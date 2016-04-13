@@ -1,3 +1,9 @@
-# G4SE-Compass
+# Geodata Compass for Geodata4SwissEDU (G4SE) / Geodaten-Kompass für Geodata4SwissEDU (G4SE)
 
-Metadata search service for project Geodata4SwissEDU.
+A Geo-metadata search service.
+
+Spec., API and technologies used:
+* Python
+* PostgreSQL
+* OAI-PMH
+* (tbd.)
