@@ -1,0 +1,83 @@
+INTERLIS 2.3;
+
+MODEL G4SE_Compass (en)
+AT "mailto:dennis@localhost"
+VERSION "2016-04-13"  =
+
+  TOPIC metadata_topic =
+
+    DOMAIN
+	  year = 1900..2199;
+	  date = FORMAT INTERLIS.XMLDate "1900-1-1" .. "2199-1-1";
+	  datetime = FORMAT INTERLIS.XMLDateTime "1900-1-1T0:0:0.0" .. "2199-1-1T0:0:0.0";
+		
+    CLASS metadata =
+      content : MANDATORY TEXT*255;
+      abstract : MANDATORY MTEXT*5000;
+	  /** Year of initial publication
+	   */
+      publicationyear : MANDATORY year;
+	  /** Comma separated publication year lineage
+	   */
+	  publicationlineage : TEXT*255;
+	  /** Official BFS (Swiss Federal Statistical Office) description. Use largest covered unit (Municipality < Canton < CH).
+	   */
+      geography : MANDATORY TEXT*255;
+      /** PostGIS BOX2D in WSG84 (OGC:BBOX)
+       */
+      extent : TEXT*40;  
+      geodata_type : (
+        vector,
+        raster
+      );
+      /** Contract partner for Data e.g. swisstopo, Canton xy...
+       */
+      source : MANDATORY INTERLIS.URI;
+	  /** URI to pdf or fileshare with several pdfs with aditional Metadata
+	   */
+      metadata : MANDATORY INTERLIS.URI;
+      /** URI to the Detailed view of the record in GeoVITe or HSR Portal.
+       */
+      access : MANDATORY INTERLIS.URI;
+	  /** Group name or feature dataset.
+       */
+      collection : TEXT*20;
+      /** Service- dataset- or filename.
+       */
+      dataset : TEXT*20;
+      service : MANDATORY (
+        external_WMS,
+        ETH_GeoVite,
+        WFS_HSR_Geoportal,
+        WMS_HSR_Geoportal
+      );
+	  /** CRS of original data (EPSG)
+       */
+      crs : MANDATORY (
+        WGS84,
+        LV95,
+        LV03
+      );
+	  /** URI to PDF with information about the terms of use.
+       */
+      terms : MANDATORY INTERLIS.URI;
+      proved : date;
+      modified : datetime;
+	  /** Metadata Author name
+	   */
+      login_name : TEXT*20;
+	  /** Metadata visibility, default public
+	   */
+      visibility : MANDATORY (
+        public,
+		test,
+		HSR_internal
+      );
+	  /** Parsed metadata from metadata link.
+	   */
+      int_parsed : MTEXT*5000;
+    END metadata;
+
+  END metadata_topic;
+
+END G4SE_Compass.
