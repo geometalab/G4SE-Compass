@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="G4SE" elementFormDefault="qualified">
+   <xsd:annotation>
+      <xsd:documentation xml:lang="en">XML Schema for use in the G4SE Project.</xsd:documentation>
+   </xsd:annotation>
+   <xsd:simpleType name="UDT.G4SE.public.box2d" />
+   <xsd:group name="elementsGroup">
+      <xsd:sequence>
+         <xsd:element name="identifier" type="string">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">Unique identifier</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="content" type="string" />
+         <xsd:element name="abstract" type="string" />
+         <xsd:element name="publicationyear" type="int">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">Year of initial publication</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="publicationlineage" type="string" nillable="true">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">Comma separated publication year lineage</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="geography" type="string">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">Official BFS (Swiss Federal Statistical Office) description. Use largest covered unit (Municipality &lt; Canton &lt; CH).</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="extent" type="UDT.G4SE.public.box2d" nillable="true">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">Must be WSG84</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="source" type="string">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">Contract partner for Data e.g. swisstopo, Canton xy...</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="metadata" type="string" nillable="true">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">URI to pdf or fileshare with several pdfs with aditional Metadata</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="access" type="string">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">URI to the Detailed view of the record in GeoVITe or HSR Portal.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="collection" type="string" nillable="true">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">Group name or feature dataset.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="dataset" type="string" nillable="true" />
+         <xsd:element name="service" type="string">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">Service- dataset- or filename.</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="crs" type="string">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">CRS of original data (EPSG)</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="terms" type="string">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">URI to PDF with information about the terms of use</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="proved" type="date" nillable="true" />
+         <xsd:element name="modified" type="dateTime" nillable="true" />
+         <xsd:element name="login_name" type="string" nillable="true">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">Metadata Author name</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="visibility" type="string" default="public">
+            <xsd:annotation>
+               <xsd:documentation xml:lang="en">Metadata visibility in front end</xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element name="geodata_type" type="string" nillable="true" />
+      </xsd:sequence>
+   </xsd:group>
+</xsd:schema>
