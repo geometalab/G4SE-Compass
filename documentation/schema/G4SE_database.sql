@@ -2,7 +2,7 @@ DROP TABLE public.records;
 
 CREATE TABLE public.records
 (
-  identifier character varying NOT NULL
+  identifier character varying NOT NULL,
   content character varying(255) NOT NULL,
   abstract text NOT NULL,
   publicationyear integer NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE public.records
   proved date,
   modified timestamp without time zone,
   login_name character varying(50),
-  visibility character varying(20) NOT NULL,
+  visibility character varying(20) NOT NULL
 );
 
 CREATE INDEX record_index
