@@ -1,24 +1,24 @@
-# G4SE Metadata Schema
+# G4SE Schema
 
-|    Name            |    Type               |    Description                                                                                                                     | Nullable |
-|--------------------|-----------------------|------------------------------------------------------------------------------------------------------------------------------------|----------|
-| identifier         | string                | Unique identifier                                                                                                                  | false    |
-| content            | string                | Metadata Record title                                                                                                              | false    |
-| abstract           | string                | Multi line record abstract                                                                                                         | false    |
-| publicationyear    | int                   | Year of initial publication                                                                                                        | false    |
-| publicationlineage | string                | Comma separated publication   year lineage (passed publications)                                                                   | true     |
-| geography          | string                | Official BFS (Swiss Federal Statistical Office) geographical   description. Use largest covered unit (Municipality < Canton < CH). | false    |
-| extent             | BBox                  | Extent of the dataset. Must   be WSG84.                                                                                            | true     |
-| source             | string                | Contract partner for original data e.g. swisstopo, Canton xy...                                                                    | false    |
-| metadata           | URI                   | URI to pdf or fileshare   with several pdfs containing aditional Metadata                                                          | true     |
-| access             | URI                   | URI to the Detailed view of the record in GeoVITe or HSR Portal                                                                    | false    |
-| collection         | string                | Group name or feature   dataset                                                                                                    | true     |
-| dataset            | string                | Service, dataset or file name                                                                                                      | true     |
-| service            | string                | Service type e.g. ETH   Geovite, WMS HSR-Geoportal...                                                                              | false    |
-| crs                | string                | CRS of original data (EPSG)                                                                                                        | false    |
-| terms              | URI                   | URI to PDF with information   about the terms of use                                                                               | false    |
-| proved             | date                  | Most recent proving date                                                                                                           | true     |
-| modified           | dateTime              | Most recent modification   time                                                                                                    | true     |
-| login_name         | string                | Metadata Author name                                                                                                               | true     |
-| visibility         | string                | Metadata visibility in   front end                                                                                                 | false    |
-| geodata_type       | string                | e.g. point, raster, vector...                                                                                                      | true     |
+| name                           | attribute name     | attribute type | nullable | default | documentation                                                                                                                      |
+|--------------------------------|--------------------|----------------|----------|---------|------------------------------------------------------------------------------------------------------------------------------------|
+| ID                             | identifier         | string         | false    |         | Unique identifier                                                                                                                  |
+| Title                          | content            | string         | false    |         | Metadata Record title                                                                                                              |
+| Metadata abstract              | abstract           | string         | false    |         | Multi line record abstract                                                                                                         |
+| Publication   year             | publicationyear    | int            | false    |         | Year of initial publication                                                                                                        |
+| Publication lineage            | publicationlineage | string         | false    |         | Comma separated publication   year lineage (passed publications)                                                                   |
+| Geographical   refference name | geography          | string         | true     | CH      | Official BFS (Swiss Federal Statistical Office) geographical   description. Use largest covered unit (Municipality < Canton < CH). |
+| Geographical extent            | extent             | string         | false    |         | Must be WSG84.                                                                                                                     |
+| Geodata   type                 | geodata_type       | string         | false    |         | e.g. point, raster, vector...                                                                                                      |
+| Source of original data        | source             | string         | true     |         | Contract partner for   original data e.g. swisstopo, Canton xy...                                                                  |
+| Additional   metadata          | metadata           | anyURI         | false    |         | URI to pdf or fileshare with several pdfs containing aditional Metadata                                                            |
+| Detailed view                  | access             | anyURI         | true     |         | URI to the Detailed view of   the record in GeoVITe or HSR Portal                                                                  |
+| Group                          | collection         | string         | false    |         | Group name or feature dataset                                                                                                      |
+| Dataset name                   | dataset            | string         | true     |         | Service, dataset or file   name                                                                                                    |
+| Service   type                 | service            | string         | true     |         | Service type e.g. ETH Geovite, WMS HSR-Geoportal...                                                                                |
+| Coordinate reference system    | crs                | string         | false    |         | CRS of original data (EPSG)                                                                                                        |
+| Terms   of use                 | terms              | anyURI         | false    |         | URI to PDF with information about the terms of use                                                                                 |
+| Proving date                   | proved             | date           | false    |         | Most recent proving date                                                                                                           |
+| Last   modification            | modified           | dateTime       | true     |         | Most recent modification time                                                                                                      |
+| Author name                    | login_name         | string         | true     |         | Metadata Author name                                                                                                               |
+| Accsess   restriction          | visibility         | string         | true     | public  | Metadata visibility in front end                                                                                                   |
