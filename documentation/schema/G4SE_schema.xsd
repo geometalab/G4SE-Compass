@@ -31,9 +31,14 @@
                <xs:documentation xml:lang="en">Comma separated publication year lineage (passed publications)</xs:documentation>
             </xs:annotation>
          </xs:element>
-         <xs:element name="geography" type="string">
+         <xs:element name="geography" type="string" default="CH">
             <xs:annotation>
                <xs:documentation xml:lang="en">Official BFS (Swiss Federal Statistical Office) geographical description. Use largest covered unit (Municipality &lt; Canton &lt; CH).</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="geodata_type" type="string">
+            <xs:annotation>
+               <xs:documentation xml:lang="en">e.g. point, raster, vector...</xs:documentation>
             </xs:annotation>
          </xs:element>
          <xs:element name="extent" type="UDT.G4SE.public.box2d" nillable="true">
@@ -46,7 +51,7 @@
                <xs:documentation xml:lang="en">Contract partner for original data e.g. swisstopo, Canton xy...</xs:documentation>
             </xs:annotation>
          </xs:element>
-         <xs:element name="metadata" type="anyURI" nillable="true">
+         <xs:element name="metadata" type="anyURI">
             <xs:annotation>
                <xs:documentation xml:lang="en">URI to pdf or fileshare with several pdfs containing aditional Metadata</xs:documentation>
             </xs:annotation>
@@ -99,11 +104,6 @@
          <xs:element name="visibility" type="string" default="public">
             <xs:annotation>
                <xs:documentation xml:lang="en">Metadata visibility in front end</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="geodata_type" type="string" nillable="true">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">e.g. point, raster, vector...</xs:documentation>
             </xs:annotation>
          </xs:element>
       </xs:sequence>
