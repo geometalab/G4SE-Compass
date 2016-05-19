@@ -26,7 +26,9 @@
 
 ## Unclear Dublin core fields with descrtiption from the DC documentation (http://dublincore.org/documents/dces/)
 subject - "Typically, the subject will be represented using keywords, key phrases, or classification codes. Recommended best practice is to use a controlled vocabulary.""
+
 source - "The described resource may be derived from the related resource in whole or in part. Recommended best practice is to identify the related resource by means of a string conforming to a formal identification system."
+
 type - "Recommended best practice is to use a controlled vocabulary such as the DCMI Type Vocabulary [DCMITYPE]. To describe the file format, physical medium, or dimensions of the resource, use the Format element."
 
 ## Fields that are not in the G4SE Schema
