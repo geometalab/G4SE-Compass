@@ -29,7 +29,7 @@
 Currently dataset and collection define data access/source (accompanied with mandatory service_type). This is still unclear...!
 
 Data sources:
-* ArcGIS REST Services (Kompatibel mit QGIS mittels Plugin), z.B. dataset="pixelkarte100", collection="https://geodata4edu.hsr.ch/geodata/rest/services/Basisdaten/" (siehe https://geodata4edu.hsr.ch/geodata/rest/services/Basisdaten/pixelkarte100/ImageServer , title pixelkarte100 )
+* ArcGIS REST Services (Kompatibel mit QGIS nur mittels Connector Plugin), z.B. dataset="pixelkarte100", collection="https://geodata4edu.hsr.ch/geodata/rest/services/Basisdaten/" (siehe https://geodata4edu.hsr.ch/geodata/rest/services/Basisdaten/pixelkarte100/ImageServer , title pixelkarte100  (Quelle: http://wiki.hsr.ch/StefanKeller/wiki.cgi?WikiSandbox))
 * GeoVITE, ???
 * Weitere (nicht geplant):
 ** ArcGIS REST Services (Kompatibel mit QGIS mittels Plugin), z.B. dataset="FUSSGAENGERSTREIFEN_P", collection="" (siehe http://maps.hsr.ch/gdi/rest/services/KTZH/FUSSGAENGERSTREIFEN_P/MapServer/0 , Basis-URL: http://maps.hsr.ch/gdi/rest/services/ )
@@ -37,9 +37,12 @@ Data sources:
 ** ArcGIS-Datenbank (à la Geodatenkompass HSR) (Kompatibel mit QGIS), z.B. mit Geodaten="db_ktzh",  Collection="NaturUndLandschaft", Class="LICHTE_WAELDER" (siehe Metadaten-Weblink http://geodatenkompass.hsr.ch/#id=20700)
 
 # Mapping to Dublin core
+
 Unclear Dublin core fields with descrtiption from the DC documentation (http://dublincore.org/documents/dces/)
 * subject - "Typically, the subject will be represented using keywords, key phrases, or classification codes. Recommended best practice is to use a controlled vocabulary.""
 * source - "The described resource may be derived from the related resource in whole or in part. Recommended best practice is to identify the related resource by means of a string conforming to a formal identification system."
 * type - "Recommended best practice is to use a controlled vocabulary such as the DCMI Type Vocabulary [DCMITYPE]. To describe the file format, physical medium, or dimensions of the resource, use the Format element."
 
 Fields that are not in the G4SE Schema: language (= german for data content?)
+
+See also: DCAP Application Profile Spec.: http://dublincore.org/groups/collections/collection-application-profile/
