@@ -3,12 +3,11 @@
    <xs:annotation>
       <xs:documentation xml:lang="en">XML Schema for use in the G4SE Project.</xs:documentation>
    </xs:annotation>
-   <xs:simpleType name="UDT.G4SE.public.box2d" />
    <xs:group name="elementsGroup">
       <xs:sequence>
          <xs:element name="identifier" type="string">
             <xs:annotation>
-               <xs:documentation xml:lang="en">Unique identifier</xs:documentation>
+               <xs:documentation xml:lang="en">Identifier unique within G4SE</xs:documentation>
             </xs:annotation>
          </xs:element>
          <xs:element name="content" type="string">
@@ -31,19 +30,19 @@
                <xs:documentation xml:lang="en">Comma separated publication year lineage (passed publications)</xs:documentation>
             </xs:annotation>
          </xs:element>
-         <xs:element name="geography" type="string" default="CH">
+         <xs:element name="geography" type="string" default="Schweiz">
             <xs:annotation>
                <xs:documentation xml:lang="en">Official BFS (Swiss Federal Statistical Office) geographical description. Use largest covered unit (Municipality &lt; Canton &lt; CH).</xs:documentation>
             </xs:annotation>
          </xs:element>
-         <xs:element name="geodata_type" type="string">
+         <xs:element name="extent" type="string" nillable="true">
             <xs:annotation>
-               <xs:documentation xml:lang="en">e.g. point, raster, vector...</xs:documentation>
+               <xs:documentation xml:lang="en">BBox. Must be WSG84.</xs:documentation>
             </xs:annotation>
          </xs:element>
-         <xs:element name="extent" type="UDT.G4SE.public.box2d" nillable="true">
+         <xs:element name="geodata_type" type="string">
             <xs:annotation>
-               <xs:documentation xml:lang="en">Extent of the dataset. Must be WSG84.</xs:documentation>
+               <xs:documentation xml:lang="en">Geodatatype of original data: raster,vector,other</xs:documentation>
             </xs:annotation>
          </xs:element>
          <xs:element name="source" type="string">
@@ -51,37 +50,27 @@
                <xs:documentation xml:lang="en">Contract partner for original data e.g. swisstopo, Canton xy...</xs:documentation>
             </xs:annotation>
          </xs:element>
-         <xs:element name="metadata" type="anyURI">
+         <xs:element name="metadata_link" type="anyURI">
             <xs:annotation>
                <xs:documentation xml:lang="en">URI to pdf or fileshare with several pdfs containing aditional Metadata</xs:documentation>
             </xs:annotation>
          </xs:element>
-         <xs:element name="access" type="anyURI">
+         <xs:element name="access_link" type="anyURI">
             <xs:annotation>
-               <xs:documentation xml:lang="en">URI to the Detailed view of the record in GeoVITe or HSR Portal</xs:documentation>
+               <xs:documentation xml:lang="en">URI to the Detailed view of the record in GeoVITe or Portal</xs:documentation>
             </xs:annotation>
          </xs:element>
-         <xs:element name="collection" type="string" nillable="true">
+         <xs:element name="service_type" type="string">
             <xs:annotation>
-               <xs:documentation xml:lang="en">Group name or feature dataset</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="dataset" type="string" nillable="true">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Service, dataset or file name</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="service" type="string">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Service type e.g. ETH Geovite, WMS HSR-Geoportal...</xs:documentation>
+               <xs:documentation xml:lang="en">Service type: FeatureService,MapService,GeoVITe,WMS,WFS</xs:documentation>
             </xs:annotation>
          </xs:element>
          <xs:element name="crs" type="string">
             <xs:annotation>
-               <xs:documentation xml:lang="en">CRS of original data (EPSG)</xs:documentation>
+               <xs:documentation xml:lang="en">CRS of original data (EPSG): LV03,LV95,WGS84,other</xs:documentation>
             </xs:annotation>
          </xs:element>
-         <xs:element name="terms" type="anyURI">
+         <xs:element name="term_link" type="anyURI">
             <xs:annotation>
                <xs:documentation xml:lang="en">URI to PDF with information about the terms of use</xs:documentation>
             </xs:annotation>
@@ -91,20 +80,11 @@
                <xs:documentation xml:lang="en">Most recent proving date</xs:documentation>
             </xs:annotation>
          </xs:element>
-         <xs:element name="modified" type="dateTime" nillable="true">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Most recent modification time</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="login_name" type="string" nillable="true">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Metadata Author name</xs:documentation>
-            </xs:annotation>
-         </xs:element>
          <xs:element name="visibility" type="string" default="public">
             <xs:annotation>
-               <xs:documentation xml:lang="en">Metadata visibility in front end</xs:documentation>
+               <xs:documentation xml:lang="en">Metadata visibility in front end: public,test,hsr-internal</xs:documentation>
             </xs:annotation>
+         </xs:element>
          </xs:element>
       </xs:sequence>
    </xs:group>
