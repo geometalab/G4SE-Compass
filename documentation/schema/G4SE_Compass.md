@@ -42,7 +42,7 @@ Currently dataset and collection define data access/source (accompanied with man
 * QGIS Connector v0.x (mit Direct Access Link)
 * QGIS Connector v1.x geplant (mit Entry Point)
  
-## ArcGIS REST API MapService (neu):
+## ArcGIS REST API MapService (new):
 * QGIS QuickMapService Plugin (mit gdal_ags.xml)
  
 ## WMS (nice-to-have): 
