@@ -90,7 +90,6 @@
                <xs:documentation xml:lang="en">Metadata visibility in front end: public,test,hsr-internal</xs:documentation>
             </xs:annotation>
          </xs:element>
-         </xs:element>
       </xs:sequence>
    </xs:group>
 </xs:schema>
