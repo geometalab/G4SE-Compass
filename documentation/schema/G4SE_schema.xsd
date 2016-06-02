@@ -27,7 +27,7 @@
          </xs:element>
          <xs:element name="publicationlineage" type="string" nillable="true">
             <xs:annotation>
-               <xs:documentation xml:lang="en">Comma separated publication year lineage (passed publications)</xs:documentation>
+               <xs:documentation xml:lang="en">Comma separated publication year lineage (passed publications), ascending</xs:documentation>
             </xs:annotation>
          </xs:element>
          <xs:element name="geography" type="string" default="Schweiz">
