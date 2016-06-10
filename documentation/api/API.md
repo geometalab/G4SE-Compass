@@ -1,29 +1,27 @@
 # API
 
-Base URL: http://api.XXXXX.ch/v1/
+Base URL: XXX
 ## record
-| Get Element by id |                                      |
-|-------------------|--------------------------------------|
-| Path              | /record/:id                          |
-| Descripption      | Get a specific record by id          |
-| Parameters        | Required: id                         |
-| Result            | Record                               |
-| Error             | 403 Permission Denied, 404 not found |
+| Get a specific record by id |                                      |
+|-----------------------------|--------------------------------------|
+| Path                        | /api/record/:id                      |
+| Parameters                  | Required: id                         |
+| Notes                       |                                      |
+| Result                      | Record                               |
+| Example                     | /api/record/1234151                  |
 
-## search paginated
-|              |                          |
-|--------------|--------------------------|
-| Path         | /search/:search_term     |
-| Descripption | Fulltext search records  |
-| Parameters   | Required: serach_term    |
-| Result       | Record list, count, page |
-| Error        | 401 Permission Denied    |
+## search
+| Fulltext search records |                          |
+|-------------------------|--------------------------|
+| Path                    | /api/search/             |
+| Parameters              | Required: query          |
+| Result                  | Record list              |
+| Example                 | /api/search/?query=wald  |
 
-## 
-|              |   |
-|--------------|---|
-| Path         |   |
-| Descripption |   |
-| Parameters   |   |
-| Result       |   |
-| Error        |   |
+## recent
+| Get most rectly inserted records |                        |
+|----------------------------------|------------------------|
+| Path                             | /api/recent/           |
+| Parameters                       | Optional: amount       |
+| Result                           | Record list            |
+| Example                          | /api/search/?amound=10 |
