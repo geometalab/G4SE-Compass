@@ -24,4 +24,4 @@ Base URL: XXX
 | Path                             | /api/recent/           |
 | Parameters                       | Optional: amount       |
 | Result                           | Record list            |
-| Example                          | /api/search/?amound=10 |
+| Example                          | /api/search/?amount=10 |
