@@ -6,17 +6,18 @@ Base URL: XXX
 |-----------------------------|--------------------------------------|
 | Path                        | /api/record/:id                      |
 | Parameters                  | Required: id                         |
-| Notes                       |                                      |
 | Result                      | Record                               |
 | Example                     | /api/record/1234151                  |
 
 ## search
-| Fulltext search records |                          |
-|-------------------------|--------------------------|
-| Path                    | /api/search/             |
-| Parameters              | Required: query          |
-| Result                  | Record list              |
-| Example                 | /api/search/?query=wald  |
+| Fulltext search records |                                     |
+|-------------------------|-------------------------------------|
+| Path                    | /api/search/                        |
+| Parameters              | Required: query, optional: language |
+| Result                  | Record list                         |
+| Example                 | /api/search?query=wald;language=en  |
+
+* The language parameter indicates the language of the search query, not the result. Only keywords are stored multilingual.
 
 ## recent
 | Get most rectly inserted records |                        |
@@ -24,4 +25,4 @@ Base URL: XXX
 | Path                             | /api/recent/           |
 | Parameters                       | Optional: amount       |
 | Result                           | Record list            |
-| Example                          | /api/search/?amount=10 |
+| Example                          | /api/search?amount=10  |
