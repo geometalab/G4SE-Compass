@@ -15,7 +15,7 @@ Base URL: XXX
 | Path                    | /api/search/                        |
 | Parameters              | Required: query, optional: language |
 | Result                  | Record list                         |
-| Example                 | /api/search?query=wald;language=en  |
+| Example                 | /api/search?query=wald&language=en  |
 
 * The language parameter indicates the language of the search query, not the result. Only keywords are stored multilingual.
 
