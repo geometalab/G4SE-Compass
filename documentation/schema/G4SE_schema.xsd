@@ -10,6 +10,11 @@
                <xs:documentation xml:lang="en">Identifier unique within G4SE</xs:documentation>
             </xs:annotation>
          </xs:element>
+         <xs:element name="language" type="string">
+            <xs:annotation>
+               <xs:documentation xml:lang="en">Language of metadata record</xs:documentation>
+            </xs:annotation>
+         </xs:element>
          <xs:element name="content" type="string">
             <xs:annotation>
                <xs:documentation xml:lang="en">Metadata Record title</xs:documentation>
@@ -18,6 +23,21 @@
          <xs:element name="abstract" type="string">
             <xs:annotation>
                <xs:documentation xml:lang="en">Multi line record abstract</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="keywords_en" type="string">
+            <xs:annotation>
+               <xs:documentation xml:lang="en">Comma separated keywords in English</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="keywords_de" type="string">
+            <xs:annotation>
+               <xs:documentation xml:lang="en">Comma separated keywords in German</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="keyqords_fr" type="string">
+            <xs:annotation>
+               <xs:documentation xml:lang="en">Comma separated keywords in French</xs:documentation>
             </xs:annotation>
          </xs:element>
          <xs:element name="publicationyear" type="int">
