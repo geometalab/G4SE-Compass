@@ -25,21 +25,6 @@
                <xs:documentation xml:lang="en">Multi line record abstract</xs:documentation>
             </xs:annotation>
          </xs:element>
-         <xs:element name="keywords_en" type="string">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Comma separated keywords in English</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="keywords_de" type="string">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Comma separated keywords in German</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="keyqords_fr" type="string">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Comma separated keywords in French</xs:documentation>
-            </xs:annotation>
-         </xs:element>
          <xs:element name="publicationyear" type="int">
             <xs:annotation>
                <xs:documentation xml:lang="en">Year of initial publication</xs:documentation>

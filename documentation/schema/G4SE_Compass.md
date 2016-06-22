@@ -6,9 +6,6 @@
 | Metadaten Sprache             | Metadata language           | language              | string    | yes   |          | language    | x |                                           | Language of metadata record                                                                                                      |                                            |
 | Titel                         | Title                       | content               | string    | yes   |          | title       | x |                                           | Metadata Record title (SK: Why not attr.name 'title'?)                                                                           |                                            | 
 | Beschreibung                  | Abstract                    | abstract              | string    | yes   |          | description | x |                                           | Multi line record abstract                                                                                                       |                                            | 
-| Keywords			            | Keywords                    | keywords_en           | string    | yes   |          | subject     | x |                                           | Comma separated keywords in English                                                                                              |                                            |
-| Keywords			            | Keywords                    | keywords_de           | string    | yes   |          | subject     | x |                                           | Comma separated keywords in German                                                                                               |                                            |
-| Keywords			            | Keywords                    | keywords_fr           | string    | yes   |          | subject     | x |                                           | Comma separated keywords in French                                                                                               |                                            |
 | Zeit                          | Publication year            | publication_year      | int       | yes   |          | date        | x |                                           | Year of initial publication                                                                                                      |                                            | 
 | History                       | Publication lineage         | publication_lineage   | string    | no    |          |             | x |                                           | Comma separated publication   year lineage (passed publications), ascending                                                      |                                            | 
 | Geogr. Bezugsname             | Geographical coverage       | geography             | string    | yes   | (Schweiz)| coverage    | x |                                           | Official BFS (Swiss Federal Statistical Office) geographical description. Use largest covered unit (Municipality < Canton < CH). |                                            | 
@@ -20,10 +17,10 @@
 | Basis URL                     | Entry point                 | base_link             | string    | no    |          |             | x |                                           | Entry point ???                                                                                                                  |                                            | 
 | Gruppe                        | Group                       | collection            | string    | no    |          |             |   |                                           | Group name or feature dataset ???                                                                                                |                                            | 
 | Datensatz-Name                | Dataset name                | dataset               | string    | no    |          |             |   |                                           | Dataset (in future ev. file name)                                                                                                |                                            | 
-| ArcGIS layer link             | ArcGIS layer link           | arcgis_layer_link     | URL       | no    |          |             |   |                                           | Weblink to a file (.pitem) hosted on a G4SE share close to metadata                                                              |                                            | 
-| QGIS layer link               | QGIS layer link             | qgis_layer_link       | URL       | no    |          |             |   |                                           |                                                                                                                                  |                                            | 
-| ArcGIS symbology link         | ArcGIS symbology link       | arcgis_symbology_link | URL       | no    |          |             |   |                                           | Weblink to a file (.lyr) hosted on a G4SE share close to metadata                                                                |                                            | 
-| QGIS symbology link           | QGIS symbology link         | qgis_symbology_link   | URL       | no    |          |             |   |                                           | Weblink to a file (.sld) hosted on a G4SE share close to metadata                                                                |                                            | 
+| ArcGIS layer link             | ArcGIS layer link           | arcgis_layer_link     | URL       | no    |          |             |   |                                           | Weblink to a file (.pitem), opens a layer in ArcGIS, hosted on a G4SE share close to metadata                                    |                                            | 
+| QGIS layer link               | QGIS layer link             | qgis_layer_link       | URL       | no    |          |             |   |                                           | Weblink to a file (.pitem), opens a layer in QGIS, hosted on a G4SE share close to metadata                                      |                                            | 
+| ArcGIS symbology link         | ArcGIS symbology link       | arcgis_symbology_link | URL       | no    |          |             |   |                                           | Weblink to a ArcGIS symbology file (.lyr) hosted on a G4SE share close to metadata                                               |                                            | 
+| QGIS symbology link           | QGIS symbology link         | qgis_symbology_link   | URL       | no    |          |             |   |                                           | Weblink to a QGIS symbology file (.sld) hosted on a G4SE share close to metadata                                                 |                                            | 
 | Service-Art                   | Service type                | service_type          | string    | no    |          | format      | x | FeatureService,MapService,GeoVITe,WMS,WFS | Service type (KES: more ArcGIS Services missing?)                                                                                |                                            | 
 | Koordinatensystem             | Coordinate reference system | crs                   | string    | yes   |          |             | x | LV03,LV95,WGS84,other                     | CRS of original data (EPSG)                                                                                                      |                                            | 
 | Nutzungsbedingungen           | Terms of use                | term_link             | URL       | yes   |          | rights      | x |                                           | URI to PDF with information about the terms of use                                                                               |                                            | 
@@ -55,49 +52,104 @@ Currently dataset and collection define data access/source (accompanied with man
  
 ## Examples
 ### GeoVITe:
-* Access to data        : http://geodata4edu.ethz.ch/portal.jsp?layer=P3_swissimage25cm_swissimage&timestamp=Latest&topic=25cm
-* ArcGIS layer link     : -
-* QGIS layer link       : -
-* Entry point           : http://geodata4edu.ethz.ch/
-* Group                 : -
-* Dataset name          : -
-* Service type          : GeoVITe
-* ArcGIS symbology link : 
-* QGIS symbology link   : 
- 
+* Metadata language         : de
+* Title                     : Orthophoto
+* Abstract                  : Das Orthophotomosaik SWISSIMAGE ist eine Zusammensetzung digitaler Farbluftbilder. Ein Orthophoto ist ein Luftbild bei dem die Neigungseinflüsse der Kamera und des Geländes korrigiert wurden. SWISSIMAGE bietet somit einen einheitlichen Massstab und eine einheitliche Radiometrie über die Gesamtheit der Schweiz an. Verschiedene Auflösungen (Grösse vom Pixel am Boden), von 25 cm bis 250 cm, stehen im Bereich der Schweiz und dem Fürstentum Liechtenstein zur Verfügung.
+* Publication year          : 1998
+* Publication lineage       : 2010, 2006, 2003, 2001, 1998
+* Geographical coverage     : Schweiz
+* Geographical extent       : BOX(5.9335 45.7785, 10.6891 47.839)
+* Geodata type              : raster
+* Source of original data   : Swisstopo
+* Additional metadata       : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/products/images/ortho/swissimage.parsysrelated1.76752.downloadList.50684.DownloadFile.tmp/infosi201003deu.pdf
+* Access to data            : http://geodata4edu.ethz.ch/portal.jsp?layer=P3_swissimage25cm_swissimage&timestamp=Latest&topic=25cm
+* Entry point               : http://geodata4edu.ethz.ch/
+* Group                     : 
+* Dataset name              : 
+* ArcGIS layer link         : 
+* QGIS layer link           : 
+* ArcGIS symbology link     : 
+* QGIS symbology link       : 
+* Service type              : GeoVITe
+* crs                       : EPSG:21781
+* Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
+* Proving date              : 02.01.2016
+* Access restriction        : public
  
 ### ArcGIS REST API FeatureService:
-* Access to data        : https://geodata4edu.hsr.ch/geodata/rest/services/swissTLM3D/TLM_FLIESSGEWAESSER/FeatureServer  
-* ArcGIS layer link     : https://geodata4edu.hsr.ch/share/TLM_FLIESSGEWAESSER.pitem
-* QGIS layer link       : -
-* Entry point           : https://geodata4edu.hsr.ch/geodata
-* Group                 : /swissTLM3D/
-* Dataset name          : TLM_FLIESSGEWAESSER
-* Service type          : FeatureService
-* ArcGIS symbology link : https://geodata4edu.hsr.ch/share/TLM_BODENBEDECKUNG.lyr
-* QGIS symbology link   : https://geodata4edu.hsr.ch/share/TLM_BODENBEDECKUNG.sld
-                
+* Metadata language         : de
+* Title                     : Topologisches Landschaftsmodell TLM, Fliessgewässer
+* Abstract                  : swissTLM3D ist das grossmassstäbliche Topografische Landschaftsmodell der Schweiz. Es umfasst die natürlichen und künstlichen Objekte wie auch die Namendaten in vektorieller Form. Mit einer hohen Genauigkeit und dem Einbezug der dritten Dimension ist swissTLM3D der genaueste und umfassendste 3D-Vektordatensatz der Schweiz. In dieser Feature Class werden die Fliessgewässer in linearer Form geführt. Die Linien sind in Richtung des Gewässerflusses gerichtet.
+* Publication year          : 2012
+* Publication lineage       : 2015, 2014, 2012
+* Geographical coverage     : Schweiz
+* Geographical extent       : BOX(5.9335 45.7785, 10.6891 47.839)
+* Geodata type              : vector
+* Source of original data   : Swisstopo
+* Additional metadata       : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/products/landscape/swissTLM3D.parsysrelated1.47641.downloadList.97108.DownloadFile.tmp/201603swisstlm3d14okd.pdf
+* Access to data            : https://geodata4edu.hsr.ch/geodata/rest/services/swissTLM3D/TLM_FLIESSGEWAESSER/FeatureServer
+* Entry point               : https://geodata4edu.hsr.ch/geodata
+* Group                     : /swissTLM3D/
+* Dataset name              : TLM_FLIESSGEWAESSER
+* ArcGIS layer link         : https://geodata4edu.hsr.ch/share/TLM_FLIESSGEWAESSER.pitem
+* QGIS layer link           : -
+* ArcGIS symbology link     : https://geodata4edu.hsr.ch/share/TLM_FLIESSGEWAESSER.lyr
+* QGIS symbology link       : https://geodata4edu.hsr.ch/share/TLM_FLIESSGEWAESSER_QGIS.zip
+* Service type              : FeatureService
+* CRS                       : EPSG:21781
+* Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
+* Proving date              : 04.03.2015
+* Access restriction        : public
+        
 ### ArcGIS REST API MapService:
-* Access to data        : https://geodata4edu.hsr.ch/geodata/rest/services/swissTLM3D/TLM_BODENBEDECKUNG/MapServer  
-* ArcGIS layer link     : https://geodata4edu.hsr.ch/share/TLM_BODENBEDECKUNG.pitem
-* QGIS layer link       : https://geodata4edu.hsr.ch/share/TLM_BODENBEDECKUNG.xml
-* Entry point           : https://geodata4edu.hsr.ch/geodata
-* Group                 : /swissTLM3D/
-* Dataset name          : TLM_BODENBEDECKUNG
-* Service type          : MapService
-* ArcGIS symbology link : - 
-* QGIS symbology link   : -
+* Metadata language         : de
+* Title                     : Topologisches Landschaftsmodell TLM, Bodenbedeckung
+* Abstract                  : swissTLM3D ist das grossmassstäbliche Topografische Landschaftsmodell der Schweiz. Es umfasst die natürlichen und künstlichen Objekte wie auch die Namendaten in vektorieller Form. Mit einer hohen Genauigkeit und dem Einbezug der dritten Dimension ist swissTLM3D der genaueste und umfassendste 3D-Vektordatensatz der Schweiz. In dieser Feature Class werden die Fliessgewässer in linearer Form geführt. Die Linien sind in Richtung des Gewässerflusses gerichtet.
+* Publication year          : 2012
+* Publication lineage       : 2015, 2014, 2012
+* Geographical coverage     : Schweiz
+* Geographical extent       : BOX(5.9335 45.7785, 10.6891 47.839)
+* Geodata type              : vector
+* Source of original data   : Swisstopo
+* Additional metadata       : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/products/landscape/swissTLM3D.parsysrelated1.47641.downloadList.97108.DownloadFile.tmp/201603swisstlm3d14okd.pdf
+* Access to data            : https://geodata4edu.hsr.ch/geodata/rest/services/swissTLM3D/TLM_BODENBEDECKUNG/MapServer  
+* Entry point               : https://geodata4edu.hsr.ch/geodata
+* Group                     : /swissTLM3D/
+* Dataset name              : TLM_BODENBEDECKUNG
+* ArcGIS layer link         : https://geodata4edu.hsr.ch/share/TLM_BODENBEDECKUNG.pitem
+* QGIS layer link           : https://geodata4edu.hsr.ch/share/TLM_BODENBEDECKUNG.xml
+* ArcGIS symbology link     : - 
+* QGIS symbology link       : -
+* Service type              : MapService
+* CRS                       : EPSG:21781
+* Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
+* Proving date              : 04.03.2015
+* Access restriction        : public
  
 ### WMS KtZH:
-* Access to data        : http://wms.zh.ch/TbaBaustellenZHWMS
-* ArcGIS layer link     : -
-* QGIS layer link       : -
-* Entry point           : http://wms.zh.ch/
-* Group                 : TbaBaustellenZHWMS/
-* Dataset name          : baustellen-detailansicht
-* Service type          : WMS
-* ArcGIS symbology link : 
-* QGIS symbology link   : 
+* Metadata language         : de
+* Title                     : Baustellen Kantonsstrassen
+* Abstract                  : Tagesaktuelle Baustellen auf dem Kantonsstrassennetz. Die vier Unterhaltregionen des Tiefbauamtes aktualisieren laufend die Informationen über bestehende und zukünftige Baustellen. Die Kommunikationsabteilung der Baudirektion des Kantons Zürich ist Ansprechpartner bei Fragen zu den Baustellen (http://www.bd.zh.ch/internet/baudirektion/de/service/nav/service/medien.html).
+* Publication year          : 2005
+* Publication lineage       : 2015, 2014, 2012, 2005
+* Geographical coverage     : Zürich
+* Geographical extent       : BOX(8.3469 47.0711, 9.0033 47.7047)
+* Geodata type              : vector
+* Source of original data   : Kanton Zürich
+* Additional metadata       : http://www.geolion.zh.ch/geodatensatz/show?nbid=1724
+* Access to data            : http://wms.zh.ch/TbaBaustellenZHWMS
+* Entry point               : http://wms.zh.ch/
+* Group                     : TbaBaustellenZHWMS/
+* Dataset name              : baustellen-detailansicht
+* ArcGIS layer link         : 
+* QGIS layer link           : 
+* ArcGIS symbology link     : http://www.geolion.zh.ch/geodatensatz/generatePDF?nbid=1724
+* QGIS symbology link       : 
+* Service type              : WMS
+* CRS                       : EPSG:21781
+* Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
+* Proving date              : 24.08.2015
+* Access restriction        : public
 
 
 
