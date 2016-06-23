@@ -24,7 +24,7 @@
 | Service-Art                   | Service type                | service_type          | string    | no    |          | format      | x | FeatureService,MapService,GeoVITe,WMS,WFS | Service type (KES: more ArcGIS Services missing?)                                                                                |                                            | 
 | Koordinatensystem             | Coordinate reference system | crs                   | string    | yes   |          |             | x | LV03,LV95,WGS84,other                     | CRS of original data (EPSG)                                                                                                      |                                            | 
 | Nutzungsbedingungen           | Terms of use                | term_link             | URL       | yes   |          | rights      | x |                                           | URI to PDF with information about the terms of use                                                                               |                                            | 
-| Letzte Aktualitätsprüfung     | Proving date                | proved                | date      | no    |          |             | x |                                           | Most recent proving date                                                                                                         |                                            | 
+| Letzte Aktualitätsprüfung     | Proving date                | proved                | date      | no    |          |             | x |                                           | Most recent proving (XML Date, ISO 8601) date                                                                                                         |                                            | 
 | Zugriffseinschränkungen       | Access restriction          | visibility            | string    | yes   | public   |             | x | public,test,hsr-internal                  | Metadata visibility in front end                                                                                                 |                                            | 
 | Letzte Bearbeitung            | Last modification           | modified              | datetime  | no    | (system) |             | - |                                           | Most recent modification time                                                                                                    |                                            | 
 | Loginname Bearbeiter          | Login name                  | login_name            | string    | no    | (system) | contributor | - |                                           | Metadata Author name                                                                                                             |                                            | 
@@ -64,16 +64,16 @@ Currently dataset and collection define data access/source (accompanied with man
 * Additional metadata       : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/products/images/ortho/swissimage.parsysrelated1.76752.downloadList.50684.DownloadFile.tmp/infosi201003deu.pdf
 * Access to data            : http://geodata4edu.ethz.ch/portal.jsp?layer=P3_swissimage25cm_swissimage&timestamp=Latest&topic=25cm
 * Entry point               : http://geodata4edu.ethz.ch/
-* Group                     : 
-* Dataset name              : 
-* ArcGIS layer link         : 
-* QGIS layer link           : 
-* ArcGIS symbology link     : 
-* QGIS symbology link       : 
+* Group                     : -
+* Dataset name              : P3_swissimage25cm
+* ArcGIS layer link         : -
+* QGIS layer link           : -
+* ArcGIS symbology link     : -
+* QGIS symbology link       : -
 * Service type              : GeoVITe
 * crs                       : EPSG:21781
 * Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
-* Proving date              : 02.01.2016
+* Proving date              : 02.01.2016 (CCYY-MM-DD)
 * Access restriction        : public
  
 ### ArcGIS REST API FeatureService:
@@ -141,10 +141,10 @@ Currently dataset and collection define data access/source (accompanied with man
 * Entry point               : http://wms.zh.ch/
 * Group                     : TbaBaustellenZHWMS/
 * Dataset name              : baustellen-detailansicht
-* ArcGIS layer link         : 
-* QGIS layer link           : 
+* ArcGIS layer link         : -
+* QGIS layer link           : -
 * ArcGIS symbology link     : http://www.geolion.zh.ch/geodatensatz/generatePDF?nbid=1724
-* QGIS symbology link       : 
+* QGIS symbology link       : -
 * Service type              : WMS
 * CRS                       : EPSG:21781
 * Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
