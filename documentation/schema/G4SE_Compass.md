@@ -61,7 +61,7 @@ Currently dataset and collection define data access/source (accompanied with man
 * Geographical extent       : BOX(5.9335 45.7785, 10.6891 47.839)
 * Geodata type              : raster
 * Source of original data   : Swisstopo
-* Additional metadata       : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/products/images/ortho/swissimage.parsysrelated1.76752.downloadList.50684.DownloadFile.tmp/infosi201003deu.pdf
+* Additional metadata       : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/products/landscape/swissTLM3D.parsysrelated1.47641.downloadList.97108.DownloadFile.tmp/201603swisstlm3d14okd.pdf
 * Access to data            : http://geodata4edu.ethz.ch/portal.jsp?layer=P3_swissimage25cm_swissimage&timestamp=Latest&topic=25cm
 * Entry point               : http://geodata4edu.ethz.ch/
 * Group                     : -
@@ -73,7 +73,7 @@ Currently dataset and collection define data access/source (accompanied with man
 * Service type              : GeoVITe
 * crs                       : EPSG:21781
 * Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
-* Proving date              : 02.01.2016 (CCYY-MM-DD)
+* Proving date              : 2016-01-02
 * Access restriction        : public
  
 ### ArcGIS REST API FeatureService:
@@ -98,7 +98,7 @@ Currently dataset and collection define data access/source (accompanied with man
 * Service type              : FeatureService
 * CRS                       : EPSG:21781
 * Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
-* Proving date              : 04.03.2015
+* Proving date              : 2015-03-04
 * Access restriction        : public
         
 ### ArcGIS REST API MapService:
@@ -123,7 +123,7 @@ Currently dataset and collection define data access/source (accompanied with man
 * Service type              : MapService
 * CRS                       : EPSG:21781
 * Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
-* Proving date              : 04.03.2015
+* Proving date              : 2015-03-04
 * Access restriction        : public
  
 ### WMS KtZH:
@@ -148,7 +148,7 @@ Currently dataset and collection define data access/source (accompanied with man
 * Service type              : WMS
 * CRS                       : EPSG:21781
 * Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
-* Proving date              : 24.08.2015
+* Proving date              : 2015-08-24
 * Access restriction        : public
 
 

@@ -5,96 +5,24 @@
    </xs:annotation>
    <xs:group name="elementsGroup">
       <xs:sequence>
-         <xs:element name="identifier" type="string">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Identifier unique within G4SE</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="language" type="string">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Language of metadata record</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="content" type="string">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Metadata Record title</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="abstract" type="string">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Multi line record abstract</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="publicationyear" type="int">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Year of initial publication</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="publicationlineage" type="string" nillable="true">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Comma separated publication year lineage (passed publications), ascending</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="geography" type="string" default="Schweiz">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Official BFS (Swiss Federal Statistical Office) geographical description. Use largest covered unit (Municipality &lt; Canton &lt; CH).</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="extent" type="string" nillable="true">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">BBox. Must be WSG84.</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="geodata_type" type="string">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Geodatatype of original data: raster,vector,other</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="source" type="string">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Contract partner for original data e.g. swisstopo, Canton xy...</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="metadata_link" type="anyURI">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">URI to pdf or fileshare with several pdfs containing aditional Metadata</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="access_link" type="anyURI">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">URI to the Detailed view of the record in GeoVITe or Portal</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="base_link" type="anyURI">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Entry point</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="service_type" type="string" nillable="true">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Service type: FeatureService,MapService,GeoVITe,WMS,WFS</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="crs" type="string">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">CRS of original data (EPSG): LV03,LV95,WGS84,other</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="term_link" type="anyURI">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">URI to PDF with information about the terms of use</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="proved" type="date" nillable="true">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Most recent proving date</xs:documentation>
-            </xs:annotation>
-         </xs:element>
-         <xs:element name="visibility" type="string" default="public">
-            <xs:annotation>
-               <xs:documentation xml:lang="en">Metadata visibility in front end: public,test,hsr-internal</xs:documentation>
-            </xs:annotation>
-         </xs:element>
+         <xs:element name="identifier" type="string" />
+         <xs:element name="language" type="string" />
+         <xs:element name="content" type="string" />
+         <xs:element name="abstract" type="string" />
+         <xs:element name="publicationyear" type="int" />
+         <xs:element name="publicationlineage" type="string" nillable="true" />
+         <xs:element name="geography" type="string" default="Schweiz" />
+         <xs:element name="extent" type="string" nillable="true" />
+         <xs:element name="geodata_type" type="string" />
+         <xs:element name="source" type="string" />
+         <xs:element name="metadata_link" type="anyURI" />
+         <xs:element name="access_link" type="anyURI" />
+         <xs:element name="base_link" type="anyURI" />
+         <xs:element name="service_type" type="string" nillable="true" />
+         <xs:element name="crs" type="string" />
+         <xs:element name="term_link" type="anyURI" />
+         <xs:element name="proved" type="date" nillable="true" />
+         <xs:element name="visibility" type="string" default="public" />
       </xs:sequence>
    </xs:group>
 </xs:schema>
