@@ -1,3 +1,7 @@
+""" Runs oai-harvest command in shell and reads all xml files.
+Deletes all previous records and writes the new ones into the database.
+Database URI must be set in a file settings.py in the src directory (e.g. passwor:user@localhost:5432/database)
+"""
 import os
 import sys
 import xml.etree.ElementTree as ET
@@ -58,14 +62,14 @@ def read_records(target_dir):
 
 def insert_records_into_db(records):
     engine = db_connect()
-    session = sessionmaker()
-    session.configure(bind=engine)
-
+    Session = sessionmaker()
+    Session.configure(bind=engine)
+    session = Session()
+    session.query(Record).delete()
     for record in records:
         db_record = Record(**record)
-        s = session()
-        s.add(db_record)
-        s.commit()
+        session.add(db_record)
+    session.commit()
 
 
 def db_connect():
