@@ -1,0 +1,16 @@
+<G4SE:xs xmlns:G4SE="http://www.geovite.ch/oai2/G4SE/" xmlns:xs="http://purl.org/dc/elements/1.1/" xsi:schemaLocation="http://www.geovite.ch/oai2/G4SE/ http://www.geovite.ch/oai2/G4SE.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<xs:identifier>oai:geovite.ch:1234</xs:identifier>
+	<xs:language>de</xs:language>  
+	<xs:content>Topologisches Landschaftsmodell TLM, Fliessgewässer</xs:content>
+	<xs:abstract>swissTLM3D ist das grossmassstäbliche Topografische Landschaftsmodell der Schweiz. Es umfasst die natürlichen und künstlichen Objekte wie auch die Namendaten in vektorieller Form. Mit einer hohen Genauigkeit und dem Einbezug der dritten Dimension ist swissTLM3D der genaueste und umfassendste 3D-Vektordatensatz der Schweiz. In dieser Feature Class werden die Fliessgewässer in linearer Form geführt. Die Linien sind in Richtung des Gewässerflusses gerichtet.</xs:abstract>
+	<xs:publication_year>2012</xs:publication_year>
+	<xs:publication_lineage>2015, 2014, 2012</xs:publication_lineage>
+	<xs:geography>Schweiz</xs:geography>
+	<xs:geodata_type>vector</xs:geodata_type>
+	<xs:source>Swisstopo</xs:source>
+	<xs:metadata_link>http://www.swisstopo.admin.ch/internet/swisstopo/de/home/products/landscape/swissTLM3D.parsysrelated1.47641.downloadList.97108.DownloadFile.tmp/201603swisstlm3d14okd.pdf</xs:metadata_link>
+	<xs:access_link>https://geodata4edu.hsr.ch/geodata/rest/services/swissTLM3D/TLM_FLIESSGEWAESSER/FeatureServer</xs:access_link>
+	<xs:crs>EPSG:21781</xs:crs>
+	<xs:term_link>http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html</xs:term_link>
+	<xs:visibility>public</xs:visibility>
+</G4SE:xs>
