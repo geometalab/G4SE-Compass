@@ -53,15 +53,15 @@ Currently dataset and collection define data access/source (accompanied with man
 ## Examples
 ### GeoVITe:
 * Metadata language         : de
-* Title                     : Orthophoto
-* Abstract                  : Das Orthophotomosaik SWISSIMAGE ist eine Zusammensetzung digitaler Farbluftbilder. Ein Orthophoto ist ein Luftbild bei dem die Neigungseinflüsse der Kamera und des Geländes korrigiert wurden. SWISSIMAGE bietet somit einen einheitlichen Massstab und eine einheitliche Radiometrie über die Gesamtheit der Schweiz an. Verschiedene Auflösungen (Grösse vom Pixel am Boden), von 25 cm bis 250 cm, stehen im Bereich der Schweiz und dem Fürstentum Liechtenstein zur Verfügung.
+* Title                     : SWISSIMAGE
+* Abstract                  : The orthophoto mosaic SWISSIMAGE is a composition of digital color aerial photographs over the whole of Switzerland and is updated every 3 years.
 * Publication year          : 1998
 * Publication lineage       : 2010, 2006, 2003, 2001, 1998
 * Geographical coverage     : Schweiz
 * Geographical extent       : BOX(5.9335 45.7785, 10.6891 47.839)
 * Geodata type              : raster
 * Source of original data   : Swisstopo
-* Additional metadata       : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/products/landscape/swissTLM3D.parsysrelated1.47641.downloadList.97108.DownloadFile.tmp/201603swisstlm3d14okd.pdf
+* Additional metadata       : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/products/images/ortho/swissimage.parsysrelated1.76752.downloadList.50684.DownloadFile.tmp/infosi201003deu.pdf
 * Access to data            : http://geodata4edu.ethz.ch/portal.jsp?layer=P3_swissimage25cm_swissimage&timestamp=Latest&topic=25cm
 * Entry point               : http://geodata4edu.ethz.ch/
 * Group                     : -
