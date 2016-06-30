@@ -1,9 +1,3 @@
-# Specifications for G4SE API
-### Open questions
-- Pagination?
-- Authentication?
-- Upatde/Add records in API?
-
 ### Multilingual support
 - Searches and Records can be in one of the following languages: en, de, fr
 - When searching the input language must be set
