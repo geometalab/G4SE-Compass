@@ -1,6 +1,6 @@
 """ Runs oai-harvest command in shell and reads all xml files.
 Deletes all previous records and writes the new ones into the database.
-Database URI must be set in a file settings.py in the src directory (e.g. passwor:user@localhost:5432/database)
+Database URI must be set in a file settings.py in the src directory (e.g. password:user@localhost:5432/database)
 """
 import os
 import sys
