@@ -3,13 +3,12 @@ FROM debian:jessie
 RUN apt-get update && \
     apt-get install -y --no-install-recommends python python-dev \
       libxml2 libxml2-dev lib32z1-dev libxslt-dev libpq-dev libxslt1-dev\
-      python-pip python-psycopg2 python-lxml cron vim
+      python-pip python-psycopg2 python-lxml cron
 
 RUN pip install oaiharvest sqlalchemy
 
 COPY ./docker-entrypoint.sh /
 
-ADD ./testfiles /testfiles
 ADD ./src /src
 ADD crontab /etc/cron.d/harvest-cron
 
