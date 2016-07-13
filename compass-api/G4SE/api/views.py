@@ -1,13 +1,13 @@
-from api.models import Record
-from api.serializers import RecordSerializer
+from api.models import Record, HarvestedRecord, AllRecords
+from api.serializers import RecordSerializer, AllRecordsSerializer
 from rest_framework import generics
 
 
-class RecordList(generics.ListCreateAPIView):
-    queryset = Record.objects.all()
-    serializer_class = RecordSerializer
+class RecordList(generics.ListAPIView):
+    queryset = AllRecords.objects.all()
+    serializer_class = AllRecordsSerializer
 
 
-class RecordDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Record.objects.all()
-    serializer_class = RecordSerializer
+class RecordDetail(generics.RetrieveAPIView):
+    queryset = AllRecords.objects.all()
+    serializer_class = AllRecordsSerializer
