@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'api.apps.ApiConfig',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -79,13 +79,18 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'OPTIONS': {
-            'options': '-c search_path=django,django'
+            'options': '-c search_path=django,public'
         },
         'NAME': 'G4SE',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': 'localhost',
         'PORT': '5432',
+        'TEST':{
+            'OPTIONS': {
+                'options': '-c search_path=postgres,public'
+            },
+        }
     },
     'records': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -94,6 +99,9 @@ DATABASES = {
         'PASSWORD': 'postgres',
         'HOST': 'localhost',
         'PORT': '5432',
+        'TEST': {
+            'MIRROR': 'default',
+        }
     }
 }
 

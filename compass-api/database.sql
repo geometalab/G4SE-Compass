@@ -1,5 +1,9 @@
+CREATE EXTENSION IF NOT EXISTS postgis
+    SCHEMA public
+    VERSION "2.2.2";
+
 -- Create table for internally organized records
-CREATE TABLE public.records
+CREATE TABLE IF NOT EXISTS public.records
 (
   identifier character varying NOT NULL,
   language character varying(20) NOT NULL,
@@ -33,14 +37,14 @@ WITH (
   OIDS=FALSE
 );
 
-CREATE INDEX record_index
+CREATE INDEX IF NOT EXISTS record_index
   ON public.records
   USING btree
   (identifier COLLATE pg_catalog."default");
 
 
 -- Create table for harvested records
-CREATE TABLE public.harvested_records
+CREATE TABLE IF NOT EXISTS public.harvested_records
 (
   identifier character varying NOT NULL,
   language character varying(20) NOT NULL,
@@ -74,7 +78,7 @@ WITH (
   OIDS=FALSE
 );
 
-CREATE INDEX harvested_record_index
+CREATE INDEX IF NOT EXISTS harvested_record_index
   ON public.harvested_records
   USING btree
   (identifier COLLATE pg_catalog."default");
@@ -137,9 +141,5 @@ UNION
     harvested_records.modified,
     harvested_records.login_name
    FROM harvested_records;
-
-ALTER TABLE public.all_records
-  OWNER TO postgres;
-
 
 
