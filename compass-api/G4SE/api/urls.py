@@ -3,5 +3,6 @@ from api import views
 
 urlpatterns = [
     url(r'^api/$', views.RecordList.as_view()),
+    url('^api/search/$', views.Search.as_view()),
     url(r'^api/(?P<pk>[0-9]+)/$', views.RecordDetail.as_view()),
 ]
