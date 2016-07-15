@@ -1,5 +1,5 @@
-from api.models import Record, AllRecords
-from api.serializers import RecordSerializer, AllRecordsSerializer
+from api.models import AllRecords
+from api.serializers import AllRecordsSerializer
 from rest_framework import generics, filters
 from django.contrib.postgres.search import SearchVector
 
