@@ -1,4 +1,3 @@
-from api.views import RecordList
 from rest_framework.test import APITestCase
 import pytest
 
@@ -22,5 +21,5 @@ class TestViews(APITestCase):
 
     def test_search(self):
         result_list = self.client.get('/api/search/?query=Zürich')
-        assert 'Zürich' in result_list.data[0].values()
-
+        for result in result_list.data:
+            assert 'Zürich' in result.values()
