@@ -1,10 +1,10 @@
-from api.models import AllRecords
-from api.serializers import AllRecordsSerializer
+from api.models import AllRecords, Record
+from api.serializers import AllRecordsSerializer, RecordSerializer
 from rest_framework import generics, filters
 from django.contrib.postgres.search import SearchVector
 
 
-class RecordList(generics.ListAPIView):
+class AllRecordsList(generics.ListAPIView):
     """
     View to return all records in the database
     """
@@ -33,3 +33,19 @@ class Search(generics.ListAPIView):
                 search=SearchVector('content', 'abstract', 'geography', 'collection', 'dataset'),
             ).filter(search=query)
         return AllRecords.objects.all()
+
+
+class InternalRecordsList(generics.ListCreateAPIView):
+    """
+    List/Create view for internal records only
+    """
+    queryset = Record.objects.all()
+    serializer_class = RecordSerializer
+
+
+class EditRecord(generics.RetrieveUpdateDestroyAPIView):
+    """
+    View for editing an internal record
+    """
+    queryset = Record.objects.all()
+    serializer_class = RecordSerializer
