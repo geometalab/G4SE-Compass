@@ -45,7 +45,7 @@ class InternalRecordsList(generics.ListCreateAPIView):
     serializer_class = RecordSerializer
 
 
-class EditRecord(generics.RetrieveUpdateDestroyAPIView):
+class CreateAndEditRecord(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAdminUser,)
     queryset = Record.objects.all()
     serializer_class = RecordSerializer
