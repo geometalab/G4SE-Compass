@@ -1,29 +1,33 @@
 from api.models import AllRecords, Record
-from api.serializers import AllRecordsSerializer, RecordSerializer
-from rest_framework import generics, filters
+from api.serializers import AllRecordsSerializer, RecordSerializer, UserSerializer
+from django.contrib.auth.models import User
+from rest_framework import generics, filters, permissions
 from django.contrib.postgres.search import SearchVector
 
 
+class UserList(generics.ListAPIView):
+    permission_classes = (permissions.IsAdminUser,)
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    permission_classes = (permissions.IsAdminUser,)
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
 class AllRecordsList(generics.ListAPIView):
-    """
-    View to return all records in the database
-    """
     queryset = AllRecords.objects.all()
     serializer_class = AllRecordsSerializer
 
 
 class RecordDetail(generics.RetrieveAPIView):
-    """
-    Detail view for single record
-    """
     queryset = AllRecords.objects.all()
     serializer_class = AllRecordsSerializer
 
 
 class Search(generics.ListAPIView):
-    """
-    Main search view
-    """
     serializer_class = AllRecordsSerializer
 
     def get_queryset(self):
@@ -36,16 +40,12 @@ class Search(generics.ListAPIView):
 
 
 class InternalRecordsList(generics.ListCreateAPIView):
-    """
-    List/Create view for internal records only
-    """
+    permission_classes = (permissions.IsAdminUser,)
     queryset = Record.objects.all()
     serializer_class = RecordSerializer
 
 
 class EditRecord(generics.RetrieveUpdateDestroyAPIView):
-    """
-    View for editing an internal record
-    """
+    permission_classes = (permissions.IsAdminUser,)
     queryset = Record.objects.all()
     serializer_class = RecordSerializer
