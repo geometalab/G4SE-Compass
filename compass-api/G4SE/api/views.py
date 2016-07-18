@@ -1,8 +1,10 @@
 from api.models import AllRecords, Record
-from api.serializers import AllRecordsSerializer, RecordSerializer, UserSerializer
+from api.serializers import AllRecordsSerializer, RecordSerializer, UserSerializer, EditRecordSerializer
 from django.contrib.auth.models import User
 from rest_framework import generics, filters, permissions
+from rest_framework.response import Response
 from django.contrib.postgres.search import SearchVector
+from rest_framework import status
 
 
 class UserList(generics.ListAPIView):
@@ -42,10 +44,23 @@ class Search(generics.ListAPIView):
 class InternalRecordsList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAdminUser,)
     queryset = Record.objects.all()
-    serializer_class = RecordSerializer
+    serializer_class = EditRecordSerializer
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = RecordSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class CreateAndEditRecord(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAdminUser,)
     queryset = Record.objects.all()
-    serializer_class = RecordSerializer
+    serializer_class = EditRecordSerializer
+
+    def retrieve(self, request, pk=None):
+        try:
+            record = Record.objects.get(api_id=pk)
+        except Record.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = RecordSerializer(record)
+        return Response(serializer.data)

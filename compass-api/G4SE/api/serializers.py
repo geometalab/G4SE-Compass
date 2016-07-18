@@ -15,6 +15,13 @@ class RecordSerializer(serializers.ModelSerializer):
         model = Record
 
 
+class EditRecordSerializer(serializers.ModelSerializer):
+    api_id = serializers.HiddenField(default=None)
+
+    class Meta:
+        model = Record
+
+
 class HarvestedRecordSerializer(serializers.ModelSerializer):
 
     class Meta:

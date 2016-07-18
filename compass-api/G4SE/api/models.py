@@ -4,7 +4,8 @@ from django.db import models
 
 
 class Base(models.Model):
-    identifier = models.CharField(primary_key=True, max_length=255)
+    api_id = models.IntegerField(primary_key=True)
+    identifier = models.CharField(max_length=255)
     language = models.CharField(max_length=20)
     content = models.CharField(max_length=255)
     abstract = models.TextField()

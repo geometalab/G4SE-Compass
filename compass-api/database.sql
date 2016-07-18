@@ -2,9 +2,13 @@ CREATE EXTENSION IF NOT EXISTS postgis
     SCHEMA public
     VERSION "2.2.2";
 
+-- Create shared sequence for creating unique ids
+CREATE SEQUENCE record_id_seq;
+
 -- Create table for internally organized records
 CREATE TABLE IF NOT EXISTS public.records
 (
+  api_id INT DEFAULT nextval('record_id_seq') NOT NULL PRIMARY KEY,
   identifier character varying NOT NULL,
   language character varying(20) NOT NULL,
   content character varying(255) NOT NULL,
@@ -30,22 +34,16 @@ CREATE TABLE IF NOT EXISTS public.records
   proved date,
   visibility character varying(255) NOT NULL,
   modified timestamp without time zone,
-  login_name character varying(255),
-  CONSTRAINT records_pk PRIMARY KEY (identifier)
+  login_name character varying(255)
 )
 WITH (
   OIDS=FALSE
 );
-
-CREATE INDEX IF NOT EXISTS record_index
-  ON public.records
-  USING btree
-  (identifier COLLATE pg_catalog."default");
-
 
 -- Create table for harvested records
 CREATE TABLE IF NOT EXISTS public.harvested_records
 (
+  api_id INT DEFAULT nextval('record_id_seq') NOT NULL PRIMARY KEY,
   identifier character varying NOT NULL,
   language character varying(20) NOT NULL,
   content character varying(255) NOT NULL,
@@ -71,22 +69,18 @@ CREATE TABLE IF NOT EXISTS public.harvested_records
   proved date,
   visibility character varying(255) NOT NULL,
   modified timestamp without time zone,
-  login_name character varying(255),
-  CONSTRAINT harvested_records_pk PRIMARY KEY (identifier)
+  login_name character varying(255)
 )
 WITH (
   OIDS=FALSE
 );
 
-CREATE INDEX IF NOT EXISTS harvested_record_index
-  ON public.harvested_records
-  USING btree
-  (identifier COLLATE pg_catalog."default");
-
 
 -- Create view that returns the contents of all record tables, extent must be casted to text for the query to work
 CREATE OR REPLACE VIEW public.all_records AS 
- SELECT st_astext(records.extent::geometry) AS extent,
+ SELECT
+    st_astext(records.extent::geometry) AS extent,
+    records.api_id,
     records.identifier,
     records.language,
     records.content,
@@ -114,7 +108,9 @@ CREATE OR REPLACE VIEW public.all_records AS
     records.login_name
    FROM records
 UNION
- SELECT st_astext(harvested_records.extent::geometry) AS extent,
+ SELECT
+    st_astext(harvested_records.extent::geometry) AS extent,
+    harvested_records.api_id,
     harvested_records.identifier,
     harvested_records.language,
     harvested_records.content,
