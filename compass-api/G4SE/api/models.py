@@ -1,10 +1,10 @@
 from __future__ import unicode_literals
-
+import uuid
 from django.db import models
 
 
 class Base(models.Model):
-    api_id = models.IntegerField(primary_key=True)
+    api_id = models.CharField(primary_key=True, max_length=100, editable=False, default=uuid.uuid4)
     identifier = models.CharField(max_length=255)
     language = models.CharField(max_length=20)
     content = models.CharField(max_length=255)

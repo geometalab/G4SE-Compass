@@ -44,7 +44,7 @@ class Search(generics.ListAPIView):
 class InternalRecordsList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAdminUser,)
     queryset = Record.objects.all()
-    serializer_class = EditRecordSerializer
+    serializer_class = RecordSerializer
 
     def list(self, request):
         queryset = self.get_queryset()
@@ -55,7 +55,7 @@ class InternalRecordsList(generics.ListCreateAPIView):
 class CreateAndEditRecord(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAdminUser,)
     queryset = Record.objects.all()
-    serializer_class = EditRecordSerializer
+    serializer_class = RecordSerializer
 
     def retrieve(self, request, pk=None):
         try:

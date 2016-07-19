@@ -16,7 +16,6 @@ class RecordSerializer(serializers.ModelSerializer):
 
 
 class EditRecordSerializer(serializers.ModelSerializer):
-    api_id = serializers.HiddenField(default=None)
 
     class Meta:
         model = Record

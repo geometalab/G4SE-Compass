@@ -14,11 +14,11 @@ class TestListViews(APITestCase):
         assert 'Zürich' in record_list.data[2].values()
 
     def test_internal_record_detail(self):
-        record = self.client.get('/api/1/')
+        record = self.client.get('/api/5e9c6175-ead7-4637-af93-ec28a9d28f8a/')
         assert 'Schweiz' in record.data.values()
 
     def test_harvested_record_detail(self):
-        record = self.client.get('/api/2/')
+        record = self.client.get('/api/dcb9cfe2-4568-4c30-971f-a4103d6e0ee9/')
         assert 'Zürich' in record.data.values()
 
     def test_search(self):
@@ -78,7 +78,7 @@ class TestBackendViews(APITestCase):
         records_before_insert = AllRecords.objects.all().count()
         user = User.objects.get(username='admin')
         self.client.force_authenticate(user=user)
-        print(self.client.post('/api/edit/', data, format='json'))
+        self.client.post('/api/edit/', data, format='json')
         assert AllRecords.objects.all().count() == records_before_insert + 1
         # Cleanup
         Record.objects.filter(content='Topologisches Landschaftsmodell TLM, Fliessgewässer').delete()
