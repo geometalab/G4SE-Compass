@@ -78,7 +78,7 @@ WITH (
 -- Create view that returns the contents of all record tables, extent must be casted to text for the query to work
 CREATE OR REPLACE VIEW public.all_records AS 
  SELECT
-    st_astext(records.extent::geometry) AS extent,
+    records.extent::text,
     records.api_id,
     records.identifier,
     records.language,
@@ -108,7 +108,7 @@ CREATE OR REPLACE VIEW public.all_records AS
    FROM records
 UNION
  SELECT
-    st_astext(harvested_records.extent::geometry) AS extent,
+    harvested_records.extent::text,
     harvested_records.api_id,
     harvested_records.identifier,
     harvested_records.language,
