@@ -43,7 +43,7 @@ class TestBackendViews(APITestCase):
 
     def test_internal_records_list(self):
         self.client.login(username='admin', password='securepassword')
-        result_list = self.client.get('/api/edit/')
+        result_list = self.client.get('/api/admin/')
         assert len(result_list.data) == 2
 
     def test_insert_record(self):
@@ -78,7 +78,7 @@ class TestBackendViews(APITestCase):
         records_before_insert = AllRecords.objects.all().count()
         user = User.objects.get(username='admin')
         self.client.force_authenticate(user=user)
-        self.client.post('/api/edit/', data, format='json')
+        self.client.post('/api/admin/create/', data, format='json')
         assert AllRecords.objects.all().count() == records_before_insert + 1
         # Cleanup
         Record.objects.filter(content='Topologisches Landschaftsmodell TLM, Fliessgewässer').delete()

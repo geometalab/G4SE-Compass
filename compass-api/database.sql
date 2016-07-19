@@ -2,13 +2,12 @@ CREATE EXTENSION IF NOT EXISTS postgis
     SCHEMA public
     VERSION "2.2.2";
 
--- Create shared sequence for creating unique ids
-CREATE SEQUENCE record_id_seq;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Create table for internally organized records
 CREATE TABLE IF NOT EXISTS public.records
 (
-  api_id INT DEFAULT nextval('record_id_seq') NOT NULL PRIMARY KEY,
+  api_id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY ,
   identifier character varying NOT NULL,
   language character varying(20) NOT NULL,
   content character varying(255) NOT NULL,
@@ -43,7 +42,7 @@ WITH (
 -- Create table for harvested records
 CREATE TABLE IF NOT EXISTS public.harvested_records
 (
-  api_id INT DEFAULT nextval('record_id_seq') NOT NULL PRIMARY KEY,
+  api_id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
   identifier character varying NOT NULL,
   language character varying(20) NOT NULL,
   content character varying(255) NOT NULL,
