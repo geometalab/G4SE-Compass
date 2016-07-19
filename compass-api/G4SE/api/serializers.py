@@ -5,15 +5,24 @@ import datetime
 
 
 class AllRecordsSerializer(serializers.ModelSerializer):
+    login_name = serializers.HiddenField(default=None)
 
     class Meta:
         model = AllRecords
 
 
 class RecordSerializer(serializers.ModelSerializer):
+    login_name = serializers.HiddenField(default=None)
 
     class Meta:
         model = Record
+
+
+class HarvestedRecordSerializer(serializers.ModelSerializer):
+    login_name = serializers.HiddenField(default=None)
+
+    class Meta:
+        model = HarvestedRecord
 
 
 class EditRecordSerializer(serializers.ModelSerializer):
@@ -27,12 +36,6 @@ class EditRecordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Record
-
-
-class HarvestedRecordSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = HarvestedRecord
 
 
 class UserSerializer(serializers.ModelSerializer):
