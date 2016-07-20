@@ -9,7 +9,7 @@ class Base(models.Model):
     language = models.CharField(max_length=20)
     content = models.CharField(max_length=255)
     abstract = models.TextField()
-    publication_year = models.IntegerField()
+    publication_year = models.CharField(max_length=20)
     publication_lineage = models.CharField(max_length=255, blank=True, null=True)
     geography = models.CharField(max_length=255)
     extent = models.CharField(max_length=255, null=True)
