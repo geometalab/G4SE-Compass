@@ -73,8 +73,9 @@ def get_data_from_index(filename):
     return index
 
 
-def create_new_record(record_name):
+def create_new_record(record_name, modified):
     data = read_xml(record_name)
+    data['modified'] = modified
     engine = db_connect()
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -83,8 +84,9 @@ def create_new_record(record_name):
     session.commit()
 
 
-def update_record(record_name):
+def update_record(record_name, modified):
     data = read_xml(record_name)
+    data['modified'] = modified
     engine = db_connect()
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -111,12 +113,12 @@ def update_diff(new_index, old_index):
         if found:
             if new_element['Last_modified'] != found['Last_modified']:
                 if new_element['Status'] == '[Valid]':
-                    update_record(new_element['Name'])
+                    update_record(new_element['Name'], new_element['Last_modified'])
                 elif new_element['Status'] == '[Deleted]':
                     delete_record(new_element['Name'])
         else:
             if new_element['Status'] != '[Deleted]':
-                create_new_record(new_element['Name'])
+                create_new_record(new_element['Name'], new_element['Last_modified'])
     return new_index, old_index
 
 
