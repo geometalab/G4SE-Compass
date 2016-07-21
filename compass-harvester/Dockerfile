@@ -1,11 +1,11 @@
 FROM debian:jessie
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends python python-dev \
+    apt-get install -y --no-install-recommends python3 python3-dev \
       libxml2 libxml2-dev lib32z1-dev libxslt-dev libpq-dev libxslt1-dev\
-      python-pip python-psycopg2 python-lxml cron
+      python3-pip python3-psycopg2 python3-lxml cron
 
-RUN pip install oaiharvest sqlalchemy
+RUN pip3 install sqlalchemy
 
 COPY ./docker-entrypoint.sh /
 

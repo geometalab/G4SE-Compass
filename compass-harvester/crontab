@@ -1,3 +1,3 @@
 PATH=/usr/local/bin
-0 2 * * * /usr/bin/python /src/harvest_records.py /testfiles/ > /var/log/harvest-cron.log 2>&1
+0 2 * * * /usr/bin/python /src/harvest_records.py > /var/log/harvest-cron.log 2>&1
 # Empty mandatory line

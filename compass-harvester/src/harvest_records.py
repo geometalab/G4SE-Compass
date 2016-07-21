@@ -1,10 +1,9 @@
-""" Runs oai-harvest command in shell and reads all xml files.
-Deletes all previous records and writes the new ones into the database.
-Database URI must be set in a file settings.py in the src directory (e.g. password:user@localhost:5432/database)
-"""
-import os
 import sys
 import xml.etree.ElementTree as ET
+from urllib import request
+import csv
+import io
+import os
 
 from sqlalchemy import create_engine, Column, Integer, String, Text, Date, TIMESTAMP
 from sqlalchemy.ext.declarative import declarative_base
@@ -12,11 +11,12 @@ from sqlalchemy.orm import sessionmaker
 
 import settings
 
+WORKING_DIRECTORY = os.path.dirname(os.path.realpath(__file__)) + '/'
 Base = declarative_base()
 
 
 class Record(Base):
-    __tablename__ = "records"
+    __tablename__ = "harvested_records"
 
     identifier = Column(String, primary_key=True)
     language = Column(String)
@@ -46,30 +46,78 @@ class Record(Base):
     login_name = Column(String)
 
 
-def read_records(target_dir):
-    records = []
-    for fn in os.listdir(target_dir):
-        tree = ET.parse(target_dir + '/' + fn)
-        root = tree.getroot()
-        record = {}
-        for child in root:
-            content = child.text
-            tag = child.tag.split('}', 1)[1]
-            record[tag] = content
-        records.append(record)
-    return records
+def read_xml(url):
+    tree = ET.ElementTree(file=request.urlopen(settings.FILESHARE_URL + url))
+    root = tree.getroot()
+    record = {}
+    for child in root:
+        content = child.text
+        tag = child.tag.split('}', 1)[1]
+        record[tag] = content
+    return record
 
 
-def insert_records_into_db(records):
+def read_csv(file):
+    reader = csv.reader(io.TextIOWrapper(file), delimiter=' ')
+    return list(reader)
+
+
+def save_new_data_index():
+    request.urlretrieve(settings.FILESHARE_URL + "/metadata.csv", WORKING_DIRECTORY + 'new_index.csv')
+
+
+def get_data_from_index(filename):
+    with open(WORKING_DIRECTORY + filename) as file:
+        reader = csv.DictReader(file, delimiter=' ')
+        index = list(reader)
+    return index
+
+
+def create_new_record(record_name):
+    data = read_xml(record_name)
     engine = db_connect()
-    Session = sessionmaker()
-    Session.configure(bind=engine)
+    Session = sessionmaker(bind=engine)
     session = Session()
-    session.query(Record).delete()
-    for record in records:
-        db_record = Record(**record)
-        session.add(db_record)
+    db_record = Record(**data)
+    session.add(db_record)
     session.commit()
+
+
+def update_record(record_name):
+    data = read_xml(record_name)
+    engine = db_connect()
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    session.query(Record).filter(Record.identifier == data['identifier']).update(data)
+    session.commit()
+
+
+def delete_record(record_name):
+    id = record_name.split('.')[0]
+    engine = db_connect()
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    session.query(Record).filter(Record.identifier == 'oai:geovite.ethz.ch:' + id).delete()
+    session.commit()
+
+
+def update_diff(new_index, old_index):
+    for new_element in new_index:
+        found = None
+        for old_element in old_index:
+            if new_element['Name'] == old_element['Name']:
+                found = old_element
+                break
+        if found:
+            if new_element['Last_modified'] != found['Last_modified']:
+                if new_element['Status'] == '[Valid]':
+                    update_record(new_element['Name'])
+                elif new_element['Status'] == '[Deleted]':
+                    delete_record(new_element['Name'])
+        else:
+            if new_element['Status'] != '[Deleted]':
+                create_new_record(new_element['Name'])
+    return new_index, old_index
 
 
 def db_connect():
@@ -77,10 +125,13 @@ def db_connect():
 
 
 def harvest():
-    os.system('oai-harvest all')
-    target_dir = sys.argv[1]
-    record_list = read_records(target_dir)
-    insert_records_into_db(record_list)
+    save_new_data_index()
+    new_index = get_data_from_index('new_index.csv')
+    old_index = get_data_from_index('old_index.csv')
+    update_diff(new_index, old_index)
+    os.remove(WORKING_DIRECTORY + 'old_index.csv')
+    os.rename(WORKING_DIRECTORY + 'new_index.csv', WORKING_DIRECTORY + 'old_index.csv')
+
 
 if __name__ == "__main__":
     sys.exit(harvest())
