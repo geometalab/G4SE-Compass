@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '#f%7nm1oe99sy$gx3$yfjxwhul&j&jn=3r^a)w)(#hcf+*ym+w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -84,9 +84,9 @@ DATABASES = {
         'NAME': 'G4SE',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'HOST': '172.17.0.1',
         'PORT': '5432',
-        'TEST':{
+        'TEST': {
             'OPTIONS': {
                 'options': '-c search_path=postgres,public'
             },
@@ -97,7 +97,7 @@ DATABASES = {
         'NAME': 'G4SE',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'HOST': '172.17.0.1',
         'PORT': '5432',
         'TEST': {
             'MIRROR': 'default',
@@ -143,6 +143,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
+STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
