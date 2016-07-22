@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
 import os
+import environ
+
+env = environ.Env(DEBUG=(bool, False),)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -19,8 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '#f%7nm1oe99sy$gx3$yfjxwhul&j&jn=3r^a)w)(#hcf+*ym+w'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -77,15 +79,9 @@ WSGI_APPLICATION = 'G4SE.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'OPTIONS': {
             'options': '-c search_path=django,public'
         },
-        'NAME': 'G4SE',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '172.17.0.1',
-        'PORT': '5432',
         'TEST': {
             'OPTIONS': {
                 'options': '-c search_path=postgres,public'
@@ -93,17 +89,14 @@ DATABASES = {
         }
     },
     'records': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'G4SE',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '172.17.0.1',
-        'PORT': '5432',
         'TEST': {
             'MIRROR': 'default',
         }
     }
 }
+
+DATABASES['default'] = env.db()
+DATABASES['records'] = env.db()
 
 
 DATABASE_ROUTERS = ['helpers.db_routers.ApiRouter']
