@@ -78,25 +78,10 @@ WSGI_APPLICATION = 'G4SE.wsgi.application'
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'OPTIONS': {
-            'options': '-c search_path=django,public'
-        },
-        'TEST': {
-            'OPTIONS': {
-                'options': '-c search_path=postgres,public'
-            },
-        }
-    },
-    'records': {
-        'TEST': {
-            'MIRROR': 'default',
-        }
-    }
+    'default': env.db(),
+    'records': env.db(),
 }
-
-DATABASES['default'] = env.db()
-DATABASES['records'] = env.db()
+DATABASES['default']['OPTIONS'] = {'options': '-c search_path=django,public'}
 
 
 DATABASE_ROUTERS = ['helpers.db_routers.ApiRouter']
