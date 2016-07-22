@@ -1,5 +1,5 @@
 ### Multilingual support
-- Searches and Records can be in one of the following languages: en, de, fr
+- Searches and Record can be in one of the following languages: en, de, fr
 - When searching the input language must be set
 - Translations have to be added and edited in a text file on GitHub
 - GitHub translations are automatically updated periodically

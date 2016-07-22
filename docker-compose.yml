@@ -1,0 +1,7 @@
+api:
+  restart: always
+  build: ./compass-api
+  expose:
+    - "8000"
+  ports:
+   - "8000:8000"
