@@ -14,4 +14,4 @@ To run the image on production 3 environment variables must be set:
 - SECRET_KEY: secret key for the django application
 
 Example(runs the API on port 80):
--sudo docker run -t -i -d -p 127.0.0.1:80:8000 -e DJANGO_SETTINGS_MODULE="G4SE.production_settings" -e DATABASE_URL=postgres://postgres:postgres@172.17.0.1:5432/G4SE  -e SECRET_KEY="i'm-a-very-secret-key"
+ -e DJANGO_SETTINGS_MODULE="G4SE.production_settings" -e DATABASE_URL=postgres://postgres:postgres@172.17.0.1:5432/G4SE  -e SECRET_KEY=-ggz*k3ty+qhko8$nhw_b#p4e$3nlh5pzf^qeste=#j28 --name api geometalab/4se-api
