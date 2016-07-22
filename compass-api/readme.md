@@ -8,4 +8,10 @@ Database tables must be manually created using the database.sql script in an exi
 tbd.
 
 ### Docker
-tbd.
+To run the image on production 3 environment variables must be set:
+- DATABASE_URL: URL to the PostgreSQL
+- DJANGO_SETTINGS_MODULE: "G4SE.production_settings" for production
+- SECRET_KEY: secret key for the django application
+
+Example(runs the API on port 80):
+-sudo docker run -t -i -d -p 127.0.0.1:80:8000 -e DJANGO_SETTINGS_MODULE="G4SE.production_settings" -e DATABASE_URL=postgres://postgres:postgres@172.17.0.1:5432/G4SE  -e SECRET_KEY="i'm-a-very-secret-key"
