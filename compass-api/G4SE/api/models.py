@@ -4,6 +4,9 @@ from django.db import models
 
 
 class Base(models.Model):
+    """
+    Abstract base model for G4SE metadata records
+    """
     api_id = models.CharField(primary_key=True, max_length=100, editable=False, default=uuid.uuid4)
     identifier = models.CharField(max_length=255)
     language = models.CharField(max_length=20)
@@ -57,14 +60,18 @@ class AllRecords(Base):
 
 
 class Record(Base):
-
-        class Meta:
-            managed = False
-            db_table = 'records'
+    """
+    Model for data edited in G4SE directly
+    """
+    class Meta:
+        managed = False
+        db_table = 'records'
 
 
 class HarvestedRecord(Base):
-
-        class Meta:
-            managed = False
-            db_table = 'harvested_records'
+    """
+    Model for harvested metadata records
+    """
+    class Meta:
+        managed = False
+        db_table = 'harvested_records'
