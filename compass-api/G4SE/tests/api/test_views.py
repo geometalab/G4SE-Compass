@@ -13,18 +13,39 @@ class TestListViews(APITestCase):
         assert 'Schweiz' in record_list.data[0].values()
         assert 'Zürich' in record_list.data[2].values()
 
+    def test_external_access(self):
+        record_list = self.client.get('/api/', REMOTE_ADDR="123.1.1.3")
+        assert len(record_list.data) == 2
+        all_record_list = self.client.get('/api/')
+        assert len(all_record_list.data) == 3
+
     def test_internal_record_detail(self):
         record = self.client.get('/api/5e9c6175-ead7-4637-af93-ec28a9d28f8a/')
         assert 'Schweiz' in record.data.values()
+
+    def test_unauthorized_detail(self):
+        record = self.client.get('/api/5e9c6175-ead7-4637-af93-ec28a9d28f8a/', REMOTE_ADDR="123.1.1.3")
+        assert record.status_code == 403
 
     def test_harvested_record_detail(self):
         record = self.client.get('/api/dcb9cfe2-4568-4c30-971f-a4103d6e0ee9/')
         assert 'Zürich' in record.data.values()
 
+
+@pytest.mark.django_db(transaction=True)
+@pytest.mark.usefixtures('setup_database')
+class TestSearchViews(APITestCase):
+
     def test_search(self):
         result_list = self.client.get('/api/search/?query=Zürich')
         for result in result_list.data:
             assert 'Zürich' in result.values()
+
+    def test_external_search(self):
+        result = self.client.get('/api/search/?query=Landschaftsmodell')
+        assert len(result.data) == 1
+        empty_result = self.client.get('/api/search/?query=Landschaftsmodell', REMOTE_ADDR="123.1.1.3")
+        assert len(empty_result.data) == 0
 
 
 @pytest.mark.django_db(transaction=True)
