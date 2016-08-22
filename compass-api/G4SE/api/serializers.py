@@ -9,6 +9,7 @@ class AllRecordsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AllRecords
+        fields = '__all__'
 
 
 class RecordSerializer(serializers.ModelSerializer):
@@ -16,6 +17,7 @@ class RecordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Record
+        fields = '__all__'
 
 
 class HarvestedRecordSerializer(serializers.ModelSerializer):
@@ -23,6 +25,7 @@ class HarvestedRecordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HarvestedRecord
+        fields = '__all__'
 
 
 class EditRecordSerializer(serializers.ModelSerializer):
@@ -36,9 +39,11 @@ class EditRecordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Record
+        fields = '__all__'
 
 
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
+        fields = '__all__'
