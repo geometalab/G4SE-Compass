@@ -56,7 +56,8 @@ class RecordDetail(generics.RetrieveAPIView):
 
 class Search(generics.ListAPIView):
     """
-    Fulltext search
+    Fulltext search.
+    tbd.
     """
     serializer_class = AllRecordsSerializer
 
@@ -75,6 +76,10 @@ class Search(generics.ListAPIView):
 
 
 class InternalRecordsList(generics.ListCreateAPIView):
+    """
+    Show all HSR metadata Records.
+    User must be an authenticated administrator access this API view.
+    """
     permission_classes = (permissions.IsAdminUser,)
     queryset = Record.objects.all()
     serializer_class = EditRecordSerializer
@@ -86,11 +91,18 @@ class InternalRecordsList(generics.ListCreateAPIView):
 
 
 class CreateRecord(generics.CreateAPIView):
+    """
+    Insert a new metadata record.
+    """
+    permission_classes = (permissions.IsAdminUser,)
     queryset = Record.objects.all()
     serializer_class = EditRecordSerializer
 
 
 class CreateAndEditRecord(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Edit a metadata record.
+    """
     permission_classes = (permissions.IsAdminUser,)
     queryset = Record.objects.all()
     serializer_class = EditRecordSerializer
