@@ -1,11 +1,12 @@
+from django.contrib.auth.models import User
+from django.contrib.postgres.search import SearchVector
+from rest_framework import generics, permissions
+from rest_framework import status
+from rest_framework.response import Response
+
+from api.helpers.helpers import is_internal
 from api.models import AllRecords, Record
 from api.serializers import AllRecordsSerializer, RecordSerializer, UserSerializer, EditRecordSerializer
-from django.contrib.auth.models import User
-from rest_framework import generics, filters, permissions
-from rest_framework.response import Response
-from django.contrib.postgres.search import SearchVector
-from rest_framework import status
-from helpers.view_helpers import is_internal
 
 
 class UserList(generics.ListAPIView):
