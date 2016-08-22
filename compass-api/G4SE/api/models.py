@@ -28,7 +28,15 @@ class Base(models.Model):
     crs = models.CharField(max_length=20)
     term_link = models.URLField(max_length=2083)
     proved = models.DateField(blank=True, null=True)
-    visibility = models.CharField(max_length=255)
+    PUBLIC = 'public'
+    TEST = 'test'
+    HSR_INTERNAL = 'hsr-internal'
+    visibility_choices = (
+        (PUBLIC, 'public'),
+        (TEST, 'test'),
+        (HSR_INTERNAL, 'hsr-internal'),
+    )
+    visibility = models.CharField(max_length=255, choices=visibility_choices, default=PUBLIC)
     modified = models.DateTimeField(blank=True, null=True)
     login_name = models.CharField(max_length=255, blank=True, null=True)
 
