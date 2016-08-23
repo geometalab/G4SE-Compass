@@ -16,7 +16,6 @@ Base URL: XXX
 | Parameters              | Required: query, optional: language |
 | Result                  | Record list                         |
 | Example                 | /api/search?query=wildlife&language=en  |
-http://localhost:8000/api/search/?query=orthophoto+digital&language=de&tags=[a,b]
 
 ## recent
 | Get most rectly inserted records |                        |
