@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from django.contrib.postgres.search import SearchVector, SearchQuery
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django.db.models import F
 from rest_framework import generics, permissions
 from rest_framework import status
 from rest_framework.response import Response
@@ -72,23 +73,33 @@ class Search(generics.ListAPIView):
     serializer_class = AllRecordsSerializer
 
     def get_queryset(self):
+
         query = self.request.query_params.get('query', None)
+
         passed_language = self.request.query_params.get('language', 'de')
         if query:
             if passed_language == 'de':
-                record_set = AllRecords.objects.filter(search_vector_de=SearchQuery(query, config='german'))
+                search_vector = 'search_vector_de'
+                config_language = 'german'
             elif passed_language == 'en':
-                record_set = AllRecords.objects.filter(search_vector_en=SearchQuery(query, config='english'))
+                search_vector = 'search_vector_en'
+                config_language = 'english'
             elif passed_language == 'fr':
-                record_set = AllRecords.objects.filter(search_vector_fr=SearchQuery(query, config='french'))
+                search_vector = 'search_vector_fr'
+                config_language = 'french'
             else:
                 raise ParseError('Not a valid language.')
 
+            queryset = AllRecords.objects.annotate(rank=SearchRank(F(search_vector),
+                                                                   SearchQuery(query, config=config_language)))
+
             if self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR']):
-                return record_set
+                return queryset.filter(rank__gt=0).order_by('-rank')
+
             else:
-                return record_set.exclude(visibility='hsr-internal')
-        return AllRecords.objects.all()
+                return queryset.filter(rank__gt=0).exclude(visibility='hsr-internal').order_by('-rank')
+        else:
+            raise ParseError('The query parameter is mandatory')
 
 
 class MostRecentRecords(generics.ListAPIView):
