@@ -33,7 +33,10 @@ CREATE TABLE IF NOT EXISTS public.records
   proved date,
   visibility character varying(255) NOT NULL,
   modified timestamp without time zone,
-  login_name character varying(255)
+  login_name character varying(255),
+  search_vector_de tsvector,
+  search_vector_en tsvector,
+  search_vector_fr tsvector
 )
 WITH (
   OIDS=FALSE
@@ -68,7 +71,10 @@ CREATE TABLE IF NOT EXISTS public.harvested_records
   proved date,
   visibility character varying(255) NOT NULL,
   modified timestamp without time zone,
-  login_name character varying(255)
+  login_name character varying(255),
+  search_vector_de tsvector,
+  search_vector_en tsvector,
+  search_vector_fr tsvector
 )
 WITH (
   OIDS=FALSE
@@ -104,7 +110,10 @@ CREATE OR REPLACE VIEW public.all_records AS
     records.proved,
     records.visibility,
     records.modified,
-    records.login_name
+    records.login_name,
+    records.search_vector_de,
+    records.search_vector_en,
+    records.search_vector_fr
    FROM records
 UNION
  SELECT
@@ -134,7 +143,113 @@ UNION
     harvested_records.proved,
     harvested_records.visibility,
     harvested_records.modified,
-    harvested_records.login_name
+    harvested_records.login_name,
+    harvested_records.search_vector_de,
+    harvested_records.search_vector_en,
+    harvested_records.search_vector_fr
    FROM harvested_records;
 
+
+-- Search vector triggers for internal metadata records
+CREATE OR REPLACE FUNCTION records_trigger_de()RETURNS trigger AS $$
+begin
+  new.search_vector_de :=
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.content,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.abstract,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.geography,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.collection,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.dataset,'')), 'A');
+  return new;
+end
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER tsvectorupdate_de BEFORE INSERT OR UPDATE
+    ON records FOR EACH ROW EXECUTE PROCEDURE records_trigger_de();
+
+
+CREATE OR REPLACE FUNCTION records_trigger_en()RETURNS trigger AS $$
+begin
+  new.search_vector_en :=
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.content,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.abstract,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.geography,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.collection,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.dataset,'')), 'A');
+  return new;
+end
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER tsvectorupdate_en BEFORE INSERT OR UPDATE
+    ON records FOR EACH ROW EXECUTE PROCEDURE records_trigger_en();
+
+
+CREATE OR REPLACE FUNCTION records_trigger_fr()RETURNS trigger AS $$
+begin
+  new.search_vector_fr :=
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.content,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.abstract,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.geography,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.collection,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.dataset,'')), 'A');
+  return new;
+end
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER tsvectorupdate_fr BEFORE INSERT OR UPDATE
+    ON records FOR EACH ROW EXECUTE PROCEDURE records_trigger_fr();
+
+
+-- Search vector triggers for harvested metadata records
+CREATE OR REPLACE FUNCTION harvested_records_trigger_de()RETURNS trigger AS $$
+begin
+  new.search_vector_de :=
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.content,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.abstract,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.geography,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.collection,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.dataset,'')), 'A');
+  return new;
+end
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER harvested_tsvectorupdate_de BEFORE INSERT OR UPDATE
+    ON harvested_records FOR EACH ROW EXECUTE PROCEDURE harvested_records_trigger_de();
+
+
+CREATE OR REPLACE FUNCTION harvested_records_trigger_en()RETURNS trigger AS $$
+begin
+  new.search_vector_en :=
+    setweight(to_tsvector('pg_catalog.english', coalesce(new.content,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.english', coalesce(new.abstract,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.english', coalesce(new.geography,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.english', coalesce(new.collection,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.english', coalesce(new.dataset,'')), 'A');
+  return new;
+end
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER harvested_tsvectorupdate_en BEFORE INSERT OR UPDATE
+    ON harvested_records FOR EACH ROW EXECUTE PROCEDURE harvested_records_trigger_en();
+
+
+CREATE OR REPLACE FUNCTION harvested_records_trigger_fr()RETURNS trigger AS $$
+begin
+  new.search_vector_fr :=
+    setweight(to_tsvector('pg_catalog.french', coalesce(new.content,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.french', coalesce(new.abstract,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.french', coalesce(new.geography,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.french', coalesce(new.collection,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.french', coalesce(new.dataset,'')), 'A');
+  return new;
+end
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER harvested_tsvectorupdate_fr BEFORE INSERT OR UPDATE
+    ON harvested_records FOR EACH ROW EXECUTE PROCEDURE harvested_records_trigger_fr();
 

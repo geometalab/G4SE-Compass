@@ -13,7 +13,7 @@ from api.serializers import AllRecordsSerializer, RecordSerializer, UserSerializ
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
     """
-    Fix for CSRF error on put and delete requests, overwirte csrf check to do nothing
+    Fix for CSRF error on put and delete requests after upgrade from 3.3 to 3.4, overwirte csrf check to do nothing
     """
     def enforce_csrf(self, request):
         return
@@ -74,24 +74,20 @@ class Search(generics.ListAPIView):
     def get_queryset(self):
         query = self.request.query_params.get('query', None)
         passed_language = self.request.query_params.get('language', 'de')
-        if passed_language == 'de':
-            language = 'german'
-        elif passed_language == 'en':
-            language = 'english'
-        elif passed_language == 'fr':
-            language = 'french'
-        else:
-            raise ParseError('Not a valid language.')
-
         if query:
-            if self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR']):
-                return AllRecords.objects.annotate(
-                    search=SearchVector('content', 'abstract', 'geography', 'collection', 'dataset', config=language),
-                ).filter(search=SearchQuery(query, config=language))
+            if passed_language == 'de':
+                record_set = AllRecords.objects.filter(search_vector_de=SearchQuery(query, config='german'))
+            elif passed_language == 'en':
+                record_set = AllRecords.objects.filter(search_vector_en=SearchQuery(query, config='english'))
+            elif passed_language == 'fr':
+                record_set = AllRecords.objects.filter(search_vector_fr=SearchQuery(query, config='french'))
             else:
-                return AllRecords.objects.annotate(
-                    search=SearchVector('content', 'abstract', 'geography', 'collection', 'dataset',  config=language),
-                ).filter(search=SearchQuery(query, config=language)).exclude(visibility='hsr-internal')
+                raise ParseError('Not a valid language.')
+
+            if self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR']):
+                return record_set
+            else:
+                return record_set.exclude(visibility='hsr-internal')
         return AllRecords.objects.all()
 
 

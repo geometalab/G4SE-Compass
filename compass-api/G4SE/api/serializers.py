@@ -6,6 +6,9 @@ import datetime
 
 class AllRecordsSerializer(serializers.ModelSerializer):
     login_name = serializers.HiddenField(default=None)
+    search_vector_de = serializers.HiddenField(default=None)
+    search_vector_en = serializers.HiddenField(default=None)
+    search_vector_fr = serializers.HiddenField(default=None)
 
     class Meta:
         model = AllRecords
@@ -14,6 +17,9 @@ class AllRecordsSerializer(serializers.ModelSerializer):
 
 class RecordSerializer(serializers.ModelSerializer):
     login_name = serializers.HiddenField(default=None)
+    search_vector_de = serializers.HiddenField(default=None)
+    search_vector_en = serializers.HiddenField(default=None)
+    search_vector_fr = serializers.HiddenField(default=None)
 
     class Meta:
         model = Record
@@ -22,6 +28,9 @@ class RecordSerializer(serializers.ModelSerializer):
 
 class HarvestedRecordSerializer(serializers.ModelSerializer):
     login_name = serializers.HiddenField(default=None)
+    search_vector_de = serializers.HiddenField(default=None)
+    search_vector_en = serializers.HiddenField(default=None)
+    search_vector_fr = serializers.HiddenField(default=None)
 
     class Meta:
         model = HarvestedRecord
@@ -30,6 +39,9 @@ class HarvestedRecordSerializer(serializers.ModelSerializer):
 
 class EditRecordSerializer(serializers.ModelSerializer):
     modified = serializers.HiddenField(default=datetime.datetime.now())
+    search_vector_de = serializers.HiddenField(default=None)
+    search_vector_en = serializers.HiddenField(default=None)
+    search_vector_fr = serializers.HiddenField(default=None)
 
     def validate_login_name(self, value):
         user = self.context['request'].user.username

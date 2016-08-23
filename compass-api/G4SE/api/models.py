@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 import uuid
 from django.db import models
+from django.contrib.postgres.search import SearchVectorField
 
 
 class Base(models.Model):
@@ -42,6 +43,9 @@ class Base(models.Model):
     visibility = models.CharField(max_length=255, choices=visibility_choices, default=PUBLIC)
     modified = models.DateTimeField(blank=True, null=True)
     login_name = models.CharField(max_length=255, blank=True, null=True)
+    search_vector_de = SearchVectorField()
+    search_vector_en = SearchVectorField()
+    search_vector_fr = SearchVectorField()
 
     class Meta:
         abstract = True
