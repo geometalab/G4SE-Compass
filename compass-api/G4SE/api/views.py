@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.contrib.postgres.search import SearchVector
+from django.contrib.postgres.search import SearchVector, SearchQuery
 from rest_framework import generics, permissions
 from rest_framework import status
 from rest_framework.response import Response
@@ -64,15 +64,25 @@ class Search(generics.ListAPIView):
 
     def get_queryset(self):
         query = self.request.query_params.get('query', None)
+        passed_language = self.request.query_params.get('language', 'de')
+        if passed_language == 'de':
+            language = 'german'
+        elif passed_language == 'en':
+            language = 'english'
+        elif passed_language == 'fr':
+            language = 'french'
+        else:
+            raise ParseError('Not a valid language.')
+
         if query:
             if self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR']):
                 return AllRecords.objects.annotate(
                     search=SearchVector('content', 'abstract', 'geography', 'collection', 'dataset'),
-                ).filter(search=query)
+                ).filter(search=SearchQuery(query, config=language))
             else:
                 return AllRecords.objects.annotate(
                     search=SearchVector('content', 'abstract', 'geography', 'collection', 'dataset'),
-                ).filter(search=query).exclude(visibility='hsr-internal')
+                ).filter(search=SearchQuery(query, config=language)).exclude(visibility='hsr-internal')
         return AllRecords.objects.all()
 
 
