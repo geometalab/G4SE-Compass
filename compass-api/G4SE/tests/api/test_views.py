@@ -58,7 +58,7 @@ class TestSearchViews(APITestCase):
             assert 'Zürich' in result.values()
 
     def test_external_search(self):
-        result = self.client.get('/api/search/?query=Landschaftsmodell')
+        result = self.client.get('/api/search/?query=Landschaftsmodell&language=de')
         assert len(result.data) == 1
         empty_result = self.client.get('/api/search/?query=Landschaftsmodell', REMOTE_ADDR="123.1.1.3")
         assert len(empty_result.data) == 0

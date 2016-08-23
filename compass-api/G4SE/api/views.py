@@ -4,10 +4,19 @@ from rest_framework import generics, permissions
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 from api.helpers.helpers import is_internal
 from api.models import AllRecords, Record
 from api.serializers import AllRecordsSerializer, RecordSerializer, UserSerializer, EditRecordSerializer
+
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+    """
+    Fix for CSRF error on put and delete requests, overwirte csrf check to do nothing
+    """
+    def enforce_csrf(self, request):
+        return
 
 
 class UserList(generics.ListAPIView):
@@ -77,11 +86,11 @@ class Search(generics.ListAPIView):
         if query:
             if self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR']):
                 return AllRecords.objects.annotate(
-                    search=SearchVector('content', 'abstract', 'geography', 'collection', 'dataset'),
+                    search=SearchVector('content', 'abstract', 'geography', 'collection', 'dataset', config=language),
                 ).filter(search=SearchQuery(query, config=language))
             else:
                 return AllRecords.objects.annotate(
-                    search=SearchVector('content', 'abstract', 'geography', 'collection', 'dataset'),
+                    search=SearchVector('content', 'abstract', 'geography', 'collection', 'dataset',  config=language),
                 ).filter(search=SearchQuery(query, config=language)).exclude(visibility='hsr-internal')
         return AllRecords.objects.all()
 
@@ -135,6 +144,7 @@ class CreateAndEditRecord(generics.RetrieveUpdateDestroyAPIView):
     Edit a metadata record.
     """
     permission_classes = (permissions.IsAdminUser,)
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     queryset = Record.objects.all()
     serializer_class = EditRecordSerializer
 
