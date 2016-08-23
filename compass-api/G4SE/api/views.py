@@ -84,9 +84,7 @@ class MostRecentRecords(generics.ListAPIView):
     serializer_class = AllRecordsSerializer
 
     def get_queryset(self):
-        count = self.request.query_params.get('count', None)
-        if not count:
-            count = 5
+        count = self.request.query_params.get('count', 5)
         try:
             limit = int(count)
         except ValueError:
