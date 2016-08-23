@@ -155,10 +155,10 @@ CREATE OR REPLACE FUNCTION records_trigger_de()RETURNS trigger AS $$
 begin
   new.search_vector_de :=
     setweight(to_tsvector('pg_catalog.german', coalesce(new.content,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.german', coalesce(new.abstract,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.abstract,'')), 'B') ||
     setweight(to_tsvector('pg_catalog.german', coalesce(new.geography,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.german', coalesce(new.collection,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.german', coalesce(new.dataset,'')), 'A');
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.collection,'')), 'B') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.dataset,'')), 'B');
   return new;
 end
 $$ LANGUAGE plpgsql;
@@ -172,10 +172,10 @@ CREATE OR REPLACE FUNCTION records_trigger_en()RETURNS trigger AS $$
 begin
   new.search_vector_en :=
     setweight(to_tsvector('pg_catalog.german', coalesce(new.content,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.german', coalesce(new.abstract,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.abstract,'')), 'B') ||
     setweight(to_tsvector('pg_catalog.german', coalesce(new.geography,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.german', coalesce(new.collection,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.german', coalesce(new.dataset,'')), 'A');
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.collection,'')), 'B') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.dataset,'')), 'B');
   return new;
 end
 $$ LANGUAGE plpgsql;
@@ -189,10 +189,10 @@ CREATE OR REPLACE FUNCTION records_trigger_fr()RETURNS trigger AS $$
 begin
   new.search_vector_fr :=
     setweight(to_tsvector('pg_catalog.german', coalesce(new.content,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.german', coalesce(new.abstract,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.abstract,'')), 'B') ||
     setweight(to_tsvector('pg_catalog.german', coalesce(new.geography,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.german', coalesce(new.collection,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.german', coalesce(new.dataset,'')), 'A');
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.collection,'')), 'B') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.dataset,'')), 'B');
   return new;
 end
 $$ LANGUAGE plpgsql;
@@ -207,10 +207,10 @@ CREATE OR REPLACE FUNCTION harvested_records_trigger_de()RETURNS trigger AS $$
 begin
   new.search_vector_de :=
     setweight(to_tsvector('pg_catalog.german', coalesce(new.content,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.german', coalesce(new.abstract,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.abstract,'')), 'B') ||
     setweight(to_tsvector('pg_catalog.german', coalesce(new.geography,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.german', coalesce(new.collection,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.german', coalesce(new.dataset,'')), 'A');
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.collection,'')), 'B') ||
+    setweight(to_tsvector('pg_catalog.german', coalesce(new.dataset,'')), 'B');
   return new;
 end
 $$ LANGUAGE plpgsql;
@@ -224,10 +224,10 @@ CREATE OR REPLACE FUNCTION harvested_records_trigger_en()RETURNS trigger AS $$
 begin
   new.search_vector_en :=
     setweight(to_tsvector('pg_catalog.english', coalesce(new.content,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.english', coalesce(new.abstract,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.english', coalesce(new.abstract,'')), 'B') ||
     setweight(to_tsvector('pg_catalog.english', coalesce(new.geography,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.english', coalesce(new.collection,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.english', coalesce(new.dataset,'')), 'A');
+    setweight(to_tsvector('pg_catalog.english', coalesce(new.collection,'')), 'B') ||
+    setweight(to_tsvector('pg_catalog.english', coalesce(new.dataset,'')), 'B');
   return new;
 end
 $$ LANGUAGE plpgsql;
@@ -241,10 +241,10 @@ CREATE OR REPLACE FUNCTION harvested_records_trigger_fr()RETURNS trigger AS $$
 begin
   new.search_vector_fr :=
     setweight(to_tsvector('pg_catalog.french', coalesce(new.content,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.french', coalesce(new.abstract,'')), 'A') ||
+    setweight(to_tsvector('pg_catalog.french', coalesce(new.abstract,'')), 'B') ||
     setweight(to_tsvector('pg_catalog.french', coalesce(new.geography,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.french', coalesce(new.collection,'')), 'A') ||
-    setweight(to_tsvector('pg_catalog.french', coalesce(new.dataset,'')), 'A');
+    setweight(to_tsvector('pg_catalog.french', coalesce(new.collection,'')), 'B') ||
+    setweight(to_tsvector('pg_catalog.french', coalesce(new.dataset,'')), 'B');
   return new;
 end
 $$ LANGUAGE plpgsql;
