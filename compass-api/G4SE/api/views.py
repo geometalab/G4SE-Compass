@@ -91,13 +91,13 @@ class Search(generics.ListAPIView):
     def parse_query(search_string):
         """
         Parses the passed search_string into a Postgres to_tsquery() compatible string
+        Wrong User inputs won't be caught here but when the query is executed
         """
-        cleaned_string = " ".join(search_string.split())
-
-        cleaned_string = re.sub(r'\s?([&])\s?', r'\1', cleaned_string)
-        s = re.sub(r"\s+", '|', cleaned_string)
-        print(s)
-        return s
+        parsed_string = " ".join(search_string.split())
+        # Remove all whitespaces around "&" characters
+        parsed_string = re.sub(r'\s?([&])\s?', r'\1', parsed_string)
+        # Replace all whitespaces with pipes
+        return re.sub(r"\s+", '|', parsed_string)
 
     @staticmethod
     def create_query(search_string, language, internal):
@@ -114,7 +114,6 @@ class Search(generics.ListAPIView):
               WHERE """ + exclude + """ query @@ """ + language[0] + """
               ORDER BY rank DESC;""", [language[1], search_string]
         )
-        print(query.query)
         return query
 
     def get_queryset(self):

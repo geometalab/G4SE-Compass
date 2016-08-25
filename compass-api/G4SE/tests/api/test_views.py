@@ -3,6 +3,7 @@ import pytest
 from django.contrib.auth.models import User
 from api.models import AllRecords, Record
 from .testdata import data
+from api.views import Search
 
 
 @pytest.mark.django_db(transaction=True)
@@ -45,6 +46,29 @@ class TestListViews(APITestCase):
         assert 'Topologisches Landschaftsmodell TLM, Fliessgewässer' in new_record_list.data[0].values()
         # cleanup
         Record.objects.filter(identifier=1234567).delete()
+
+
+@pytest.mark.django_db(transaction=True)
+@pytest.mark.usefixtures('setup_database')
+class TestSearchHelpers(APITestCase):
+
+    def test_parse_query(self):
+        and_query = Search.parse_query('A & B')
+        assert and_query == 'A&B'
+        or_query = Search.parse_query('A B')
+        assert or_query == 'A|B'
+        and_or_query = Search.parse_query('A & B C')
+        assert and_or_query == 'A&B|C'
+        multiple_whitespaces = Search.parse_query('A  &   B')
+        assert multiple_whitespaces == 'A&B'
+
+    def test_parse_language(self):
+        german = Search.parse_language('de')
+        assert german[0] == 'search_vector_de'
+        assert german[1] == 'german'
+        # Invalid Language should raise an error
+        with pytest.raises(Exception) as exception_info:
+            Search.parse_language('jibberish')
 
 
 @pytest.mark.django_db(transaction=True)
