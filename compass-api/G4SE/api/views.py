@@ -72,7 +72,10 @@ class RecordDetail(generics.RetrieveAPIView):
 class Search(generics.ListAPIView):
     """
     Fulltext search.
-    tbd.
+    Search text is passed in query parameter. The search can be controlled with operators, which can be combined:
+        - If there is no operator between search words, metadata records matching either word will be returned
+        - & for and operation. Metadata records matching bot keywords will be returned. E.g. "Zürich & Digital"
+        - ! for not operation. Records not matching the word will be returned. E.g. "Digital & !Orthofoto"
     """
     serializer_class = AllRecordsSerializer
 
