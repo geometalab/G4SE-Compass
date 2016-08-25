@@ -1,4 +1,5 @@
 import re
+import logging
 from django.db import ProgrammingError
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions
@@ -10,6 +11,10 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from api.helpers.helpers import is_internal
 from api.models import AllRecords, Record
 from api.serializers import AllRecordsSerializer, RecordSerializer, UserSerializer, EditRecordSerializer
+
+
+logger = logging.getLogger(__name__)
+
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
     """
@@ -120,6 +125,7 @@ class Search(generics.ListAPIView):
             try:
                 query = list(self.create_query(parsed_search, language, internal))
             except ProgrammingError:
+                logger.exception('Invalid Query')
                 raise ParseError('Invalid Query')
             return query
         else:
