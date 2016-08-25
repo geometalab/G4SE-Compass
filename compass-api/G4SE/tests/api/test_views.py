@@ -64,7 +64,15 @@ class TestSearchViews(APITestCase):
 
     def test_or_search(self):
         result = self.client.get('/api/search/?query=orthofotho digital&language=de')
-        assert 1 == 1
+        assert len(result.data) == 17
+
+    def test_and_search(self):
+        result = self.client.get('/api/search/?query=orthophoto%26digital&language=de')
+        assert len(result.data) == 4
+
+    def test_invalid_search_query(self):
+        result = self.client.get('/api/search/?query=orthophoto|%26digital&language=de')
+        assert result.status_code == 400
 
 
 @pytest.mark.django_db(transaction=True)

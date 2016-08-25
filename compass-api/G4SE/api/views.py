@@ -96,6 +96,7 @@ class Search(generics.ListAPIView):
 
         cleaned_string = re.sub(r'\s?([&])\s?', r'\1', cleaned_string)
         s = re.sub(r"\s+", '|', cleaned_string)
+        print(s)
         return s
 
     @staticmethod
@@ -113,6 +114,7 @@ class Search(generics.ListAPIView):
               WHERE """ + exclude + """ query @@ """ + language[0] + """
               ORDER BY rank DESC;""", [language[1], search_string]
         )
+        print(query.query)
         return query
 
     def get_queryset(self):
