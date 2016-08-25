@@ -1,6 +1,6 @@
+import re
+from django.db import ProgrammingError
 from django.contrib.auth.models import User
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
-from django.db.models import F
 from rest_framework import generics, permissions
 from rest_framework import status
 from rest_framework.response import Response
@@ -10,7 +10,6 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from api.helpers.helpers import is_internal
 from api.models import AllRecords, Record
 from api.serializers import AllRecordsSerializer, RecordSerializer, UserSerializer, EditRecordSerializer
-
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
     """
@@ -72,32 +71,57 @@ class Search(generics.ListAPIView):
     """
     serializer_class = AllRecordsSerializer
 
+    @staticmethod
+    def parse_language(language):
+        if language == 'de':
+            return ['search_vector_de', 'german']
+        elif language == 'en':
+            return ['search_vector_en', 'english']
+        elif language == 'fr':
+            return ['search_vector_fr', 'french']
+        else:
+            raise ParseError('Not a valid language.')
+
+    @staticmethod
+    def parse_query(search_string):
+        """
+        Parses the passed search_string into a Postgres to_tsquery() compatible string
+        """
+        cleaned_string = " ".join(search_string.split())
+
+        cleaned_string = re.sub(r'\s?([&])\s?', r'\1', cleaned_string)
+        s = re.sub(r"\s+", '|', cleaned_string)
+        return s
+
+    @staticmethod
+    def create_query(search_string, language, internal):
+        """
+        Parses the passed search_string into a Postgres to_tsquery() compatible string
+        """
+        exclude = ''
+        if not internal:
+            exclude = "visibility != 'hsr-internal' AND"
+
+        query = AllRecords.objects.raw(
+            "SELECT *, ts_rank_cd( " + language[0] + """, query) AS rank
+              FROM all_records, to_tsquery(%s, %s) query
+              WHERE """ + exclude + """ query @@ """ + language[0] + """
+              ORDER BY rank DESC;""", [language[1], search_string]
+        )
+        return query
+
     def get_queryset(self):
-
-        query = self.request.query_params.get('query', None)
-
+        search_string = self.request.query_params.get('query', None)
         passed_language = self.request.query_params.get('language', 'de')
-        if query:
-            if passed_language == 'de':
-                search_vector = 'search_vector_de'
-                config_language = 'german'
-            elif passed_language == 'en':
-                search_vector = 'search_vector_en'
-                config_language = 'english'
-            elif passed_language == 'fr':
-                search_vector = 'search_vector_fr'
-                config_language = 'french'
-            else:
-                raise ParseError('Not a valid language.')
-
-            queryset = AllRecords.objects.annotate(rank=SearchRank(F(search_vector),
-                                                                   SearchQuery(query, config=config_language)))
-
-            if self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR']):
-                return queryset.filter(rank__gt=0).order_by('-rank')
-
-            else:
-                return queryset.filter(rank__gt=0).exclude(visibility='hsr-internal').order_by('-rank')
+        if search_string:
+            internal = self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR'])
+            language = self.parse_language(passed_language)
+            parsed_search = self.parse_query(search_string)
+            try:
+                query = list(self.create_query(parsed_search, language, internal))
+            except ProgrammingError:
+                raise ParseError('Invalid Query')
+            return query
         else:
             raise ParseError('The query parameter is mandatory')
 

@@ -62,6 +62,10 @@ class TestSearchViews(APITestCase):
         empty_result = self.client.get('/api/search/?query=swissimage', REMOTE_ADDR="123.1.1.3")
         assert len(empty_result.data) == 3
 
+    def test_or_search(self):
+        result = self.client.get('/api/search/?query=orthofotho digital&language=de')
+        assert 1 == 1
+
 
 @pytest.mark.django_db(transaction=True)
 @pytest.mark.usefixtures('setup_database', 'test_user')
