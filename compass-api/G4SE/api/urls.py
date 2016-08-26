@@ -4,10 +4,10 @@ from api import views
 
 urlpatterns = [
     # API views
-    url(r'^api/$', views.AllRecordsList.as_view()),
-    url('^api/search/$', views.Search.as_view()),
-    url(r'^api/(?P<pk>[a-fA-F0-9]{8}-?[a-fA-F0-9]{4}-?[1345][a-fA-F0-9]{3}-?[a-fA-F0-9]{4}-?[a-fA-F0-9]{12})/$',
+    url(r'^api/metadata/$', views.AllRecordsList.as_view()),
+    url(r'^api/metadata/(?P<pk>[a-fA-F0-9]{8}-?[a-fA-F0-9]{4}-?[1345][a-fA-F0-9]{3}-?[a-fA-F0-9]{4}-?[a-fA-F0-9]{12})/$',
         views.RecordDetail.as_view()),
+    url('^api/search/$', views.Search.as_view()),
     url('^api/recent/$', views.MostRecentRecords.as_view()),
 
     # API admin views

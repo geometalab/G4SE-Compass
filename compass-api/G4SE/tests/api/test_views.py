@@ -11,25 +11,25 @@ from api.views import Search
 class TestListViews(APITestCase):
 
     def test_record_list(self):
-        record_list = self.client.get('/api/')
+        record_list = self.client.get('/api/metadata/')
         assert len(record_list.data) == 21
 
     def test_external_access(self):
-        record_list = self.client.get('/api/', REMOTE_ADDR="123.1.1.3")
+        record_list = self.client.get('/api/metadata/', REMOTE_ADDR="123.1.1.3")
         assert len(record_list.data) == 20
-        all_record_list = self.client.get('/api/')
+        all_record_list = self.client.get('/api/metadata/')
         assert len(all_record_list.data) == 21
 
     def test_internal_record_detail(self):
-        record = self.client.get('/api/5e98dd86-e3c7-4a8b-895f-d555dde45566/')
+        record = self.client.get('/api/metadata/5e98dd86-e3c7-4a8b-895f-d555dde45566/')
         assert 'swissimage' in record.data.values()
 
     def test_unauthorized_detail(self):
-        record = self.client.get('/api/5e98dd86-e3c7-4a8b-895f-d555dde45566/', REMOTE_ADDR="123.1.1.3")
+        record = self.client.get('/api/metadata/5e98dd86-e3c7-4a8b-895f-d555dde45566/', REMOTE_ADDR="123.1.1.3")
         assert record.status_code == 403
 
     def test_harvested_record_detail(self):
-        record = self.client.get('/api/17f17742-50d4-4882-94fb-3855922b0acc/')
+        record = self.client.get('/api/metadata/17f17742-50d4-4882-94fb-3855922b0acc/')
         assert 'GeoVITe' in record.data.values()
 
     def test_most_recent_records(self):
