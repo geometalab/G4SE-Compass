@@ -35,7 +35,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/var/logs/G4SE.log',
+            'filename': '/var/log/G4SE.log',
         },
     },
     'loggers': {
