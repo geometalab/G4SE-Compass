@@ -72,6 +72,7 @@ class RecordDetail(generics.RetrieveAPIView):
 class Search(generics.ListAPIView):
     """
     Fulltext search.
+
     Search text is passed in query parameter. The search can be controlled with operators, which can be combined:
         - If there is no operator between search words, metadata records matching either word will be returned
         - & for and operation. Metadata records matching bot keywords will be returned. E.g. "Zürich & Digital"
@@ -94,6 +95,7 @@ class Search(generics.ListAPIView):
     def parse_query(search_string):
         """
         Parses the passed search_string into a Postgres to_tsquery() compatible string
+
         Wrong User inputs won't be caught here but when the query is executed
         """
         parsed_string = " ".join(search_string.split())
@@ -138,8 +140,9 @@ class Search(generics.ListAPIView):
 
 class MostRecentRecords(generics.ListAPIView):
     """
-    Returns the most recently entered or modified records
-    Count may be passed, default is 5
+    Recently entered or modified records
+
+    Return list of recently entered records sorted by date. Count may be passed, default is 5
     """
     serializer_class = AllRecordsSerializer
 
@@ -159,6 +162,7 @@ class MostRecentRecords(generics.ListAPIView):
 class InternalRecordsList(generics.ListCreateAPIView):
     """
     Show all HSR metadata Records.
+
     User must be an authenticated administrator access this API view.
     """
     permission_classes = (permissions.IsAdminUser,)
