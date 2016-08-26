@@ -5,3 +5,4 @@ gunicorn==19.6.0
 psycopg2==2.6.2
 django-environ==0.4.0
 netaddr==0.7.18
+django-rest-swagger==2.0.5

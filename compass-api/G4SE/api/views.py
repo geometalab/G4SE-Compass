@@ -7,6 +7,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import ParseError
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework import response, schemas
+from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
 from api.helpers.helpers import is_internal
 from api.models import AllRecords, Record
@@ -22,6 +25,13 @@ class CsrfExemptSessionAuthentication(SessionAuthentication):
     """
     def enforce_csrf(self, request):
         return
+
+
+@api_view()
+@renderer_classes([OpenAPIRenderer, SwaggerUIRenderer])
+def schema_view(request):
+    generator = schemas.SchemaGenerator(title='G4SE API')
+    return response.Response(generator.get_schema(request=request))
 
 
 class UserList(generics.ListAPIView):

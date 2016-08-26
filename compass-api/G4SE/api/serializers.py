@@ -10,6 +10,7 @@ class AllRecordsSerializer(serializers.ModelSerializer):
     search_vector_en = serializers.HiddenField(default=None)
     search_vector_fr = serializers.HiddenField(default=None)
 
+    content = serializers.CharField(max_length=200)
     class Meta:
         model = AllRecords
         fields = '__all__'
