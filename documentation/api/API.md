@@ -9,7 +9,7 @@ Base URL: http://86.119.37.75/
 | Result                      | Record                               |
 | Example                     | /api/metadata/1234151                |
 
-## metadata record
+## all metadata records
 | Get all metadata records   |                                       |
 |-----------------------------|--------------------------------------|
 | Path                        | /api/metadata/                       |
