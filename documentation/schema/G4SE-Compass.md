@@ -2,7 +2,7 @@
  
 | display name (de)             | display name (en)           | attribute name        | data type | mand. | default  | dublin core |OAI| enumeration values                        | documentation                                                                                                                    |                                            | 
 |-------------------------------|-----------------------------|-----------------------|-----------|-------|----------|-------------|---|-------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|
-| (Identifikator)               | (Id)                        | identifier            | string    | yes   |          | identifier  | x |                                           | Identifier unique within G4SE                                                                                                    |  tbd. can be e.g. PREFIX+data_provider_id" | 
+| Identifikator                 | Id                          | identifier            | string    | yes   |          | identifier  | x |                                           | Identifier unique within G4SE                                                                                                    |  tbd. can be e.g. PREFIX+data_provider_id" | 
 | Metadaten Sprache             | Metadata language           | language              | string    | yes   |          | language    | x |                                           | Language of metadata record                                                                                                      |                                            |
 | Titel                         | Title                       | content               | string    | yes   |          | title       | x |                                           | Metadata Record title (SK: Why not attr.name 'title'?)                                                                           |                                            | 
 | Beschreibung                  | Abstract                    | abstract              | string    | yes   |          | description | x |                                           | Multi line record abstract                                                                                                       |                                            | 
@@ -28,6 +28,12 @@
 | Zugriffseinschränkungen       | Access restriction          | visibility            | string    | yes   | public   |             | x | public,test,hsr-internal                  | Metadata visibility in front end                                                                                                 |                                            | 
 | Letzte Bearbeitung            | Last modification           | modified              | datetime  | no    | (system) |             | - |                                           | Most recent modification time                                                                                                    |                                            | 
 | Loginname Bearbeiter          | Login name                  | login_name            | string    | no    | (system) | contributor | - |                                           | Metadata Author name                                                                                                             |                                            | 
+
+DB-internal attributes:
+* UUID
+* tsv_de
+* tsv_en
+* tsv_fr
 
 
 # Data access
