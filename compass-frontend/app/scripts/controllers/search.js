@@ -9,5 +9,5 @@
  */
 angular.module('g4seApp')
   .controller('SearchCtrl', function () {
-    alert('hi')
+
   });
