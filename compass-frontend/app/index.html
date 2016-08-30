@@ -1,14 +1,17 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
     <title>G4SE</title>
-    <meta name="description" content="Geodatacompass for G">
-    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Geodatacompass for G4SE">
     <meta name="author" content="GeometaLab">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
     <!-- bower:css -->
     <!-- endbower -->
     <!-- endbuild -->
@@ -21,10 +24,15 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
     <div class="container">
-      <header>
-        <h1>Geodata4SwissEdu</h1>
+      <header class="row col-sm-12">
+        <h1 class="col-sm-12">Geodata4SwissEdu</h1>
       </header>
-      <div ng-view="" class="content"></div>
+      <div class="row col-sm-12">
+        <div class="col-sm-12 menu">
+
+        </div>
+      </div>
+      <div ng-view="" class="row col-sm-12"></div>
     </div>
 
     <!-- build:js(.) scripts/vendor.js -->

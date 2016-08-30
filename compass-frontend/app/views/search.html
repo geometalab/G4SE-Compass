@@ -1,35 +1,56 @@
-<div class="search" ng-controller="SearchCtrl">
+<div class="main-content" ng-controller="SearchCtrl">
+  <div class="search col-sm-9 col-sm-push-3">
+    <!--<form ng-submit="enter_search()" class="search">-->
+      <!--<input id="search-field" type="text" ng-model="text" name="search-text">-->
+      <!--<input id="search-button" type="submit" ng-click="enter_search()" value="Search" />-->
+    <!--</form>-->
+    <form ng-submit="enter_search()" class="search">
+      <div class="input-group">
+        <input type="text" class="form-control" ng-model="text">
+        <span class="input-group-btn">
+          <button class="btn btn-secondary" type="submit">Search</button>
+        </span>
+      </div>
+    </form>
 
-  <form ng-submit="enter_search()" class="search">
-    <input id="search-field" type="text" ng-model="text" name="search-text">
-    <input id="search-button" type="submit" ng-click="enter_search()" value="Search" />
-  </form>
+    <div class="results">
+      <div class="result_count" ng-show="result_count != null">
+        {{ result_count }} results found.
+        <hr>
+      </div>
+      <div ng-repeat="record in records">
+        <div class="col-xs-12 custom-col result">
+          <table class="table">
+            <tr>
+              <td colspan="2">{{ record.content }}</td>
+            </tr>
+            <tr>
+              <td>Geographical coverage:</td>
+              <td>{{ record.geography }}</td>
+            </tr>
+            <tr>
+              <td>Geodata type:</td>
+              <td>{{ record.geodata_type }}</td>
+            </tr>
+            <tr>
+              <td>Source of original data:</td>
+              <td>{{ record.source }}</td>
+            </tr>
+            <tr>
+              <td>Abstract:</td>
+              <td>{{ record.abstract }}</td>
+            </tr>
+          </table>
+          <hr>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <div class="results">
-    <div ng-repeat="record in records">
-      <table>
-        <tr>
-          <td>Title:</td>
-          <td>{{ record.content }}</td>
-        </tr>
-        <tr>
-          <td>Geographical coverage:</td>
-          <td>{{ record.geography }}</td>
-        </tr>
-        <tr>
-          <td>Geodata type:</td>
-          <td>{{ record.geodata_type }}</td>
-        </tr>
-        <tr>
-          <td>Source of original data:</td>
-          <td>{{ record.source }}</td>
-        </tr>
-        <tr>
-          <td>Abstract:</td>
-          <td>{{ record.abstract }}</td>
-        </tr>
-      </table>
-      <hr>
+  <div class="recent col-sm-3 col-sm-pull-9">
+    <h3>Most recently updated or entered metadata</h3>
+    <div ng-repeat="record in recent_records" class="nowrap">
+      {{ record.modified | date:'yyyy-MM-dd HH:mm'}}: {{ record.content }}
     </div>
   </div>
 
