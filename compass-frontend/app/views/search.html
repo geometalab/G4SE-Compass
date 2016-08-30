@@ -1,12 +1,36 @@
-<div ng-controller="SearchCtrl">
-  <form ng-submit="enter_search()">
-    <input type="text" ng-model="text" name="search-text">
-    <input type="submit" ng-click="enter_search()" value="Save" />
+<div class="search" ng-controller="SearchCtrl">
+
+  <form ng-submit="enter_search()" class="search">
+    <input id="search-field" type="text" ng-model="text" name="search-text">
+    <input id="search-button" type="submit" ng-click="enter_search()" value="Search" />
   </form>
 
-  <div class="records">
+  <div class="results">
     <div ng-repeat="record in records">
-      {{ record.content }}
+      <table>
+        <tr>
+          <td>Title:</td>
+          <td>{{ record.content }}</td>
+        </tr>
+        <tr>
+          <td>Geographical coverage:</td>
+          <td>{{ record.geography }}</td>
+        </tr>
+        <tr>
+          <td>Geodata type:</td>
+          <td>{{ record.geodata_type }}</td>
+        </tr>
+        <tr>
+          <td>Source of original data:</td>
+          <td>{{ record.source }}</td>
+        </tr>
+        <tr>
+          <td>Abstract:</td>
+          <td>{{ record.abstract }}</td>
+        </tr>
+      </table>
+      <hr>
     </div>
   </div>
+
 </div>
