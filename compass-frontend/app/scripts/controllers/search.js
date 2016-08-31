@@ -10,7 +10,7 @@
 angular.module('g4seApp').service('dataService', ['$http', function ($http) {
   return {
     getSearchResult: function (searchQuery) {
-      return $http.get('http://localhost/api/search/?query=' + searchQuery);
+      return $http.get('http://localhost/api/search/?query=' + encodeURIComponent(searchQuery));
     },
     getSingleResult: function (id) {
       return $http.get('http://localhost/api/metadata/' + id);
@@ -24,17 +24,29 @@ angular.module('g4seApp').service('dataService', ['$http', function ($http) {
 
 angular.module('g4seApp')
   .controller('SearchCtrl',['$scope', '$http', 'dataService', '$timeout', function($scope, $http, dataService, $timeout) {
+    $scope.itemsPerPage = 5;
 
-    $scope.isHidden = true;
+    $scope.setPage = function (pageNo) {
+      $scope.currentPage = pageNo;
+    };
+
+    $scope.pageChanged = function() {
+      $scope.begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
+      $scope.end = $scope.begin + $scope.itemsPerPage;
+      $scope.filteredRecords = $scope.records.slice($scope.begin, $scope.end);
+      $timeout(function () {
+        $scope.$apply();
+      });
+    };
 
     dataService.getRecentlyUpdated().then(function (result) {
       $scope.recentRecords = result.data;
     });
 
-    $scope.singleResult = function(api_id) {
-      dataService.getSingleResult(api_id).then(function (result) {
-        $scope.records = [result.data];
-        $scope.resultCount = 1;
+    $scope.singleResult = function(apiId) {
+      dataService.getSingleResult(apiId).then(function (result) {
+        $scope.filteredRecords = [result.data];
+        $scope.totalItems = null;
         $timeout(function () {
           $scope.$apply();
         });
@@ -45,10 +57,9 @@ angular.module('g4seApp')
       if ($scope.text){
         dataService.getSearchResult($scope.text).then(function (result) {
           $scope.records = result.data;
-          $scope.resultCount = result.data.length;
-          $timeout(function () {
-            $scope.$apply();
-          });
+          $scope.totalItems = result.data.length;
+          $scope.setPage(1);
+          $scope.pageChanged();
         });
       }
     };

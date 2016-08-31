@@ -79,3 +79,11 @@ table{
 .panel-heading{
   padding: 2px;
 }
+
+.pagination > li > a{
+  border-radius: 0;
+  background: none;
+  border: 1px solid #ccc;
+  color: #0065A3;
+  font-size: 14px;
+}

@@ -1,6 +1,5 @@
 <div class="main-content" ng-controller="SearchCtrl">
   <div class="recent col-sm-3 recent">
-    <!--<h3>Most recently updated or entered metadata</h3>-->
     <div class="panel panel-default">
       <div class="panel-heading">Most recently updated or entered metadata</div>
       <div class="panel-body" ng-repeat="record in recentRecords" ng-click="singleResult(record.api_id)">
@@ -18,10 +17,10 @@
       </div>
     </form>
     <div class="results">
-      <div class="resultCount" ng-show="resultCount != null">
-        {{ resultCount }} results found.
+      <div class="resultCount" ng-show="totalItems != null">
+        Page {{ currentPage }} of {{ totalItems }} found results.
       </div>
-      <div ng-repeat="record in records">
+      <div ng-repeat="record in filteredRecords">
         <div class="col-xs-12 custom-col result">
           <table class="table">
             <tr>
@@ -122,6 +121,8 @@
           </button>
         </div>
       </div>
+      <ul ng-show="totalItems != null" uib-pagination items-per-page="itemsPerPage"
+          total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></ul>
     </div>
   </div>
 </div>
