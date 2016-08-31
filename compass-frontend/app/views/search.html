@@ -10,15 +10,15 @@
   <div class="search col-sm-9">
     <form ng-submit="enterSearch()" class="search">
       <div class="input-group">
-        <input type="text" class="form-control" ng-model="text">
+          <input type="text" class="form-control" ng-model="text">
         <span class="input-group-btn">
-          <button class="btn btn-secondary" type="submit">Search</button>
+          <button class="btn btn-secondary search-button" type="submit">Search</button>
         </span>
       </div>
     </form>
     <div class="results">
       <div class="resultCount" ng-show="totalItems != null">
-        Page {{ currentPage }} of {{ totalItems }} found results.
+        Page {{ currentPage }} of total {{ totalItems }} found results.
       </div>
       <div ng-repeat="record in filteredRecords">
         <div class="col-xs-12 custom-col result">
@@ -40,11 +40,15 @@
                 <td ng-bind-html="record.source | linky"></td>
               </tr>
               <tr>
-                <td>Abstract:</td>
-                <td ng-bind-html="record.abstract | linky"></td>
+                <td>Additional metadata:</td>
+                <td ng-bind-html="record.metadata_link | linky"></td>
               </tr>
             </tbody>
             <tbody ng-show="record.detailsHidden == true">
+              <tr>
+                <td>Abstract:</td>
+                <td ng-bind-html="record.abstract | linky"></td>
+              </tr>
               <tr>
                   <td>Publication year:</td>
                   <td ng-bind-html="record.publication_year | linky"></td>
@@ -56,10 +60,6 @@
               <tr>
                 <td>Geographical extent:</td>
                 <td ng-bind-html="record.extent | linky"></td>
-              </tr>
-              <tr>
-                <td>Additional metadata:</td>
-                <td ng-bind-html="record.metadata_link | linky"></td>
               </tr>
               <tr>
                 <td>Access to data:</td>

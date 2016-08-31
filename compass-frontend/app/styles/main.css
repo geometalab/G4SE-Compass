@@ -43,10 +43,15 @@ h1{
 }
 
 .btn, .panel{
+  font-size: 12px;
   border-radius: 0;
   background: none;
   border: 1px solid #ccc;
   color: #0065A3;
+}
+
+.search-button{
+  font-size: 14px;
 }
 
 .form-control, .input-group-btn{
@@ -62,6 +67,7 @@ th{
   margin-top: 10px;
   margin-bottom: 10px;
   border-top:2px solid #0065A3 !important;
+  font-size: 15px;
 }
 
 table{
@@ -85,5 +91,6 @@ table{
   background: none;
   border: 1px solid #ccc;
   color: #0065A3;
-  font-size: 14px;
+  font-size: 12px;
 }
+

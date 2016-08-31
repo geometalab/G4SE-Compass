@@ -20,11 +20,6 @@ angular
   ])
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl',
-        controllerAs: 'about'
-      })
       .when('/', {
         templateUrl: 'views/search.html',
         controller: 'SearchCtrl',

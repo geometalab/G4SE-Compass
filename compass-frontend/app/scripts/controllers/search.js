@@ -23,8 +23,8 @@ angular.module('g4seApp').service('dataService', ['$http', function ($http) {
 
 
 angular.module('g4seApp')
-  .controller('SearchCtrl',['$scope', '$http', 'dataService', '$timeout', function($scope, $http, dataService, $timeout) {
-    $scope.itemsPerPage = 5;
+  .controller('SearchCtrl',['$scope', '$http', 'dataService', '$timeout', '$window', function($scope, $http, dataService, $timeout, $window) {
+    $scope.itemsPerPage = 10;
 
     $scope.setPage = function (pageNo) {
       $scope.currentPage = pageNo;
@@ -34,6 +34,7 @@ angular.module('g4seApp')
       $scope.begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
       $scope.end = $scope.begin + $scope.itemsPerPage;
       $scope.filteredRecords = $scope.records.slice($scope.begin, $scope.end);
+      $window.scrollTo(0, 0);
       $timeout(function () {
         $scope.$apply();
       });
