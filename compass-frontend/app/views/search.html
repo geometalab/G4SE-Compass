@@ -8,7 +8,6 @@
         </span>
       </div>
     </form>
-
     <div class="results">
       <div class="resultCount" ng-show="resultCount != null">
         {{ resultCount }} results found.
@@ -33,7 +32,7 @@
             </tr>
             <tr>
               <td>Abstract:</td>
-              <td>{{ record.abstract }}</td>
+              <td ng-bind-html="record.abstract | linky"></td>
             </tr>
             <tr ng-show="isHidden != true">
                 <td>Publication year:</td>
@@ -49,15 +48,15 @@
             </tr>
             <tr ng-show="isHidden != true">
               <td>Additional metadata:</td>
-              <td>{{ record.metadata_link }}</td>
+              <td ng-bind-html="record.metadata_link | linky"></td>
             </tr>
             <tr ng-show="isHidden != true">
               <td>Access to data:</td>
-              <td>{{ record.access_link }}</td>
+              <td bind-html="record.access_link | linky"></td>
             </tr>
             <tr ng-show="isHidden != true">
               <td>Entry point:</td>
-              <td>{{ record.base_link }}</td>
+              <td bind-html="record.base_link | linky"></td>
             </tr>
             <tr ng-show="isHidden != true">
               <td>Group:</td>
@@ -69,19 +68,19 @@
             </tr>
             <tr ng-show="isHidden != true">
               <td>ArcGIS layer link:</td>
-              <td>{{ record.arcgis_layer_link }}</td>
+              <td bind-html="record.arcgis_layer_link | linky"></td>
             </tr>
             <tr ng-show="isHidden != true">
               <td>QGIS layer link:</td>
-              <td>{{ record.qgis_layer_link }}</td>
+              <td bind-html="record.qgis_layer_link | linky"></td>
             </tr>
             <tr ng-show="isHidden != true">
               <td>ArcGIS symbology link:</td>
-              <td>{{ record.arcgis_symbology_link }}</td>
+              <td bind-html="record.arcgis_symbology_link | linky"></td>
             </tr>
             <tr ng-show="isHidden != true">
               <td>QGIS symbology link:</td>
-              <td>{{ record.qgis_symbology_link }}</td>
+              <td bind-html="record.record.qgis_symbology_link | linky"></td>
             </tr>
             <tr ng-show="isHidden != true">
               <td>Service type:</td>
@@ -93,11 +92,11 @@
             </tr>
             <tr ng-show="isHidden != true">
               <td>Terms of use:</td>
-              <td>{{ record.term_link }}</td>
+              <td ng-bind-html="record.term_link | linky"></td>
             </tr>
             <tr ng-show="isHidden != true">
               <td>Proving date:</td>
-              <td>{{ record.proved }}</td>
+              <td >{{ record.proved }}</td>
             </tr>
             <tr ng-show="isHidden != true">
               <td>Access restriction:</td>
