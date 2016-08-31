@@ -18,6 +18,7 @@
             <tr>
               <th colspan="2">{{ record.content }}</th>
             </tr>
+            <tbody>
             <tr>
               <td>Geographical coverage:</td>
               <td>{{ record.geography }}</td>
@@ -34,78 +35,82 @@
               <td>Abstract:</td>
               <td ng-bind-html="record.abstract | linky"></td>
             </tr>
-            <tr ng-show="isHidden != true">
-                <td>Publication year:</td>
-                <td>{{ record.publication_year }}</td>
+            </tbody>
+            <tbody ng-show="record.detailsHidden == true">
+              <tr>
+                  <td>Publication year:</td>
+                  <td>{{ record.publication_year }}</td>
+                </tr>
+              <tr>
+                <td>Publication lineage:</td>
+                <td>{{ record.publication_lineage }}</td>
               </tr>
-            <tr ng-show="isHidden != true">
-              <td>Publication lineage:</td>
-              <td>{{ record.publication_lineage }}</td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>Geographical extent:</td>
-              <td>{{ record.extent }}</td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>Additional metadata:</td>
-              <td ng-bind-html="record.metadata_link | linky"></td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>Access to data:</td>
-              <td bind-html="record.access_link | linky"></td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>Entry point:</td>
-              <td bind-html="record.base_link | linky"></td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>Group:</td>
-              <td>{{ record.collection }}</td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>Dataset name:</td>
-              <td>{{ record.dataset }}</td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>ArcGIS layer link:</td>
-              <td bind-html="record.arcgis_layer_link | linky"></td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>QGIS layer link:</td>
-              <td bind-html="record.qgis_layer_link | linky"></td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>ArcGIS symbology link:</td>
-              <td bind-html="record.arcgis_symbology_link | linky"></td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>QGIS symbology link:</td>
-              <td bind-html="record.record.qgis_symbology_link | linky"></td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>Service type:</td>
-              <td>{{ record.service_type }}</td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>Coordinate reference system:</td>
-              <td>{{ record.crs }}</td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>Terms of use:</td>
-              <td ng-bind-html="record.term_link | linky"></td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>Proving date:</td>
-              <td >{{ record.proved }}</td>
-            </tr>
-            <tr ng-show="isHidden != true">
-              <td>Access restriction:</td>
-              <td>{{ record.visibility }}</td>
-            </tr>
+              <tr>
+                <td>Geographical extent:</td>
+                <td>{{ record.extent }}</td>
+              </tr>
+              <tr>
+                <td>Additional metadata:</td>
+                <td ng-bind-html="record.metadata_link | linky"></td>
+              </tr>
+              <tr>
+                <td>Access to data:</td>
+                <td bind-html="record.access_link | linky"></td>
+              </tr>
+              <tr>
+                <td>Entry point:</td>
+                <td bind-html="record.base_link | linky"></td>
+              </tr>
+              <tr>
+                <td>Group:</td>
+                <td>{{ record.collection }}</td>
+              </tr>
+              <tr>
+                <td>Dataset name:</td>
+                <td>{{ record.dataset }}</td>
+              </tr>
+              <tr>
+                <td>ArcGIS layer link:</td>
+                <td bind-html="record.arcgis_layer_link | linky"></td>
+              </tr>
+              <tr>
+                <td>QGIS layer link:</td>
+                <td bind-html="record.qgis_layer_link | linky"></td>
+              </tr>
+              <tr>
+                <td>ArcGIS symbology link:</td>
+                <td bind-html="record.arcgis_symbology_link | linky"></td>
+              </tr>
+              <tr>
+                <td>QGIS symbology link:</td>
+                <td bind-html="record.record.qgis_symbology_link | linky"></td>
+              </tr>
+              <tr>
+                <td>Service type:</td>
+                <td>{{ record.service_type }}</td>
+              </tr>
+              <tr>
+                <td>Coordinate reference system:</td>
+                <td>{{ record.crs }}</td>
+              </tr>
+              <tr>
+                <td>Terms of use:</td>
+                <td ng-bind-html="record.term_link | linky"></td>
+              </tr>
+              <tr>
+                <td>Proving date:</td>
+                <td >{{ record.proved }}</td>
+              </tr>
+              <tr>
+                <td>Access restriction:</td>
+                <td>{{ record.visibility }}</td>
+              </tr>
+            </tbody>
           </table>
-          <button class="btn btn-secondary" ng-click="expand()" type="button">
-            <div ng-show="isHidden == true">Show more</div>
-            <div ng-show="isHidden != true">Show less</div>
+          {{ record.collapsed }}
+          <button class="btn btn-secondary" ng-click="expand({ $index })" type="button">
+            <div ng-show="record.detailsHidden != true">Show more</div>
+            <div ng-show="record.detailsHidden == true">Show less</div>
           </button>
         </div>
       </div>
