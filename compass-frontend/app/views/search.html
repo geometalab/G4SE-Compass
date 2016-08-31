@@ -17,8 +17,11 @@
       </div>
     </form>
     <div class="results">
-      <div class="resultCount" ng-show="totalItems != null">
+      <div class="resultCount" ng-show="totalItems != 0 && totalItems != undefined">
         Page {{ currentPage }} of total {{ totalItems }} found results.
+      </div>
+      <div class="resultCount" ng-show="totalItems == 0">
+        No results found.
       </div>
       <div ng-repeat="record in filteredRecords">
         <div class="col-xs-12 custom-col result">
@@ -121,7 +124,7 @@
           </button>
         </div>
       </div>
-      <ul ng-show="totalItems != null" uib-pagination items-per-page="itemsPerPage"
+      <ul ng-show="totalItems != 0 && totalItems != undefined" uib-pagination items-per-page="itemsPerPage"
           total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></ul>
     </div>
   </div>
