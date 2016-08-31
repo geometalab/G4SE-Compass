@@ -75,3 +75,13 @@ hr{
   padding-left: 0;
   padding-right: 0;
 }
+
+th{
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-top:1px dotted #0065A4 !important;
+}
+
+table{
+  margin-top: 10px;
+}

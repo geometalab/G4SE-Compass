@@ -9,32 +9,38 @@
  */
 angular.module('g4seApp').service('dataService', ['$http', function ($http) {
   return {
-    getSearchResult: function (search_query) {
-      return $http.get('http://localhost/api/search/?query=' + search_query);
+    getSearchResult: function (searchQuery) {
+      return $http.get('http://localhost/api/search/?query=' + searchQuery);
     },
     getRecentlyUpdated: function () {
       return $http.get('http://localhost/api/recent/?count=5');
     }
-  }
+  };
 }]);
 
 
 angular.module('g4seApp')
   .controller('SearchCtrl',['$scope', '$http', 'dataService', '$timeout', function($scope, $http, dataService, $timeout) {
+
+    $scope.isHidden = true;
+
     dataService.getRecentlyUpdated().then(function (result) {
-      $scope.recent_records = result.data;
+      $scope.recentRecords = result.data;
     });
 
-    $scope.enter_search = function() {
-      console.log('hi');
+    $scope.enterSearch = function() {
       if ($scope.text){
         dataService.getSearchResult($scope.text).then(function (result) {
           $scope.records = result.data;
-          $scope.result_count = result.data.length;
+          $scope.resultCount = result.data.length;
           $timeout(function () {
-            $scope.$apply()
-          })
+            $scope.$apply();
+          });
         });
       }
+    };
+
+    $scope.expand = function () {
+      $scope.isHidden = !$scope.isHidden;
     };
   }]);

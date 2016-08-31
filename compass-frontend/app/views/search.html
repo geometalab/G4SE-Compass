@@ -1,10 +1,6 @@
 <div class="main-content" ng-controller="SearchCtrl">
   <div class="search col-sm-9 col-sm-push-3">
-    <!--<form ng-submit="enter_search()" class="search">-->
-      <!--<input id="search-field" type="text" ng-model="text" name="search-text">-->
-      <!--<input id="search-button" type="submit" ng-click="enter_search()" value="Search" />-->
-    <!--</form>-->
-    <form ng-submit="enter_search()" class="search">
+    <form ng-submit="enterSearch()" class="search">
       <div class="input-group">
         <input type="text" class="form-control" ng-model="text">
         <span class="input-group-btn">
@@ -14,15 +10,14 @@
     </form>
 
     <div class="results">
-      <div class="result_count" ng-show="result_count != null">
-        {{ result_count }} results found.
-        <hr>
+      <div class="resultCount" ng-show="resultCount != null">
+        {{ resultCount }} results found.
       </div>
       <div ng-repeat="record in records">
         <div class="col-xs-12 custom-col result">
           <table class="table">
             <tr>
-              <td colspan="2">{{ record.content }}</td>
+              <th colspan="2">{{ record.content }}</th>
             </tr>
             <tr>
               <td>Geographical coverage:</td>
@@ -40,8 +35,79 @@
               <td>Abstract:</td>
               <td>{{ record.abstract }}</td>
             </tr>
+            <tr ng-show="isHidden != true">
+                <td>Publication year:</td>
+                <td>{{ record.publication_year }}</td>
+              </tr>
+            <tr ng-show="isHidden != true">
+              <td>Publication lineage:</td>
+              <td>{{ record.publication_lineage }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>Geographical extent:</td>
+              <td>{{ record.extent }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>Additional metadata:</td>
+              <td>{{ record.metadata_link }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>Access to data:</td>
+              <td>{{ record.access_link }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>Entry point:</td>
+              <td>{{ record.base_link }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>Group:</td>
+              <td>{{ record.collection }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>Dataset name:</td>
+              <td>{{ record.dataset }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>ArcGIS layer link:</td>
+              <td>{{ record.arcgis_layer_link }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>QGIS layer link:</td>
+              <td>{{ record.qgis_layer_link }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>ArcGIS symbology link:</td>
+              <td>{{ record.arcgis_symbology_link }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>QGIS symbology link:</td>
+              <td>{{ record.qgis_symbology_link }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>Service type:</td>
+              <td>{{ record.service_type }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>Coordinate reference system:</td>
+              <td>{{ record.crs }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>Terms of use:</td>
+              <td>{{ record.term_link }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>Proving date:</td>
+              <td>{{ record.proved }}</td>
+            </tr>
+            <tr ng-show="isHidden != true">
+              <td>Access restriction:</td>
+              <td>{{ record.visibility }}</td>
+            </tr>
           </table>
-          <hr>
+          <button class="btn btn-secondary" ng-click="expand()" type="button">
+            <div ng-show="isHidden == true">Show more</div>
+            <div ng-show="isHidden != true">Show less</div>
+          </button>
         </div>
       </div>
     </div>
@@ -49,7 +115,7 @@
 
   <div class="recent col-sm-3 col-sm-pull-9">
     <h3>Most recently updated or entered metadata</h3>
-    <div ng-repeat="record in recent_records" class="nowrap">
+    <div ng-repeat="record in recentRecords" class="nowrap">
       {{ record.modified | date:'yyyy-MM-dd HH:mm'}}: {{ record.content }}
     </div>
   </div>
