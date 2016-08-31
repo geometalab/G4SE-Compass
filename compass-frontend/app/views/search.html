@@ -1,5 +1,16 @@
 <div class="main-content" ng-controller="SearchCtrl">
-  <div class="search col-sm-9 col-sm-push-3">
+
+  <div class="recent col-sm-3 recent">
+    <!--<h3>Most recently updated or entered metadata</h3>-->
+    <div class="panel panel-default">
+      <div class="panel-heading">Most recently updated or entered metadata</div>
+      <div class="panel-body" ng-repeat="record in recentRecords">
+        {{ record.modified | date:'yyyy-MM-dd HH:mm'}}: {{ record.content }}
+      </div>
+    </div>
+  </div>
+
+  <div class="search col-sm-9">
     <form ng-submit="enterSearch()" class="search">
       <div class="input-group">
         <input type="text" class="form-control" ng-model="text">
@@ -107,7 +118,6 @@
               </tr>
             </tbody>
           </table>
-          {{ record.collapsed }}
           <button class="btn btn-secondary" ng-click="expand({ $index })" type="button">
             <div ng-show="record.detailsHidden != true">Show more</div>
             <div ng-show="record.detailsHidden == true">Show less</div>
@@ -116,12 +126,4 @@
       </div>
     </div>
   </div>
-
-  <div class="recent col-sm-3 col-sm-pull-9">
-    <h3>Most recently updated or entered metadata</h3>
-    <div ng-repeat="record in recentRecords" class="nowrap">
-      {{ record.modified | date:'yyyy-MM-dd HH:mm'}}: {{ record.content }}
-    </div>
-  </div>
-
 </div>

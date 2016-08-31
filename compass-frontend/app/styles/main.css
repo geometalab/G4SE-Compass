@@ -21,23 +21,10 @@ body {
 
 h1{
   font-weight: bold;
+  color: #0065A3;
 }
 
-h3{
-  margin-top: 0;
-  font-size: 12px;
-  background: #EBEBEB;
-  padding: 2px;
-}
-
-hr{
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border-top:1px dotted #0065A4;
-  border-bottom: 0;
-}
-
-.result_count{
+.resultCount{
   margin-top: 10px;
 }
 
@@ -51,20 +38,15 @@ hr{
   width: 75%;
 }
 
-.nowrap{
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .form-control{
   padding-right: 2px;
 }
 
-.btn{
+.btn, .panel{
   border-radius: 0;
   background: none;
   border: 1px solid #ccc;
+  color: #0065A3;
 }
 
 .form-control, .input-group-btn{
@@ -79,9 +61,21 @@ hr{
 th{
   margin-top: 10px;
   margin-bottom: 10px;
-  border-top:1px dotted #0065A4 !important;
+  border-top:2px solid #0065A3 !important;
 }
 
 table{
   margin-top: 10px;
+}
+
+.panel-body{
+  padding: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.panel-heading{
+  padding: 2px;
 }
