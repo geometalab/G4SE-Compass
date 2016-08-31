@@ -65,7 +65,7 @@ angular.module('g4seApp')
     };
 
     $scope.expand = function (index) {
-      $scope.records[index.$index].detailsHidden = !$scope.records[index.$index].detailsHidden;
+      $scope.filteredRecords[index.$index].detailsHidden = !$scope.filteredRecords[index.$index].detailsHidden;
       $scope.isHidden = !$scope.isHidden;
       $timeout(function () {
         $scope.$apply();
