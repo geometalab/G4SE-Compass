@@ -16,38 +16,38 @@
         <div class="col-xs-12 custom-col result">
           <table class="table">
             <tr>
-              <th colspan="2">{{ record.content }}</th>
+              <th colspan="2" ng-bind-html="record.content | linky"></th>
             </tr>
             <tbody>
-            <tr>
-              <td>Geographical coverage:</td>
-              <td>{{ record.geography }}</td>
-            </tr>
-            <tr>
-              <td>Geodata type:</td>
-              <td>{{ record.geodata_type }}</td>
-            </tr>
-            <tr>
-              <td>Source of original data:</td>
-              <td>{{ record.source }}</td>
-            </tr>
-            <tr>
-              <td>Abstract:</td>
-              <td ng-bind-html="record.abstract | linky"></td>
-            </tr>
+              <tr>
+                <td>Geographical coverage:</td>
+                <td ng-bind-html="record.geography | linky"></td>
+              </tr>
+              <tr>
+                <td>Geodata type:</td>
+                <td ng-bind-html="record.geodata_type | linky"></td>
+              </tr>
+              <tr>
+                <td>Source of original data:</td>
+                <td ng-bind-html="record.source | linky"></td>
+              </tr>
+              <tr>
+                <td>Abstract:</td>
+                <td ng-bind-html="record.abstract | linky"></td>
+              </tr>
             </tbody>
             <tbody ng-show="record.detailsHidden == true">
               <tr>
                   <td>Publication year:</td>
-                  <td>{{ record.publication_year }}</td>
+                  <td ng-bind-html="record.publication_year | linky"></td>
                 </tr>
               <tr>
                 <td>Publication lineage:</td>
-                <td>{{ record.publication_lineage }}</td>
+                <td ng-bind-html="record.publication_lineage | linky"></td>
               </tr>
               <tr>
                 <td>Geographical extent:</td>
-                <td>{{ record.extent }}</td>
+                <td ng-bind-html="record.extent | linky"></td>
               </tr>
               <tr>
                 <td>Additional metadata:</td>
@@ -55,43 +55,43 @@
               </tr>
               <tr>
                 <td>Access to data:</td>
-                <td bind-html="record.access_link | linky"></td>
+                <td ng-bind-html="record.access_link | linky"></td>
               </tr>
               <tr>
                 <td>Entry point:</td>
-                <td bind-html="record.base_link | linky"></td>
+                <td ng-bind-html="record.base_link | linky"></td>
               </tr>
               <tr>
                 <td>Group:</td>
-                <td>{{ record.collection }}</td>
+                <td ng-bind-html="record.collection | linky"></td>
               </tr>
               <tr>
                 <td>Dataset name:</td>
-                <td>{{ record.dataset }}</td>
+                <td ng-bind-html="record.dataset | linky"></td>
               </tr>
               <tr>
                 <td>ArcGIS layer link:</td>
-                <td bind-html="record.arcgis_layer_link | linky"></td>
+                <td ng-bind-html="record.arcgis_layer_link | linky"></td>
               </tr>
               <tr>
                 <td>QGIS layer link:</td>
-                <td bind-html="record.qgis_layer_link | linky"></td>
+                <td ng-bind-html="record.qgis_layer_link | linky"></td>
               </tr>
               <tr>
                 <td>ArcGIS symbology link:</td>
-                <td bind-html="record.arcgis_symbology_link | linky"></td>
+                <td ng-bind-html="record.arcgis_symbology_link | linky"></td>
               </tr>
               <tr>
                 <td>QGIS symbology link:</td>
-                <td bind-html="record.record.qgis_symbology_link | linky"></td>
+                <td ng-bind-html="record.record.qgis_symbology_link | linky"></td>
               </tr>
               <tr>
                 <td>Service type:</td>
-                <td>{{ record.service_type }}</td>
+                <td ng-bind-html="record.record.service_type | linky"></td>
               </tr>
               <tr>
                 <td>Coordinate reference system:</td>
-                <td>{{ record.crs }}</td>
+                <td ng-bind-html="record.crs | linky"></td>
               </tr>
               <tr>
                 <td>Terms of use:</td>
@@ -99,11 +99,11 @@
               </tr>
               <tr>
                 <td>Proving date:</td>
-                <td >{{ record.proved }}</td>
+                <td ng-bind-html="record.proved | linky"></td>
               </tr>
               <tr>
                 <td>Access restriction:</td>
-                <td>{{ record.visibility }}</td>
+                <td ng-bind-html="record.visibility | linky"></td>
               </tr>
             </tbody>
           </table>
