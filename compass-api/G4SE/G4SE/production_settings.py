@@ -145,7 +145,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_ROOT = 'staticfiles'
-STATIC_URL = '/static/'
+STATIC_URL = '/staticfiles/'
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (

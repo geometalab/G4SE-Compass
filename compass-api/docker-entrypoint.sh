@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-cd ${HOME}/G4SE
+cd /G4SE
 touch /var/log/G4SE.log
 python3 manage.py migrate --no-input
 python3 manage.py collectstatic --noinput
