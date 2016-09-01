@@ -1,3 +1,4 @@
 FROM nginx:alpine
-COPY ./default.conf.template /etc/nginx/nginx.conf
-CMD nginx -g 'daemon off;'
+COPY ./nginx.conf.template /etc/nginx/nginx.conf.template
+CMD DOMAIN_NAMES=$(echo $VIRTUAL_HOST | sed 's/,/ /g') envsubst '$DOMAIN_NAMES' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf \
+&& nginx -g 'daemon off;'
