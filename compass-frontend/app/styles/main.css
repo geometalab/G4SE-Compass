@@ -86,11 +86,10 @@ table{
   padding: 2px;
 }
 
-.pagination > li > a{
+.pagination > li:first-child > a, .pagination > li:last-child > a{
   border-radius: 0;
   background: none;
   border: 1px solid #ccc;
   color: #0065A3;
   font-size: 12px;
 }
-
