@@ -10,7 +10,16 @@ class Base(models.Model):
     """
     api_id = models.CharField(primary_key=True, max_length=100, editable=False, default=uuid.uuid4)
     identifier = models.CharField(max_length=255)
-    language = models.CharField(max_length=20)
+    GERMAN = 'de'
+    FRENCH = 'fr'
+    ENGLISH = 'en'
+    # Enums for language
+    language_choices = (
+        (GERMAN, 'de'),
+        (FRENCH, 'fr'),
+        (ENGLISH, 'en'),
+    )
+    language = models.CharField(max_length=20, choices=language_choices, default=GERMAN)
     content = models.CharField(max_length=255)
     abstract = models.TextField()
     publication_year = models.CharField(max_length=20)
@@ -32,6 +41,7 @@ class Base(models.Model):
     crs = models.CharField(max_length=20)
     term_link = models.URLField(max_length=2083)
     proved = models.DateField(blank=True, null=True)
+    # Enums for visibility
     PUBLIC = 'public'
     TEST = 'test'
     HSR_INTERNAL = 'hsr-internal'
