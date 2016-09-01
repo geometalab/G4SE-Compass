@@ -54,7 +54,7 @@
               </tr>
               <tr>
                 <td class="col-xs-3">Publication lineage:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.publication_lineage | linky"></td>
+                <td colspan="3" class="col-xs-9" ng-bind-html="record.publication_lineage"></td>
               </tr>
               <tr>
                 <td class="col-xs-3">Geographical extent:</td>
@@ -85,20 +85,12 @@
                 <td colspan="3" class="col-xs-9" ng-bind-html="record.qgis_layer_link | linky"></td>
               </tr>
               <tr>
-                <td class="col-xs-3">ArcGIS symbology link:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.arcgis_symbology_link | linky"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">QGIS symbology link:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.record.qgis_symbology_link | linky"></td>
-              </tr>
-              <tr>
                 <td class="col-xs-3">Service type:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.record.service_type | linky"></td>
+                <td colspan="3" class="col-xs-9" ng-bind-html="record.service_type | linky"></td>
               </tr>
               <tr>
                 <td class="col-xs-3">Coordinate reference system:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.crs | linky"></td>
+                <td colspan="3" class="col-xs-9" ng-bind-html="record.crs"></td>
               </tr>
               <tr>
                 <td class="col-xs-3">Terms of use:</td>
@@ -106,11 +98,7 @@
               </tr>
               <tr>
                 <td class="col-xs-3">Proving date:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.proved | linky"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">Access restriction:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.visibility | linky"></td>
+                <td colspan="3" class="col-xs-9" ng-bind-html="record.proved"></td>
               </tr>
             </tbody>
           </table>

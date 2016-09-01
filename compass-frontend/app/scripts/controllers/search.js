@@ -54,11 +54,7 @@ angular.module('g4seApp')
             $scope.$apply();
           });
         }, function errorCallback(response) {
-          if(response.status == 404){
-            console.log(response);
-          }else{
-
-          }
+          // TODO error handling
         });
       };
 
