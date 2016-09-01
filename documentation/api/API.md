@@ -20,15 +20,15 @@ Base URL: http://86.119.37.75/
 ## search
 | Fulltext search records |                                         |
 |-------------------------|-----------------------------------------|
-| Path                    | /api/search/                            |
+| Path                    | /api/metadata/search/                   |
 | Parameters              | Required: query, optional: language     |
 | Result                  | Record list                             |
 | Example                 | /api/search?query=wildlife&language=en  |
 
 ## recent
-| Get most rectly inserted records |                        |
-|----------------------------------|------------------------|
-| Path                             | /api/recent/           |
-| Parameters                       | Optional: count        |
-| Result                           | Record list            |
-| Example                          | /api/search?count=10   |
+| Get most rectly inserted records |                            |
+|----------------------------------|----------------------------|
+| Path                             | /api/metadata/recent/      |
+| Parameters                       | Optional: count (default 5 |
+| Result                           | Record list                |
+| Example                          | /api/search?count=10       |
