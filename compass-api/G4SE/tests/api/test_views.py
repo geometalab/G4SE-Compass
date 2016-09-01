@@ -33,7 +33,7 @@ class TestListViews(APITestCase):
         assert 'GeoVITe' in record.data.values()
 
     def test_most_recent_records(self):
-        record_list = self.client.get('/api/recent/?count=2')
+        record_list = self.client.get('/api/metadata/recent/?count=2')
         assert len(record_list.data) == 2
 
         # Add new record over API
@@ -41,7 +41,7 @@ class TestListViews(APITestCase):
         self.client.force_authenticate(user=user)
         self.client.post('/api/admin/create/', data, format='json')
 
-        new_record_list = self.client.get('/api/recent/?count=2')
+        new_record_list = self.client.get('/api/metadata/recent/?count=2')
         assert len(record_list.data) == 2
         assert 'Topologisches Landschaftsmodell TLM, Fliessgewässer' in new_record_list.data[0].values()
         # cleanup
@@ -76,26 +76,26 @@ class TestSearchHelpers(APITestCase):
 class TestSearchViews(APITestCase):
 
     def test_search(self):
-        result_list = self.client.get('/api/search/?query=Zürich')
+        result_list = self.client.get('/api/metadata/search/?query=Zürich')
         for result in result_list.data:
             assert 'Zürich' in result.values()
 
     def test_external_search(self):
-        result = self.client.get('/api/search/?query=swissimage&language=de')
+        result = self.client.get('/api/metadata/search/?query=swissimage&language=de')
         assert len(result.data) == 4
-        empty_result = self.client.get('/api/search/?query=swissimage', REMOTE_ADDR="123.1.1.3")
+        empty_result = self.client.get('/api/metadata/search/?query=swissimage', REMOTE_ADDR="123.1.1.3")
         assert len(empty_result.data) == 3
 
     def test_or_search(self):
-        result = self.client.get('/api/search/?query=orthofotho digital&language=de')
+        result = self.client.get('/api/metadata/search/?query=orthofotho digital&language=de')
         assert len(result.data) == 17
 
     def test_and_search(self):
-        result = self.client.get('/api/search/?query=orthophoto%26digital&language=de')
+        result = self.client.get('/api/metadata/search/?query=orthophoto%26digital&language=de')
         assert len(result.data) == 4
 
     def test_invalid_search_query(self):
-        result = self.client.get('/api/search/?query=orthophoto|%26digital&language=de')
+        result = self.client.get('/api/metadata/search/?query=orthophoto|%26digital&language=de')
         assert result.status_code == 400
 
 
