@@ -19,10 +19,16 @@ http {
         location /staticfiles {
             autoindex off;
             alias /G4SE/staticfiles;
-            expires 1y;
             access_log off;
             add_header Cache-Control "public";
          }
+
+        location / {
+            autoindex off;
+            alias /var/www/;
+            access_log off;
+            add_header Cache-Control "public";
+        }
 
         location /api {
             proxy_pass http://api:8000;
