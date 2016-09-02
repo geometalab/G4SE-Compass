@@ -10,13 +10,13 @@
 angular.module('g4seApp').service('dataService', ['$http', function ($http) {
   return {
     getSearchResult: function (searchQuery) {
-      return $http.get('http://localhost/api/search/?query=' + encodeURIComponent(searchQuery));
+      return $http.get(API_BASE_URL + '/api/metadata/search/?query=' + encodeURIComponent(searchQuery));
     },
     getSingleResult: function (id) {
-      return $http.get('http://localhost/api/metadata/' + id);
+      return $http.get(API_BASE_URL + '/api/metadata/' + id);
     },
     getRecentlyUpdated: function () {
-      return $http.get('http://localhost/api/recent/?count=5');
+      return $http.get(API_BASE_URL + '/api/metadata/recent/?count=5');
     }
   };
 }]);
