@@ -1,6 +1,6 @@
 # API
 
-Base URL: http://86.119.37.75/
+Base URL: http://search-geodata4edu.hsr.ch
 ## metadata record
 | Get a specific metadata record by id |                             |
 |-----------------------------|--------------------------------------|
