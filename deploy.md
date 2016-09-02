@@ -8,4 +8,4 @@ Additionaly the env variable VIRTUAL_HOST is required. In it you can set the sit
 
 Example:
 
-sudo docker run -t -i -d --link api:api --restart=always -p 0.0.0.0:80:80 --volumes-from api -e VIRTUAL_HOST="example.com" --name nginx geometalab/g4se-nginx
+    sudo docker run -t -i -d --link api:api --restart=always -p 0.0.0.0:80:80 --volumes-from api -e VIRTUAL_HOST="example.com" --name nginx geometalab/g4se-nginx
