@@ -1,8 +1,5 @@
 #!/bin/bash
 cd compass-frontend
-npm install -g bower grunt
-npm install
-bower install
 grunt build
 cd ..
 rm -rf nginx/g4se-frontend
