@@ -24,84 +24,71 @@
         No results found.
       </div>
       <div ng-repeat="record in filteredRecords">
-        <div class="col-xs-12 custom-col result">
-          <table class="table">
-            <tr>
-              <th colspan="4" ng-bind-html="record.content | linky"></th>
-            </tr>
-            <tbody>
-              <tr>
-                <td class="col-xs-3">Geographical coverage:</td>
-                <td class="col-xs-3" ng-bind-html="record.geography | linky"></td>
-                <td class="col-xs-3">Geodata type:</td>
-                <td class="col-xs-3" ng-bind-html="record.geodata_type | linky"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">Source of original data:</td>
-                <td class="col-xs-3" ng-bind-html="record.source | linky"></td>
-                <td class="col-xs-3">Publication year:</td>
-                <td class="col-xs-3" ng-bind-html="record.publication_year | linky"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">Additional metadata:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.metadata_link | linky"></td>
-              </tr>
-            </tbody>
-            <tbody ng-show="record.detailsHidden == true">
-              <tr>
-                <td class="col-xs-3">Abstract:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.abstract | linky"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">Publication lineage:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.publication_lineage"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">Geographical extent:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.extent | linky"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">Access to data:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.access_link | linky"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">Entry point:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.base_link | linky"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">Group:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.collection | linky"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">Dataset name:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.dataset | linky"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">ArcGIS layer link:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.arcgis_layer_link | linky"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">QGIS layer link:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.qgis_layer_link | linky"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">Service type:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.service_type | linky"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">Coordinate reference system:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.crs"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">Terms of use:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.term_link | linky"></td>
-              </tr>
-              <tr>
-                <td class="col-xs-3">Proving date:</td>
-                <td colspan="3" class="col-xs-9" ng-bind-html="record.proved"></td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="col-md-12 result">
+          <!-- Short list -->
+              <div>
+                <ng-include src="'views/partials/record.html'"></ng-include>
+              </div>
+
+          <!-- END short list -->
+          <!-- full attributes -->
+            <div ng-show="record.detailsHidden == true">
+              <h4>Extras</h4>
+            </div>
+              <!--<tr>-->
+                <!--<td class="col-xs-3">Abstract:</td>-->
+                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.abstract | linky"></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+                <!--<td class="col-xs-3">Publication lineage:</td>-->
+                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.publication_lineage"></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+                <!--<td class="col-xs-3">Geographical extent:</td>-->
+                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.extent | linky"></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+                <!--<td class="col-xs-3">Access to data:</td>-->
+                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.access_link | linky"></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+                <!--<td class="col-xs-3">Entry point:</td>-->
+                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.base_link | linky"></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+                <!--<td class="col-xs-3">Group:</td>-->
+                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.collection | linky"></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+                <!--<td class="col-xs-3">Dataset name:</td>-->
+                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.dataset | linky"></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+                <!--<td class="col-xs-3">ArcGIS layer link:</td>-->
+                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.arcgis_layer_link | linky"></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+                <!--<td class="col-xs-3">QGIS layer link:</td>-->
+                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.qgis_layer_link | linky"></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+                <!--<td class="col-xs-3">Service type:</td>-->
+                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.service_type | linky"></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+                <!--<td class="col-xs-3">Coordinate reference system:</td>-->
+                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.crs"></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+                <!--<td class="col-xs-3">Terms of use:</td>-->
+                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.term_link | linky"></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+                <!--<td class="col-xs-3">Proving date:</td>-->
+                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.proved"></td>-->
+              <!--</tr>-->
+            <!--</tbody>-->
+          <!--</table>-->
           <button class="btn btn-secondary" ng-click="expand({ $index })" type="button">
             <div ng-show="record.detailsHidden != true">Show more</div>
             <div ng-show="record.detailsHidden == true">Show less</div>
