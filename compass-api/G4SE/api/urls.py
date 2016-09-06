@@ -1,5 +1,5 @@
-from django.conf.urls import url, include
-from api import views
+from django.conf.urls import url
+from . import views
 
 
 urlpatterns = [

@@ -1,0 +1,58 @@
+version: '2'
+services:
+  api:
+    image: geometalab/g4se-api
+    build:
+      context: ./compass-api/
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - api-static:/var/www/g4se-api/static
+    environment:
+      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+      - DATABASE_URL=postgres://postgres:postgres@database:5432/G4SE
+      - SECRET_KEY=secret_key
+      - DEBUG=True
+      - STATIC_ROOT=/var/www/g4se-api/static/
+      - STATIC_URL=/api/static/
+      - ALLOWED_HOSTS=['*']
+    links:
+      - db:database
+  harvester:
+    image: geometalab/g4se-harvester
+    build:
+      context: ./compass-harvester/
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@database:5432/G4SE
+      - FILESHARE_URL=https://geodata4edu.ethz.ch/metadata/
+    links:
+      - db:database
+  db:
+    image: geometalab/g4se-api-db
+    build:
+      context: ./compass-api/
+      dockerfile: Dockerfile.database
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=G4SE
+  nginx:
+    image: geometalab/g4se-frontend
+    ports:
+      - "8080:80"
+    build:
+      context: ./nginx/
+      dockerfile: Dockerfile
+    depends_on:
+      - api
+    links:
+      - api
+    volumes:
+      - api-static:/var/www/g4se-api/static
+    environment:
+      - VIRTUAL_HOST=localhost,127.0.0.1
+volumes:
+  api-static: {}

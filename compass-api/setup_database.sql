@@ -6,7 +6,7 @@ CREATE EXTENSION IF NOT EXISTS postgis
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Create table for internally organized records
-CREATE TABLE IF NOT EXISTS public.records
+CREATE TABLE IF NOT EXISTS records
 (
   api_id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY ,
   identifier character varying NOT NULL,
@@ -44,7 +44,7 @@ WITH (
 );
 
 -- Create table for harvested records
-CREATE TABLE IF NOT EXISTS public.harvested_records
+CREATE TABLE IF NOT EXISTS harvested_records
 (
   api_id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
   identifier character varying NOT NULL,
@@ -83,7 +83,7 @@ WITH (
 
 
 -- Create view that returns the contents of all record tables, extent must be casted to text for the query to work
-CREATE OR REPLACE VIEW public.all_records AS 
+CREATE OR REPLACE VIEW all_records AS
  SELECT
     records.extent::text,
     records.api_id,
@@ -152,7 +152,7 @@ UNION
 
 
 -- Search vector triggers for internal metadata records
-CREATE OR REPLACE FUNCTION records_trigger_de()RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION records_trigger_de() RETURNS trigger AS $$
 begin
   new.search_vector_de :=
     setweight(to_tsvector('pg_catalog.german', coalesce(new.content,'')), 'A') ||
@@ -169,7 +169,7 @@ CREATE TRIGGER tsvectorupdate_de BEFORE INSERT OR UPDATE
     ON records FOR EACH ROW EXECUTE PROCEDURE records_trigger_de();
 
 
-CREATE OR REPLACE FUNCTION records_trigger_en()RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION records_trigger_en() RETURNS trigger AS $$
 begin
   new.search_vector_en :=
     setweight(to_tsvector('pg_catalog.german', coalesce(new.content,'')), 'A') ||
@@ -204,7 +204,7 @@ CREATE TRIGGER tsvectorupdate_fr BEFORE INSERT OR UPDATE
 
 
 -- Search vector triggers for harvested metadata records
-CREATE OR REPLACE FUNCTION harvested_records_trigger_de()RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION harvested_records_trigger_de() RETURNS trigger AS $$
 begin
   new.search_vector_de :=
     setweight(to_tsvector('pg_catalog.german', coalesce(new.content,'')), 'A') ||
@@ -221,7 +221,7 @@ CREATE TRIGGER harvested_tsvectorupdate_de BEFORE INSERT OR UPDATE
     ON harvested_records FOR EACH ROW EXECUTE PROCEDURE harvested_records_trigger_de();
 
 
-CREATE OR REPLACE FUNCTION harvested_records_trigger_en()RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION harvested_records_trigger_en() RETURNS trigger AS $$
 begin
   new.search_vector_en :=
     setweight(to_tsvector('pg_catalog.english', coalesce(new.content,'')), 'A') ||
@@ -238,7 +238,7 @@ CREATE TRIGGER harvested_tsvectorupdate_en BEFORE INSERT OR UPDATE
     ON harvested_records FOR EACH ROW EXECUTE PROCEDURE harvested_records_trigger_en();
 
 
-CREATE OR REPLACE FUNCTION harvested_records_trigger_fr()RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION harvested_records_trigger_fr() RETURNS trigger AS $$
 begin
   new.search_vector_fr :=
     setweight(to_tsvector('pg_catalog.french', coalesce(new.content,'')), 'A') ||
@@ -253,6 +253,3 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER harvested_tsvectorupdate_fr BEFORE INSERT OR UPDATE
     ON harvested_records FOR EACH ROW EXECUTE PROCEDURE harvested_records_trigger_fr();
-
--- Setup the database
-CREATE DATABASE G4SE;

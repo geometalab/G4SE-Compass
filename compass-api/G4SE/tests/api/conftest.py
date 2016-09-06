@@ -17,7 +17,7 @@ def setup_database():
     """
     Create custom database fields and populate them with data
     """
-    sql = str(PurePath(Path(__file__).parents[3], "database.sql"))
+    sql = str(PurePath(Path(__file__).parents[3], "setup_database.sql"))
     data = str(PurePath(Path(__file__).parents[1], "testdata.sql"))
     run_sql(sql)
     run_sql(data)

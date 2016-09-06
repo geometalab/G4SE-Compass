@@ -7,6 +7,8 @@ RUN apt-get update && \
 
 RUN pip3 install sqlalchemy
 
+ADD ./wait-for-it/wait-for-it.sh /wait-for-it.sh
+
 COPY ./docker-entrypoint.sh /
 
 ADD ./src /src
