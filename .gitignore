@@ -1,3 +1,4 @@
 *.pyc
 .idea
 .cache
+nginx/g4se-frontend

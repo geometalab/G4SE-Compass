@@ -1,0 +1,10 @@
+Django
+djangorestframework
+gunicorn
+psycopg2
+django-environ
+netaddr
+django-rest-swagger
+django-cors-middleware
+whitenoise
+brotlipy

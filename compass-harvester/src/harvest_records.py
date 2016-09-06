@@ -11,7 +11,7 @@ from sqlalchemy.orm import sessionmaker
 
 import settings
 
-WORKING_DIRECTORY = os.path.dirname(os.path.realpath(__file__)) + '/'
+WORKING_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 Base = declarative_base()
 
 
@@ -63,11 +63,11 @@ def read_csv(file):
 
 
 def save_new_data_index():
-    request.urlretrieve(settings.FILESHARE_URL + "/metadata.csv", WORKING_DIRECTORY + 'new_index.csv')
+    request.urlretrieve(settings.FILESHARE_URL + "/metadata.csv", os.path.join(WORKING_DIRECTORY, 'new_index.csv'))
 
 
 def get_data_from_index(filename):
-    with open(WORKING_DIRECTORY + filename) as file:
+    with open(os.path.join(WORKING_DIRECTORY, filename)) as file:
         reader = csv.DictReader(file, delimiter=' ')
         index = list(reader)
     return index
@@ -123,7 +123,7 @@ def update_diff(new_index, old_index):
 
 
 def db_connect():
-    return create_engine('postgresql://' + settings.DATABASE_URL)
+    return create_engine(settings.DATABASE_URL)
 
 
 def harvest():
@@ -131,8 +131,10 @@ def harvest():
     new_index = get_data_from_index('new_index.csv')
     old_index = get_data_from_index('old_index.csv')
     update_diff(new_index, old_index)
-    os.remove(WORKING_DIRECTORY + 'old_index.csv')
-    os.rename(WORKING_DIRECTORY + 'new_index.csv', WORKING_DIRECTORY + 'old_index.csv')
+    old_index_file_path = os.path.join(WORKING_DIRECTORY, 'old_index.csv')
+    index_file_path = os.path.join(WORKING_DIRECTORY, 'new_index.csv')
+    os.remove(old_index_file_path)
+    os.rename(index_file_path, old_index_file_path)
 
 
 if __name__ == "__main__":

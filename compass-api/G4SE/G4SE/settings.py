@@ -12,23 +12,27 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 import os
 
+import environ
+
+env = environ.Env(DEBUG=(bool, False),)
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = env('DEBUG')
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Internal IP ranges for displaying internal data
-INTERNAL_IP_RANGES = ["127.0.0.1"]
+# Not out of the Env, so they can easily be modified in production
+INTERNAL_IP_RANGES = ["152.96.0.0/16", "152.96.244.0/23"]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '#f%7nm1oe99sy$gx3$yfjxwhul&j&jn=3r^a)w)(#hcf+*ym+w'
+SECRET_KEY = env('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
 
 LOGGING = {
     'version': 1,
@@ -65,6 +69,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -73,6 +78,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Static Assets
+# ------------------------
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -99,37 +108,11 @@ WSGI_APPLICATION = 'G4SE.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'OPTIONS': {
-            'options': '-c search_path=django,public'
-        },
-        'NAME': 'G4SE',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '172.17.0.1',
-        'PORT': '5432',
-        'TEST': {
-            'OPTIONS': {
-                'options': '-c search_path=postgres,public'
-            },
-        }
-    },
-    'records': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'G4SE',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '172.17.0.1',
-        'PORT': '5432',
-        'TEST': {
-            'MIRROR': 'default',
-        }
-    }
+    'default': env.db(),
+    'records': env.db(),
 }
-
+DATABASES['default']['OPTIONS'] = {'options': '-c search_path=django,public'}
 
 DATABASE_ROUTERS = ['helpers.db_routers.ApiRouter']
 
@@ -169,8 +152,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
-STATIC_ROOT = 'staticfiles'
-STATIC_URL = '/staticfiles/'
+STATIC_ROOT = env.str('STATIC_ROOT', default=os.path.join(BASE_DIR, '..', 'static'))
+STATIC_URL = env.str('STATIC_URL', '/api/static/')
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (

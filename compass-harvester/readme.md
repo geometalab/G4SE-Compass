@@ -11,4 +11,4 @@ There are 2 enviroment Variables all of which are required to successfully run t
 - FILESHARE_URL: URL to the fileshare root containing xml files and a csv index
 
 Example:
--sudo docker run -t -i -d --restart=always --name harvester -e DATABASE_URL=postgres:postgres@172.17.0.1:5432/G4SE -e FILESHARE_URL=https://geodata4edu.ethz.ch/metadata/ geometalab/g4se-harvester
+`docker run -t -i -d --restart=always --name harvester -e DATABASE_URL=postgres:postgres@172.17.0.1:5432/G4SE -e FILESHARE_URL=https://geodata4edu.ethz.ch/metadata/ geometalab/g4se-harvester`
