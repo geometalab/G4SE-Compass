@@ -23,6 +23,65 @@ angular.module('g4seApp').service('dataService', ['$http', function ($http) {
 
 
 angular.module('g4seApp')
+  .filter('linkify', ['$sanitize', function($sanitize) {
+    var LINKY_URL_REGEXP =
+        /((ftp|https?):\/\/|(www\.)|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s.;,(){}<>"\u201d\u2019]/i,
+      MAILTO_REGEXP = /^mailto:/i;
+
+    var linkyMinErr = angular.$$minErr('linkify');
+    var isString = angular.isString;
+
+    return function(text, limit) {
+      if (text == null || text === '') return text;
+      if (!isString(text)) throw linkyMinErr('notstring', 'Expected string but received: {0}', text);
+
+      if ((limit == null) || (limit == undefined)) limit = 20000;
+      if (limit < 20) limit = 20;
+
+      var match;
+      var raw = text;
+      var html = [];
+      var url;
+      var i;
+      while ((match = raw.match(LINKY_URL_REGEXP))) {
+        // We can not end in these as they are sometimes found at the end of the sentence
+        url = match[0];
+        // if we did not match ftp/http/www/mailto then assume mailto
+        if (!match[2] && !match[4]) {
+          url = (match[3] ? 'http://' : 'mailto:') + url;
+        }
+        i = match.index;
+        addText(raw.substr(0, i));
+        addLink(url, match[0].replace(MAILTO_REGEXP, ''));
+        raw = raw.substring(i + match[0].length);
+      }
+      addText(raw);
+      return $sanitize(html.join(''));
+
+      function addText(text) {
+        if (!text) {
+          return;
+        }
+        html.push($sanitize(text));
+      }
+
+      function addLink(url, text) {
+        html.push('<a ');
+
+        html.push('href="',
+          url.replace(/"/g, '&quot;'),
+          '">');
+        if (text.length > limit) {
+          addText(text.slice(0, 10));
+          addText('...');
+          addText(text.slice(text.length - (limit - 13), text.length));
+        } else {
+          addText(text);
+        }
+        html.push('</a>');
+      }
+    };
+  }])
   .controller('SearchCtrl',['$scope', '$http', 'dataService', '$timeout', '$window', '$routeParams', '$location',
     function ($scope, $http, dataService, $timeout, $window, $routeParams, $location) {
       $scope.itemsPerPage = 10;

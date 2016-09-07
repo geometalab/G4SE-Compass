@@ -19,20 +19,24 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="g4seApp">
+  <body ng-app="g4seApp" class="">
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
     <div class="container">
-      <header class="row col-sm-12">
-        <h1 class="col-sm-12">Geodata4SwissEdu</h1>
-      </header>
-      <div class="row col-sm-12">
-        <div class="col-sm-12 menu">
-
+      <div class="row">
+      <div class="col-xs-8">
+        <h1>Geodatenkompass geodata4edu</h1>
+      </div>
+      <div class="col-xs-4">
+        <div class="pull-right">
+          <img src="images/HSR-Logo.jpg" height="80px" />
         </div>
       </div>
-      <div ng-view="" class="row col-sm-12"></div>
+        </div>
+      <div class="row">
+      <div ng-view=""></div>
+      </div>
     </div>
 
     <!-- build:js(.) scripts/vendor.js -->

@@ -1,0 +1,47 @@
+<div>
+  <p ng-show="record.geodata_type">
+    <strong>Data Type</strong>: {{record.geodata_type}}
+  </p>
+  <p ng-show="record.abstract">
+    <strong>Abstract</strong>: <span ng-bind-html="record.abstract | linkify:50"></span>
+  </p>
+  <p ng-show="record.publication_lineage">
+    <strong>Publication lineage</strong>: {{record.publication_lineage}}
+  </p>
+  <p ng-show="record.extent">
+    <strong>Geographical extent</strong>: {{record.extent}}
+  </p>
+  <p ng-show="record.access_link">
+    <strong>Access to data</strong>: <span ng-bind-html="record.access_link | linkify:50"></span>
+  </p>
+  <p ng-show="record.base_link">
+    <strong>Entry point</strong>:  <span ng-bind-html="record.base_link | linkify:50"></span>
+  </p>
+  <p ng-show="record.collection">
+    <strong>Group</strong>: <span ng-bind-html="record.collection | linkify:50"></span>
+  </p>
+  <p ng-show="record.dataset">
+    <strong>Dataset name</strong>: <span ng-bind-html="record.dataset | linkify:50"></span>
+  </p>
+  <p ng-show="record.arcgis_layer_link">
+    <strong>ArcGIS layer link</strong>: <span ng-bind-html="record.arcgis_layer_link | linkify:50"></span>
+  </p>
+  <p ng-show="record.qgis_layer_link">
+    <strong>QGIS layer link</strong>: <span ng-bind-html="record.qgis_layer_link | linkify:50"></span>
+  </p>
+  <p ng-show="record.service_type">
+    <strong>Service type</strong>: <span ng-bind-html="record.service_type | linkify:50"></span>
+  </p>
+  <p ng-show="record.crs">
+    <strong>Coordinate reference system</strong>: {{record.crs}}
+  </p>
+  <p ng-show="record.term_link">
+    <strong>Terms of use</strong>: <span ng-bind-html="record.term_link | linkify:50"></span>
+  </p>
+  <p ng-show="record.proved">
+    <strong>Proving date</strong>: <span ng-bind-html="record.proved | linkify:50"></span>
+  </p>
+  <p ng-show="record.metadata_link">
+    <strong>Additional metadata</strong>: <span ng-bind-html="record.metadata_link | linkify:50"></span>
+  </p>
+</div>
