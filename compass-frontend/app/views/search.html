@@ -1,5 +1,5 @@
-<div class="main-content" ng-controller="SearchCtrl">
-  <div class="recent col-sm-3 recent">
+<div ng-controller="SearchCtrl">
+  <div class="col-sm-3">
     <div class="panel panel-default">
       <div class="panel-heading">Most recently updated or entered metadata</div>
       <div class="panel-body" ng-repeat="record in recentRecords" ng-click="singleResult(record.api_id)">
@@ -10,93 +10,59 @@
   <div class="search col-sm-9">
     <form ng-submit="enterSearch()" class="search">
       <div class="input-group">
-          <input type="text" class="form-control" ng-model="text">
+        <input type="text" class="form-control" ng-model="text">
         <span class="input-group-btn">
           <button class="btn btn-secondary search-button" type="submit">Search</button>
         </span>
       </div>
     </form>
-    <div class="results">
-      <div class="resultCount" ng-show="totalItems != 0 && totalItems != undefined">
-        Page {{ currentPage }} of total {{ totalItems }} found results.
-      </div>
-      <div class="resultCount" ng-show="totalItems == 0">
-        No results found.
-      </div>
-      <div ng-repeat="record in filteredRecords">
-        <div class="col-md-12 result">
-          <!-- Short list -->
-              <div>
-                <ng-include src="'views/partials/record.html'"></ng-include>
-              </div>
+    <div class="row">
+      <div class="resultCount" ng-show="totalItems != undefined && totalItems != 0">
 
-          <!-- END short list -->
-          <!-- full attributes -->
-            <div ng-show="record.detailsHidden == true">
-              <h4>Extras</h4>
+        <ul ng-show="totalItems != 0 && totalItems != undefined" uib-pagination items-per-page="itemsPerPage"
+            total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></ul>
+
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <div class="row">
+              <div class="col-sm-2"><strong>Name</strong></div>
+              <div class="col-sm-2">Geographical Coverage</div>
+              <div class="col-sm-2">Publication Year</div>
+              <div class="col-sm-3">Source of original data</div>
+              <div class="col-sm-2">Service Type</div>
+              <div class="col-sm-1"></div>
             </div>
-              <!--<tr>-->
-                <!--<td class="col-xs-3">Abstract:</td>-->
-                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.abstract | linky"></td>-->
-              <!--</tr>-->
-              <!--<tr>-->
-                <!--<td class="col-xs-3">Publication lineage:</td>-->
-                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.publication_lineage"></td>-->
-              <!--</tr>-->
-              <!--<tr>-->
-                <!--<td class="col-xs-3">Geographical extent:</td>-->
-                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.extent | linky"></td>-->
-              <!--</tr>-->
-              <!--<tr>-->
-                <!--<td class="col-xs-3">Access to data:</td>-->
-                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.access_link | linky"></td>-->
-              <!--</tr>-->
-              <!--<tr>-->
-                <!--<td class="col-xs-3">Entry point:</td>-->
-                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.base_link | linky"></td>-->
-              <!--</tr>-->
-              <!--<tr>-->
-                <!--<td class="col-xs-3">Group:</td>-->
-                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.collection | linky"></td>-->
-              <!--</tr>-->
-              <!--<tr>-->
-                <!--<td class="col-xs-3">Dataset name:</td>-->
-                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.dataset | linky"></td>-->
-              <!--</tr>-->
-              <!--<tr>-->
-                <!--<td class="col-xs-3">ArcGIS layer link:</td>-->
-                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.arcgis_layer_link | linky"></td>-->
-              <!--</tr>-->
-              <!--<tr>-->
-                <!--<td class="col-xs-3">QGIS layer link:</td>-->
-                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.qgis_layer_link | linky"></td>-->
-              <!--</tr>-->
-              <!--<tr>-->
-                <!--<td class="col-xs-3">Service type:</td>-->
-                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.service_type | linky"></td>-->
-              <!--</tr>-->
-              <!--<tr>-->
-                <!--<td class="col-xs-3">Coordinate reference system:</td>-->
-                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.crs"></td>-->
-              <!--</tr>-->
-              <!--<tr>-->
-                <!--<td class="col-xs-3">Terms of use:</td>-->
-                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.term_link | linky"></td>-->
-              <!--</tr>-->
-              <!--<tr>-->
-                <!--<td class="col-xs-3">Proving date:</td>-->
-                <!--<td colspan="3" class="col-xs-9" ng-bind-html="record.proved"></td>-->
-              <!--</tr>-->
-            <!--</tbody>-->
-          <!--</table>-->
-          <button class="btn btn-secondary" ng-click="expand({ $index })" type="button">
-            <div ng-show="record.detailsHidden != true">Show more</div>
-            <div ng-show="record.detailsHidden == true">Show less</div>
-          </button>
+          </div>
+        </div>
+
+        <div class="panel panel-default" ng-repeat="record in filteredRecords">
+          <div class="panel-heading">
+
+            <!-- Short list -->
+            <div class="col-sm-2">{{record.content}}</div>
+            <div class="col-sm-2">{{record.geography}}</div>
+            <div class="col-sm-2">{{record.publication_year}}</div>
+            <div class="col-sm-3">{{record.source}}</div>
+            <div class="col-sm-2">{{record.service_type}}</div>
+            <div class="col-sm-1">
+              <a ng-click="expand({ $index })" type="link" class="navbar-link">
+                <div ng-show="record.detailsHidden != true">Show more</div>
+                <div ng-show="record.detailsHidden == true">Show less</div>
+              </a>
+            </div>
+          </div>
+          <div class="panel-body"ng-show=" record.detailsHidden == true">
+            <div class="col-sm-12">
+              <ng-include src="'views/partials/record_details.html'"></ng-include>
+            </div>
+          </div>
         </div>
       </div>
       <ul ng-show="totalItems != 0 && totalItems != undefined" uib-pagination items-per-page="itemsPerPage"
           total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></ul>
+    </div>
+    <div class="resultCount" ng-show="totalItems == 0">
+      No results found.
     </div>
   </div>
 </div>
