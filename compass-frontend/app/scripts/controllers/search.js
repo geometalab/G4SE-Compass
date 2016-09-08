@@ -13,7 +13,7 @@ angular.module('g4seApp').service('dataService', ['$http', function ($http) {
       return $http.get(API_BASE_URL + '/api/metadata/search/?query=' + encodeURIComponent(searchQuery));
     },
     getSingleResult: function (id) {
-      return $http.get(API_BASE_URL + '/api/metadata/' + id);
+      return $http.get(API_BASE_URL + '/api/metadata/' + id + '/');
     },
     getRecentlyUpdated: function () {
       return $http.get(API_BASE_URL + '/api/metadata/recent/?count=5');
@@ -104,6 +104,7 @@ angular.module('g4seApp')
       });
 
       $scope.singleResult = function(apiId) {
+        $scope.text = null;
         dataService.getSingleResult(apiId).then(function (result) {
           $scope.filteredRecords = [result.data];
           // null so pagination section isn't shown
@@ -119,6 +120,7 @@ angular.module('g4seApp')
 
       $scope.enterSearch = function() {
         if ($scope.text){
+          $location.search('id', null);
           dataService.getSearchResult($scope.text).then(function (result) {
             $scope.records = result.data;
             $scope.totalItems = result.data.length;
@@ -130,7 +132,6 @@ angular.module('g4seApp')
 
       $scope.expand = function (index) {
         $scope.filteredRecords[index.$index].detailsHidden = !$scope.filteredRecords[index.$index].detailsHidden;
-        $location.search('id', $scope.filteredRecords[index.$index]['api_id']);
         $scope.isHidden = !$scope.isHidden;
         $timeout(function () {
           $scope.$apply();
