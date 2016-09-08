@@ -2,8 +2,10 @@
   <div class="col-sm-3">
     <div class="panel panel-default">
       <div class="panel-heading">Most recently updated or entered metadata</div>
-      <div class="panel-body" ng-repeat="record in recentRecords" ng-click="singleResult(record.api_id)">
-        {{ record.modified | date:'yyyy-MM-dd HH:mm'}}: {{ record.content }}
+      <div class="panel-body">
+        <a href ng-repeat="record in recentRecords" ng-click="singleResult(record.api_id)">
+          {{ record.content }} ({{ record.modified | date:'yyyy-MM-dd HH:mm'}})
+        </a>
       </div>
     </div>
   </div>
@@ -16,39 +18,41 @@
         </span>
       </div>
     </form>
-    <div class="row">
-      <div class="resultCount" ng-show="totalItems != undefined && totalItems != 0">
+      <div class="resultCount">
 
         <ul ng-show="totalItems != 0 && totalItems != undefined" uib-pagination items-per-page="itemsPerPage"
             total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></ul>
+        <ul ng-show="totalItems == 0 || totalItems == undefined"></ul>
 
-        <div class="panel panel-info">
+        <div class="panel panel-info" ng-repeat="record in filteredRecords">
           <div class="panel-heading">
             <div class="row">
-              <div class="col-sm-2"><strong>Name</strong></div>
-              <div class="col-sm-2">Geographical Coverage</div>
-              <div class="col-sm-2">Publication Year</div>
-              <div class="col-sm-3">Source of original data</div>
-              <div class="col-sm-2">Service Type</div>
-              <div class="col-sm-1"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel panel-default" ng-repeat="record in filteredRecords">
-          <div class="panel-heading">
-
-            <!-- Short list -->
-            <div class="col-sm-2">{{record.content}}</div>
-            <div class="col-sm-2">{{record.geography}}</div>
-            <div class="col-sm-2">{{record.publication_year}}</div>
-            <div class="col-sm-3">{{record.source}}</div>
-            <div class="col-sm-2">{{record.service_type}}</div>
-            <div class="col-sm-1">
-              <a ng-click="expand({ $index })" type="link" class="navbar-link">
-                <div ng-show="record.detailsHidden != true">Show more</div>
-                <div ng-show="record.detailsHidden == true">Show less</div>
-              </a>
+              <!-- Short list -->
+              <div class="col-sm-4">
+                  <h4 uib-tooltip-html="record.abstract | linkify:50">{{record.content}}</h4>
+              </div>
+              <div class="col-sm-3">
+                <div class="row">
+                  Publication Year: {{record.publication_year}}
+                </div>
+                <div class="row">
+                  Service Type: {{record.service_type}}
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="row">
+                  Geographical Coverage: {{record.geography}}
+                </div>
+                <div class="row">
+                  Source of original data: {{record.source}}
+                </div>
+              </div>
+              <div class="col-sm-1">
+                <a ng-click="expand({ $index })" type="link" class="navbar-link">
+                  <div ng-show="record.detailsHidden != true">Show more</div>
+                  <div ng-show="record.detailsHidden == true">Show less</div>
+                </a>
+              </div>
             </div>
           </div>
           <div class="panel-body"ng-show=" record.detailsHidden == true">
@@ -60,7 +64,6 @@
       </div>
       <ul ng-show="totalItems != 0 && totalItems != undefined" uib-pagination items-per-page="itemsPerPage"
           total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></ul>
-    </div>
     <div class="resultCount" ng-show="totalItems == 0">
       No results found.
     </div>
