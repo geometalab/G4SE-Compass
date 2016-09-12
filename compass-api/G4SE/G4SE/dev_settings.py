@@ -9,6 +9,11 @@ https://docs.djangoproject.com/en/dev/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
+import os
+if os.environ.get('SECRET_KEY', None) is None:
+    os.environ['SECRET_KEY'] = 'dev_secret_key'
+if os.environ.get('DATABASE_URL', None) is None:
+    os.environ['DATABASE_URL'] = 'postgres://postgres:postgres@localhost:5432/G4SE'
 
 from .settings import *  # noqa
 INTERNAL_IP_RANGES = ["127.0.0.1", '172.0.0.0/8']

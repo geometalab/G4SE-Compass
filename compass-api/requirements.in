@@ -1,4 +1,6 @@
-Django
+#Django>=1.10.2
+-e git+https://github.com/django/django.git@stable/1.10.x#egg=Django
+grako
 djangorestframework
 gunicorn
 psycopg2

@@ -1,3 +1,4 @@
+from rest_framework.exceptions import ParseError
 from rest_framework.test import APITestCase
 import pytest
 from django.contrib.auth.models import User
@@ -53,22 +54,14 @@ class TestListViews(APITestCase):
 class TestSearchHelpers(APITestCase):
 
     def test_parse_query(self):
-        and_query = Search.parse_query('A & B')
+        and_query = Search.search_to_query_string('A & B')
         assert and_query == 'A&B'
-        or_query = Search.parse_query('A B')
+        or_query = Search.search_to_query_string('A B')
         assert or_query == 'A|B'
-        and_or_query = Search.parse_query('A & B C')
+        and_or_query = Search.search_to_query_string('A & B C')
         assert and_or_query == 'A&B|C'
-        multiple_whitespaces = Search.parse_query('A  &   B')
+        multiple_whitespaces = Search.search_to_query_string('A  &   B')
         assert multiple_whitespaces == 'A&B'
-
-    def test_parse_language(self):
-        german = Search.parse_language('de')
-        assert german[0] == 'search_vector_de'
-        assert german[1] == 'german'
-        # Invalid Language should raise an error
-        with pytest.raises(Exception) as exception_info:
-            Search.parse_language('jibberish')
 
 
 @pytest.mark.django_db(transaction=True)
@@ -76,9 +69,16 @@ class TestSearchHelpers(APITestCase):
 class TestSearchViews(APITestCase):
 
     def test_search(self):
-        result_list = self.client.get('/api/metadata/search/?query=Zürich')
+        result_list = self.client.get('/api/metadata/search/?query=digital')
+        assert len(result_list.data) > 0
         for result in result_list.data:
-            assert 'Zürich' in result.values()
+            assert any('digital' in value for value in result.values())
+
+    def test_partial_word_search(self):
+        result_list = self.client.get('/api/metadata/search/?query=digital')
+        assert len(result_list.data) > 0
+        for result in result_list.data:
+            assert any('digital' in value for value in result.values())
 
     def test_external_search(self):
         result = self.client.get('/api/metadata/search/?query=swissimage&language=de')
@@ -106,7 +106,7 @@ class TestAuthentication(APITestCase):
     def test_authenticate(self):
         assert self.client.login(username='admin', password='securepassword')
         self.client.logout()
-        assert self.client.login(username='admin', password='wrongpassword') == False
+        assert self.client.login(username='admin', password='wrongpassword') is False
 
 
 @pytest.mark.django_db(transaction=True)

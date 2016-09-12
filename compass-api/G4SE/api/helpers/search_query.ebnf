@@ -1,0 +1,16 @@
+start = search_query $;
+
+search_query = parenthesized_query | (combined_query | search_term);
+parenthesized_query = '(' (@:parenthesized_query | @:combined_query | @:search_term) ')';  # Solution for BUG: https://bitbucket.org/apalala/grako/issues/81/left-recursion
+combined_query = search_query BIN_OP search_query;
+BIN_OP = and_op | OR_OP;
+search_term = [ unary_op ] search_word;
+
+search_word = quoted_string | literal_search_word;
+quoted_string = /(?:"(?:[^"\n\r\\]|(?:"")|(?:\\x[0-9a-fA-F]+)|(?:\\.))*")|(?:'(?:[^'\n\r\\]|(?:'')|(?:\\x[0-9a-fA-F]+)|(?:\\.))*')/;
+literal_search_word = /\w+/;
+
+and_op = '&';
+OR_OP = pipe | /\s/;
+pipe = '|';
+unary_op = '!';

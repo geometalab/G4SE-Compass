@@ -8,6 +8,20 @@ class Base(models.Model):
     """
     Abstract base model for G4SE metadata records
     """
+    SEARCH_INDEX_FIELDS = [
+        'content',
+        'abstract',
+        'geography',
+        'collection',
+        'dataset',
+    ]
+
+    LANGUAGE_TO_PG = dict(
+        de=['search_vector_de', 'german'],
+        en=['search_vector_en', 'english'],
+        fr=['search_vector_fr', 'french'],
+    )
+
     api_id = models.CharField(primary_key=True, max_length=100, editable=False, default=uuid.uuid4)
     identifier = models.CharField(max_length=255)
     GERMAN = 'de'

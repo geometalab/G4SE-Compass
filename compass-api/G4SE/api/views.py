@@ -1,5 +1,8 @@
 import re
 import logging
+import shlex
+
+from django.contrib.postgres.search import SearchQuery
 from django.db import ProgrammingError
 from django.contrib.auth.models import User
 from rest_framework import generics, permissions
@@ -11,8 +14,8 @@ from rest_framework.decorators import api_view, renderer_classes
 from rest_framework import response, schemas
 from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
-from api.helpers.helpers import is_internal
-from api.models import AllRecords, Record
+from api.helpers.networking import is_internal
+from api.models import AllRecords, Record, Base
 from api.serializers import AllRecordsSerializer, RecordSerializer, UserSerializer, EditRecordSerializer
 
 
@@ -85,61 +88,81 @@ class Search(generics.ListAPIView):
 
     Search text is passed in query parameter. The search can be controlled with operators, which can be combined:
         - If there is no operator between search words, metadata records matching either word will be returned
-        - & for and operation. Metadata records matching bot keywords will be returned. E.g. "Zürich & Digital"
-        - ! for not operation. Records not matching the word will be returned. E.g. "Digital & !Orthofoto"
+        - & for and op. Metadata records matching bot keywords will be returned. E.g. "Zürich & Digital"
+        - ! for not op. Records not matching the word will be returned. E.g. "Digital & !Orthofoto"
     """
     serializer_class = AllRecordsSerializer
 
     @staticmethod
-    def parse_language(language):
-        if language == 'de':
-            return ['search_vector_de', 'german']
-        elif language == 'en':
-            return ['search_vector_en', 'english']
-        elif language == 'fr':
-            return ['search_vector_fr', 'french']
-        else:
-            raise ParseError('Not a valid language.')
-
-    @staticmethod
-    def parse_query(search_string):
+    def search_to_query_string(search_string):
         """
         Parses the passed search_string into a Postgres to_tsquery() compatible string
 
         Wrong User inputs won't be caught here but when the query is executed
         """
+        AND_TOKEN = '&'
+        OR_TOKEN = '|'
+        NOT_TOKEN = '!'
+
+        search_string = search_string.replace(AND_TOKEN, ' {} '.format(AND_TOKEN))  # ensure whitespace around `&`
+        search_string = search_string.replace(AND_TOKEN, ' {} '.format(AND_TOKEN))  # ensure whitespace around `&`
+        search_string = search_string.replace(OR_TOKEN, ' {} '.format(OR_TOKEN))  # remove pipes, they are the same as white space
+        search_string = search_string.replace(NOT_TOKEN, ' {} '.format(NOT_TOKEN))  # add whitespace around `!`
+
+        lexer = shlex.shlex(search_string)
+        operation = None
+        for token in lexer:
+            if token in [AND_TOKEN, OR_TOKEN, NOT_TOKEN]:
+                operation = AND_TOKEN
+                continue
+            if not operation:
+                operation = OR_TOKEN
+            if operation == AND_TOKEN:
+                sq = sq & SearchQuery(token)
+
+
+        return ''.join(parsed_string)
+
         parsed_string = " ".join(search_string.split())
+        parsed_string = parsed_string.split('|')
+        parsed_string.split('&')
         # Remove all whitespaces around "&" characters
         parsed_string = re.sub(r'\s?([&])\s?', r'\1', parsed_string)
         # Replace all whitespaces with pipes
-        return re.sub(r"\s+", '|', parsed_string)
+        condensed = re.sub(r"\s+", '|', parsed_string)
+        condensed = condensed.split('&')
+        return
 
-    @staticmethod
-    def create_query(search_string, language, internal):
+    def create_query(self, search_string, internal):
         """
         Parses the passed search_string into a Postgres to_tsquery() compatible string
         """
-        exclude = ''
-        if not internal:
-            exclude = "visibility != 'hsr-internal' AND"
+        language = self.request.query_params.get('language', 'en')
+        vector_to_search, pg_language = AllRecords.LANGUAGE_TO_PG.get(language, 'en')
 
-        query = AllRecords.objects.raw(
-            "SELECT *, ts_rank_cd( " + language[0] + """, query) AS rank
-              FROM all_records, to_tsquery(%s, %s) query
-              WHERE """ + exclude + """ query @@ """ + language[0] + """
-              ORDER BY rank DESC;""", [language[1], search_string]
-        )
+        query = AllRecords.objects
+        if not internal:
+            query = query.exclude(visibility='hsr-internal')
+        filter_kwargs = {
+            vector_to_search: search_string
+        }
+        query = query.filter(**filter_kwargs)
+        # query = query.raw(
+        #     "SELECT *, ts_rank_cd( " + vector_to_search + """, query) AS rank
+        #       FROM all_records, to_tsquery(%s, %s) query
+        #       WHERE query @@ """ + vector_to_search + """
+        #       ORDER BY rank DESC;""", [pg_language, search_string]
+        # )
         return query
 
     def get_queryset(self):
         search_string = self.request.query_params.get('query', None)
-        passed_language = self.request.query_params.get('language', 'de')
+
         if search_string:
             internal = self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR'])
-            language = self.parse_language(passed_language)
-            parsed_search = self.parse_query(search_string)
+            parsed_search = self.search_to_query_string(search_string)
             try:
-                query = list(self.create_query(parsed_search, language, internal))
+                query = list(self.create_query(parsed_search, internal))
             except ProgrammingError:
                 logger.exception('Invalid Query')
                 raise ParseError('Invalid Query')
