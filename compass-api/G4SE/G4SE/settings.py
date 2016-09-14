@@ -110,11 +110,8 @@ WSGI_APPLICATION = 'G4SE.wsgi.application'
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     'default': env.db(),
-    'records': env.db(),
 }
-DATABASES['default']['OPTIONS'] = {'options': '-c search_path=django,public'}
-
-DATABASE_ROUTERS = ['helpers.db_routers.ApiRouter']
+# DATABASES['default']['OPTIONS'] = {'options': '-c search_path=django,public'}
 
 # Password validation
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators
@@ -152,7 +149,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
-STATIC_ROOT = env.str('STATIC_ROOT', default=os.path.join(BASE_DIR, '..', 'static'))
+STATIC_ROOT = env.str('STATIC_ROOT', default=os.path.abspath(os.path.join(BASE_DIR, '..', 'static')))
 STATIC_URL = env.str('STATIC_URL', '/api/static/')
 
 REST_FRAMEWORK = {
@@ -162,3 +159,4 @@ REST_FRAMEWORK = {
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
