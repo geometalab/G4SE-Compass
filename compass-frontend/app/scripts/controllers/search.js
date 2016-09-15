@@ -106,7 +106,10 @@ angular.module('g4seApp')
       $scope.singleResult = function(apiId) {
         $scope.text = null;
         dataService.getSingleResult(apiId).then(function (result) {
-          $scope.filteredRecords = [result.data];
+          var record = result.data;
+          record.showDetails = true;
+          $scope.filteredRecords = [record];
+          console.log(record);
           // null so pagination section isn't shown
           $scope.totalItems = null;
           $location.search('id', result.data['api_id']);
@@ -131,7 +134,7 @@ angular.module('g4seApp')
       };
 
       $scope.expand = function (index) {
-        $scope.filteredRecords[index.$index].detailsHidden = !$scope.filteredRecords[index.$index].detailsHidden;
+        $scope.filteredRecords[index.$index].showDetails = !$scope.filteredRecords[index.$index].showDetails;
         $scope.isHidden = !$scope.isHidden;
         $timeout(function () {
           $scope.$apply();

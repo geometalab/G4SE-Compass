@@ -49,13 +49,13 @@
               </div>
               <div class="col-sm-1">
                 <a ng-click="expand({ $index })" type="link" class="navbar-link">
-                  <div ng-show="record.detailsHidden != true">Show more</div>
-                  <div ng-show="record.detailsHidden == true">Show less</div>
+                  <div ng-show="record.showDetails != true">Show more</div>
+                  <div ng-show="record.showDetails == true">Show less</div>
                 </a>
               </div>
             </div>
           </div>
-          <div class="panel-body"ng-show=" record.detailsHidden == true">
+          <div class="panel-body" ng-show="record.showDetails == true">
             <div class="col-sm-12">
               <ng-include src="'views/partials/record_details.html'"></ng-include>
             </div>
