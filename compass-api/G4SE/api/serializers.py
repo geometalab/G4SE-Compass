@@ -1,4 +1,4 @@
-from .models import Record, HarvestedRecord, AllRecords
+from .models import Record, HarvestedRecord, CombinedRecord
 from django.contrib.auth.models import User
 from rest_framework import serializers
 import datetime
@@ -13,7 +13,7 @@ class AllRecordsSerializer(serializers.ModelSerializer):
     content = serializers.CharField(max_length=200)
 
     class Meta:
-        model = AllRecords
+        model = CombinedRecord
         fields = '__all__'
 
 

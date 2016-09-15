@@ -12,7 +12,7 @@ from rest_framework import response, schemas
 from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
 from api.helpers.helpers import is_internal
-from api.models import AllRecords, Record
+from api.models import CombinedRecord, Record
 from api.serializers import AllRecordsSerializer, RecordSerializer, UserSerializer, EditRecordSerializer
 
 
@@ -54,8 +54,8 @@ class AllRecordsList(generics.ListAPIView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR']):
-            return AllRecords.objects.all()
-        return AllRecords.objects.exclude(visibility='hsr-internal')
+            return CombinedRecord.objects.all()
+        return CombinedRecord.objects.exclude(visibility='hsr-internal')
 
 
 class RecordDetail(generics.RetrieveAPIView):
@@ -69,11 +69,11 @@ class RecordDetail(generics.RetrieveAPIView):
 
     def retrieve(self, request, pk=None):
         try:
-            record = AllRecords.objects.get(api_id=pk)
+            record = CombinedRecord.objects.get(api_id=pk)
             if not self.request.user.is_authenticated and not is_internal(self.request.META['REMOTE_ADDR']):
                 if record.visibility == 'hsr-internal':
                     return Response(status=status.HTTP_403_FORBIDDEN)
-        except AllRecords.DoesNotExist:
+        except CombinedRecord.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = AllRecordsSerializer(record)
         return Response(serializer.data)
@@ -123,7 +123,7 @@ class Search(generics.ListAPIView):
         if not internal:
             exclude = "visibility != 'hsr-internal' AND"
 
-        query = AllRecords.objects.raw(
+        query = CombinedRecord.objects.raw(
             "SELECT *, ts_rank_cd( " + language[0] + """, query) AS rank
               FROM all_records, to_tsquery(%s, %s) query
               WHERE """ + exclude + """ query @@ """ + language[0] + """
@@ -164,9 +164,9 @@ class MostRecentRecords(generics.ListAPIView):
             raise ParseError('Count must be an Integer.')
 
         if self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR']):
-            return AllRecords.objects.order_by('-modified')[:limit]
+            return CombinedRecord.objects.order_by('-modified')[:limit]
         else:
-            return AllRecords.objects.exclude(visibility='hsr-internal').order_by('-modified')[:limit]
+            return CombinedRecord.objects.exclude(visibility='hsr-internal').order_by('-modified')[:limit]
 
 
 class InternalRecordsList(generics.ListCreateAPIView):

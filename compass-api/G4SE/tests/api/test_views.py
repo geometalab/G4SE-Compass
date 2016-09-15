@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 import pytest
 from django.contrib.auth.models import User
-from api.models import AllRecords, Record
+from api.models import CombinedRecord, Record
 from .testdata import data
 from api.views import Search
 
@@ -119,10 +119,10 @@ class TestBackendViews(APITestCase):
         assert len(result_list.data) == 10
 
     def test_insert_record(self):
-        records_before_insert = AllRecords.objects.all().count()
+        records_before_insert = CombinedRecord.objects.all().count()
         user = User.objects.get(username='admin')
         self.client.force_authenticate(user=user)
         self.client.post('/api/admin/create/', data, format='json')
-        assert AllRecords.objects.all().count() == records_before_insert + 1
+        assert CombinedRecord.objects.all().count() == records_before_insert + 1
         # Cleanup
         Record.objects.filter(identifier=1234567).delete()

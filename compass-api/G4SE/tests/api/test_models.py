@@ -1,4 +1,4 @@
-from api.models import AllRecords, Record, HarvestedRecord
+from api.models import CombinedRecord, Record, HarvestedRecord
 import pytest
 
 
@@ -7,7 +7,7 @@ import pytest
 class TestModels:
 
     def test_all_records(self):
-        res = AllRecords.objects.all().count()
+        res = CombinedRecord.objects.all().count()
         assert res == 21
 
     def test_record(self):

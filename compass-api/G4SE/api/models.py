@@ -69,7 +69,7 @@ class Base(models.Model):
         return self.content
 
 
-class AllRecords(Base):
+class CombinedRecord(Base):
     """
     Model to represent database view witch unions the record and harvested_record table
     """
@@ -129,9 +129,9 @@ class RecordTag(models.Model):
     tag_en_search_vector = SearchVectorField()
     tag_fr_search_vector = SearchVectorField()
 
-    # since AllRecords is not a table we need to use generic foreignkey...
+    # since CombinedRecord is not a table we need to use generic foreignkey...
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
+    object_id = models.CharField(max_length=100)
     content_object = GenericForeignKey('content_type', 'object_id')
 
     def __str__(self):

@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='AllRecords',
+            name='CombinedRecord',
             fields=[
                 ('api_id', models.CharField(default=uuid.uuid4, editable=False, max_length=100, primary_key=True, serialize=False)),
                 ('identifier', models.CharField(max_length=255)),
