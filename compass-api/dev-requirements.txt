@@ -4,6 +4,7 @@
 #
 #    pip-compile --output-file dev-requirements.txt dev-requirements.in
 #
+-e git+https://github.com/django/django.git@stable/1.10.x#egg=Django  # via django-debug-toolbar, django-environ
 brotlipy==0.5.1
 cffi==1.8.2               # via brotlipy
 coreapi==1.32.3           # via django-rest-swagger, openapi-codec
@@ -12,7 +13,6 @@ django-debug-toolbar==1.5
 django-environ==0.4.0
 django-extensions==1.7.4
 django-rest-swagger==2.0.5
-django==1.10.1
 djangorestframework==3.4.6
 gunicorn==19.6.0
 itypes==1.1.0             # via coreapi
