@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 import uuid
 
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
@@ -13,7 +13,7 @@ class Base(models.Model):
     """
     Abstract base model for G4SE metadata records
     """
-    api_id = models.CharField(primary_key=True, max_length=100, editable=False, default=uuid.uuid4)
+    api_id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     identifier = models.CharField(max_length=255)
     GERMAN = 'de'
     FRENCH = 'fr'
@@ -61,6 +61,7 @@ class Base(models.Model):
     search_vector_de = SearchVectorField()
     search_vector_en = SearchVectorField()
     search_vector_fr = SearchVectorField()
+    tags = GenericRelation('RecordTaggedItem', related_query_name='records')
 
     class Meta:
         abstract = True
@@ -99,7 +100,7 @@ class HarvestedRecord(Base):
 class RecordTaggedItem(models.Model):
     # since CombinedRecord is not a table we need to use generic foreignkey...
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.CharField(max_length=100)
+    object_id = models.UUIDField()
     content_object = GenericForeignKey('content_type', 'object_id')
     record_tag = models.ForeignKey('RecordTag')
 

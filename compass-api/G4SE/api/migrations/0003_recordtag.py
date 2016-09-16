@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
             name='RecordTaggedItem',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('object_id', models.CharField(max_length=100)),
+                ('object_id', models.UUIDField()),
                 ('content_type',
                  models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contenttypes.ContentType')),
             ],
