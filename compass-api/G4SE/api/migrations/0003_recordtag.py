@@ -11,7 +11,7 @@ create_update_tsv_function = """
 CREATE OR REPLACE FUNCTION {function_name}()
 RETURNS TRIGGER AS $$
 BEGIN
-    NEW.tag_{lang}_search_vector := to_tsvector('pg_catalog.{pg_lang}', array_to_string(NEW.tag_alternative_{lang}, ' ')) ||
+    NEW.tag_{lang}_search_vector := to_tsvector('pg_catalog.{pg_lang}', array_to_string(NEW.tag_alternatives_{lang}, ' ')) ||
     to_tsvector('pg_catalog.{pg_lang}', NEW.tag_{lang});
     RETURN NEW;
 END;
@@ -48,21 +48,33 @@ class Migration(migrations.Migration):
             name='RecordTag',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('tag_de', models.CharField(max_length=200, verbose_name='tag de')),
-                ('tag_en', models.CharField(max_length=200, verbose_name='tag en')),
-                ('tag_fr', models.CharField(max_length=200, verbose_name='tag fr')),
-                ('tag_alternative_de', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=200), help_text='comma separated extra fields', size=None)),
-                ('tag_alternative_en', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=200), help_text='comma separated extra fields', size=None)),
-                ('tag_alternative_fr', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=200), help_text='comma separated extra fields', size=None)),
+                ('tag_de', models.CharField(max_length=200, unique=True, verbose_name='tag de')),
+                ('tag_en', models.CharField(max_length=200, unique=True, verbose_name='tag en')),
+                ('tag_fr', models.CharField(max_length=200, unique=True, verbose_name='tag fr')),
+                ('tag_alternatives_de', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=200), help_text='comma separated extra fields', size=None)),
+                ('tag_alternatives_en', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=200), help_text='comma separated extra fields', size=None)),
+                ('tag_alternatives_fr', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=200), help_text='comma separated extra fields', size=None)),
                 ('tag_de_search_vector', django.contrib.postgres.search.SearchVectorField()),
                 ('tag_en_search_vector', django.contrib.postgres.search.SearchVectorField()),
                 ('tag_fr_search_vector', django.contrib.postgres.search.SearchVectorField()),
-                ('object_id', models.PositiveIntegerField()),
-                ('content_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contenttypes.ContentType')),
             ],
             options={
                 'db_table': 'record_tag',
             },
+        ),
+        migrations.CreateModel(
+            name='RecordTaggedItem',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('object_id', models.CharField(max_length=100)),
+                ('content_type',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contenttypes.ContentType')),
+            ],
+        ),
+        migrations.AddField(
+            model_name='recordtaggeditem',
+            name='record_tag',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.RecordTag'),
         ),
         migrations.RunSQL(
             [
