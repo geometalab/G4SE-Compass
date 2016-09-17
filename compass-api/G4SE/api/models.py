@@ -61,14 +61,17 @@ class Base(models.Model):
     search_vector_de = SearchVectorField()
     search_vector_en = SearchVectorField()
     search_vector_fr = SearchVectorField()
-    tags = GenericRelation('RecordTaggedItem', related_query_name='records')
 
-    def tag_list(self):
-        tags = self.tags.all()
+    @property
+    def tags(self):
+        return RecordTaggedItem.objects.filter(object_id=self.api_id)
+
+    def tag_list_display(self):
+        tags = self.tags
         if len(tags) > 0:
             return ', '.join([str(t) for t in tags])
         return ' - '
-    tag_list.short_description = 'tags'
+    tag_list_display.short_description = 'tags'
 
     class Meta:
         abstract = True

@@ -1,4 +1,4 @@
-from .models import Record, CombinedRecord
+from .models import Record, CombinedRecord, RecordTaggedItem
 from django.contrib.auth.models import User
 from rest_framework import serializers
 import datetime
@@ -9,6 +9,8 @@ class BaseRecordSerializer(serializers.ModelSerializer):
     search_vector_de = serializers.HiddenField(default=None)
     search_vector_en = serializers.HiddenField(default=None)
     search_vector_fr = serializers.HiddenField(default=None)
+
+    tags = serializers.ListField(child=serializers.CharField(read_only=True))
 
 
 class AllRecordsSerializer(BaseRecordSerializer):

@@ -33,8 +33,12 @@ def _taggable_records(tag):
 
 
 def _is_tag_in_record(tag, record):
-    return record.search_vector_de.find(tag) > 0
-
+    vector = {
+        Record.GERMAN: record.search_vector_de,
+        Record.ENGLISH: record.search_vector_en,
+        Record.FRENCH: record.search_vector_fr,
+    }
+    return vector[record.language].find(tag) > 0
 
 def _tags_for_record(record):
     tags = []
@@ -44,7 +48,7 @@ def _tags_for_record(record):
             Record.ENGLISH: [tag.tag_en] + tag.tag_alternatives_en,
             Record.FRENCH: [tag.tag_fr] + tag.tag_alternatives_fr,
         }
-        if any(_is_tag_in_record(tag_word, record) for tag_word in language_tags[record.language]):
+        if any(_is_tag_in_record(tag_word.lower(), record) for tag_word in language_tags[record.language]):
             tags.append(tag)
     return list(set(tags))
 
