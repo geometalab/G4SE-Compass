@@ -6,6 +6,10 @@ class ApiConfig(AppConfig):
     name = 'api'
 
     def ready(self):
-        from api.signals import auto_tag_tags_signal
+        from api.signals import changed_or_added_tag_update_records_signal
         # registering signals with the model's string label
-        post_save.connect(auto_tag_tags_signal, sender='api.RecordTag')
+        post_save.connect(changed_or_added_tag_update_records_signal, sender='api.RecordTag')
+
+        from api.signals import changed_or_added_record_update_tag_signal
+        post_save.connect(changed_or_added_record_update_tag_signal, sender='api.Record')
+        post_save.connect(changed_or_added_record_update_tag_signal, sender='api.HarvestedRecord')

@@ -1,15 +1,17 @@
-from .models import Record, HarvestedRecord, CombinedRecord
+from .models import Record, CombinedRecord
 from django.contrib.auth.models import User
 from rest_framework import serializers
 import datetime
 
 
-class AllRecordsSerializer(serializers.ModelSerializer):
+class BaseRecordSerializer(serializers.ModelSerializer):
     login_name = serializers.HiddenField(default=None)
     search_vector_de = serializers.HiddenField(default=None)
     search_vector_en = serializers.HiddenField(default=None)
     search_vector_fr = serializers.HiddenField(default=None)
 
+
+class AllRecordsSerializer(BaseRecordSerializer):
     content = serializers.CharField(max_length=200)
 
     class Meta:
@@ -17,33 +19,14 @@ class AllRecordsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RecordSerializer(serializers.ModelSerializer):
-    login_name = serializers.HiddenField(default=None)
-    search_vector_de = serializers.HiddenField(default=None)
-    search_vector_en = serializers.HiddenField(default=None)
-    search_vector_fr = serializers.HiddenField(default=None)
-
+class RecordSerializer(BaseRecordSerializer):
     class Meta:
         model = Record
         fields = '__all__'
 
 
-class HarvestedRecordSerializer(serializers.ModelSerializer):
-    login_name = serializers.HiddenField(default=None)
-    search_vector_de = serializers.HiddenField(default=None)
-    search_vector_en = serializers.HiddenField(default=None)
-    search_vector_fr = serializers.HiddenField(default=None)
-
-    class Meta:
-        model = HarvestedRecord
-        fields = '__all__'
-
-
-class EditRecordSerializer(serializers.ModelSerializer):
+class EditRecordSerializer(BaseRecordSerializer):
     modified = serializers.HiddenField(default=datetime.datetime.now())
-    search_vector_de = serializers.HiddenField(default=None)
-    search_vector_en = serializers.HiddenField(default=None)
-    search_vector_fr = serializers.HiddenField(default=None)
 
     def validate_login_name(self, value):
         user = self.context['request'].user.username

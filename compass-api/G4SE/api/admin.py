@@ -28,7 +28,8 @@ class ReadOnlyAdmin(admin.ModelAdmin):
 
 
 class RecordAdminMixin(object):
-    list_display = ['api_id', 'language', 'content', 'publication_year', 'abstract']
+    readonly_fields = ['api_id', 'tag_list']
+    list_display = ['api_id', 'language', 'content', 'publication_year', 'abstract', 'tag_list']
     exclude = ['search_vector_de', 'search_vector_fr', 'search_vector_en']
     search_fields = ['search_vector_de', 'search_vector_fr', 'search_vector_en']
 

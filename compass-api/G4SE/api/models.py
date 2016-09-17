@@ -63,6 +63,13 @@ class Base(models.Model):
     search_vector_fr = SearchVectorField()
     tags = GenericRelation('RecordTaggedItem', related_query_name='records')
 
+    def tag_list(self):
+        tags = self.tags.all()
+        if len(tags) > 0:
+            return ', '.join([str(t) for t in tags])
+        return ' - '
+    tag_list.short_description = 'tags'
+
     class Meta:
         abstract = True
 
@@ -104,6 +111,9 @@ class RecordTaggedItem(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
     record_tag = models.ForeignKey('RecordTag')
 
+    def __str__(self):
+        return "{}/{}/{}".format(self.record_tag.tag_de, self.record_tag.tag_en, self.record_tag.tag_fr)
+
 
 class RecordTag(models.Model):
     """
@@ -114,15 +124,22 @@ class RecordTag(models.Model):
     tag_fr = models.CharField(_('tag fr'), max_length=200, unique=True)
 
     tag_alternatives_de = ArrayField(
-        models.CharField(max_length=200, blank=True),
+        models.CharField(max_length=200),
+        blank=True,
+        null=True,
         help_text=_('comma separated extra fields'),
+
     )
     tag_alternatives_en = ArrayField(
-        models.CharField(max_length=200, blank=True),
+        models.CharField(max_length=200),
+        blank=True,
+        null=True,
         help_text=_('comma separated extra fields'),
     )
     tag_alternatives_fr = ArrayField(
-        models.CharField(max_length=200, blank=True),
+        models.CharField(max_length=200),
+        blank=True,
+        null=True,
         help_text=_('comma separated extra fields'),
     )
 
