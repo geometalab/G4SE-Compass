@@ -25,7 +25,7 @@
         <ul ng-show="totalItems == 0 || totalItems == undefined"></ul>
 
         <div class="panel panel-info" ng-repeat="record in filteredRecords">
-          <div class="panel-heading">
+          <div class="panel-heading cursor-pointer" ng-click="expand({ $index })">
             <div class="row">
               <!-- Short list -->
               <div class="col-sm-4">
@@ -48,10 +48,16 @@
                 </div>
               </div>
               <div class="col-sm-1">
-                <a ng-click="expand({ $index })" type="link" class="navbar-link">
-                  <div ng-show="record.showDetails != true">Show more</div>
-                  <div ng-show="record.showDetails == true">Show less</div>
-                </a>
+                  <div ng-show="record.showDetails != true">
+                    <h2>
+                      <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+                    </h2>
+                  </div>  <!-- show more -->
+                  <div ng-show="record.showDetails == true">
+                    <h2>
+                      <span class="glyphicon glyphicon-collapse-up" aria-hidden="true"></span>
+                    </h2>
+                  </div>  <!-- show less -->
               </div>
             </div>
           </div>
