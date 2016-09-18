@@ -19,6 +19,7 @@ def changed_or_added_tag_update_records_signal(sender, instance, created, raw, u
 
 
 def _combined_query(main_tag, tags, language):
+    tags = tags if tags is not None else []
     q = SearchQuery(main_tag, config=language)
     for tag in tags:
         q = q | SearchQuery(tag, config=language)

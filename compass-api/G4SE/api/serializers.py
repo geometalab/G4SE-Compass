@@ -1,4 +1,4 @@
-from .models import Record, CombinedRecord, RecordTaggedItem
+from .models import Record, CombinedRecord
 from django.contrib.auth.models import User
 from rest_framework import serializers
 import datetime

@@ -64,7 +64,7 @@ class Base(models.Model):
 
     @property
     def tags(self):
-        return RecordTaggedItem.objects.filter(object_id=self.api_id)
+        return RecordTaggedItem.objects.filter(object_id=self.api_id).order_by('id')
 
     def tag_list_display(self):
         tags = self.tags
@@ -146,9 +146,9 @@ class RecordTag(models.Model):
         help_text=_('comma separated extra fields'),
     )
 
-    tag_de_search_vector = SearchVectorField()
-    tag_en_search_vector = SearchVectorField()
-    tag_fr_search_vector = SearchVectorField()
+    tag_de_search_vector = SearchVectorField(blank=True, null=True)
+    tag_en_search_vector = SearchVectorField(blank=True, null=True)
+    tag_fr_search_vector = SearchVectorField(blank=True, null=True)
 
     def __str__(self):
         return "{}/{}/{}".format(self.tag_de, self.tag_en, self.tag_fr)

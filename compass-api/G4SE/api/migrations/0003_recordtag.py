@@ -54,9 +54,9 @@ class Migration(migrations.Migration):
                 ('tag_alternatives_de', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=200), blank=True, help_text='comma separated extra fields', null=True, size=None)),
                 ('tag_alternatives_en', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=200), blank=True, help_text='comma separated extra fields', null=True, size=None)),
                 ('tag_alternatives_fr', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=200), blank=True, help_text='comma separated extra fields', null=True, size=None)),
-                ('tag_de_search_vector', django.contrib.postgres.search.SearchVectorField()),
-                ('tag_en_search_vector', django.contrib.postgres.search.SearchVectorField()),
-                ('tag_fr_search_vector', django.contrib.postgres.search.SearchVectorField()),
+                ('tag_de_search_vector', django.contrib.postgres.search.SearchVectorField(blank=True, null=True)),
+                ('tag_en_search_vector', django.contrib.postgres.search.SearchVectorField(blank=True, null=True)),
+                ('tag_fr_search_vector', django.contrib.postgres.search.SearchVectorField(blank=True, null=True)),
             ],
             options={
                 'db_table': 'record_tag',
