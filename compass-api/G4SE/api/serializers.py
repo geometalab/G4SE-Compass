@@ -10,7 +10,7 @@ class BaseRecordSerializer(serializers.ModelSerializer):
     search_vector_en = serializers.HiddenField(default=None)
     search_vector_fr = serializers.HiddenField(default=None)
 
-    tags = serializers.ListField(child=serializers.CharField(read_only=True))
+    tags = serializers.ListField(child=serializers.CharField(read_only=True), read_only=True)
 
 
 class AllRecordsSerializer(BaseRecordSerializer):

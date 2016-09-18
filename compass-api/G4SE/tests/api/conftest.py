@@ -1,7 +1,6 @@
 from django.db import connection, transaction
 import pytest
 from pathlib import Path, PurePath
-from django.contrib.auth.models import User
 
 
 def run_sql(path):
@@ -12,8 +11,8 @@ def run_sql(path):
     transaction.atomic()
 
 
-@pytest.fixture(scope='session')
-def setup_database():
+@pytest.fixture
+def setup_database(db):
     """
     Create custom database fields and populate them with data
     """
@@ -21,8 +20,3 @@ def setup_database():
     data = str(PurePath(Path(__file__).parents[1], "testdata.sql"))
     run_sql(sql)
     run_sql(data)
-
-
-@pytest.fixture(scope='class')
-def test_user():
-    User.objects.create_superuser('admin', 'admin@test.com', 'securepassword')
