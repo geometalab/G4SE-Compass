@@ -7,9 +7,9 @@ RUN apt-get update && \
 
 RUN pip3 install sqlalchemy
 
-ADD ./wait-for-it/wait-for-it.sh /wait-for-it.sh
+ADD ./wait-for-it/wait-for-it.sh /bin/wait-for-it.sh
 
-COPY ./docker-entrypoint.sh /
+COPY ./docker-entrypoint.sh /bin/docker-entrypoint.sh
 
 ADD ./src /src
 ADD crontab /etc/cron.d/harvest-cron
@@ -17,4 +17,4 @@ ADD crontab /etc/cron.d/harvest-cron
 RUN chmod 0644 /etc/cron.d/harvest-cron
 RUN crontab /etc/cron.d/harvest-cron
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/docker-entrypoint.sh"]

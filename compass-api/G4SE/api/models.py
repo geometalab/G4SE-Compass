@@ -1,14 +1,19 @@
 from __future__ import unicode_literals
 import uuid
+
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.contrib.postgres.search import SearchVectorField
+from django.utils.translation import ugettext_lazy as _
 
 
 class Base(models.Model):
     """
     Abstract base model for G4SE metadata records
     """
-    api_id = models.CharField(primary_key=True, max_length=100, editable=False, default=uuid.uuid4)
+    api_id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     identifier = models.CharField(max_length=255)
     GERMAN = 'de'
     FRENCH = 'fr'
@@ -25,7 +30,7 @@ class Base(models.Model):
     publication_year = models.CharField(max_length=20)
     publication_lineage = models.CharField(max_length=255, blank=True, null=True)
     geography = models.CharField(max_length=255)
-    extent = models.CharField(max_length=255, null=True)
+    extent = models.CharField(max_length=255, null=True, blank=True)
     geodata_type = models.CharField(max_length=255)
     source = models.CharField(max_length=2083)
     metadata_link = models.URLField(max_length=2083)
@@ -57,6 +62,17 @@ class Base(models.Model):
     search_vector_en = SearchVectorField()
     search_vector_fr = SearchVectorField()
 
+    @property
+    def tags(self):
+        return RecordTaggedItem.objects.filter(object_id=self.api_id).order_by('id')
+
+    def tag_list_display(self):
+        tags = self.tags
+        if len(tags) > 0:
+            return ', '.join([str(t) for t in tags])
+        return ' - '
+    tag_list_display.short_description = 'tags'
+
     class Meta:
         abstract = True
 
@@ -64,7 +80,7 @@ class Base(models.Model):
         return self.content
 
 
-class AllRecords(Base):
+class CombinedRecord(Base):
     """
     Model to represent database view witch unions the record and harvested_record table
     """
@@ -89,3 +105,53 @@ class HarvestedRecord(Base):
     class Meta:
         managed = False
         db_table = 'harvested_records'
+
+
+class RecordTaggedItem(models.Model):
+    # since CombinedRecord is not a table we need to use generic foreignkey...
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.UUIDField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    record_tag = models.ForeignKey('RecordTag')
+
+    def __str__(self):
+        return "{}/{}/{}".format(self.record_tag.tag_de, self.record_tag.tag_en, self.record_tag.tag_fr)
+
+
+class RecordTag(models.Model):
+    """
+    A single tag with language associations
+    """
+    tag_de = models.CharField(_('tag de'), max_length=200, unique=True)
+    tag_en = models.CharField(_('tag en'), max_length=200, unique=True)
+    tag_fr = models.CharField(_('tag fr'), max_length=200, unique=True)
+
+    tag_alternatives_de = ArrayField(
+        models.CharField(max_length=200),
+        blank=True,
+        null=True,
+        help_text=_('comma separated extra fields'),
+
+    )
+    tag_alternatives_en = ArrayField(
+        models.CharField(max_length=200),
+        blank=True,
+        null=True,
+        help_text=_('comma separated extra fields'),
+    )
+    tag_alternatives_fr = ArrayField(
+        models.CharField(max_length=200),
+        blank=True,
+        null=True,
+        help_text=_('comma separated extra fields'),
+    )
+
+    tag_de_search_vector = SearchVectorField(blank=True, null=True)
+    tag_en_search_vector = SearchVectorField(blank=True, null=True)
+    tag_fr_search_vector = SearchVectorField(blank=True, null=True)
+
+    def __str__(self):
+        return "{}/{}/{}".format(self.tag_de, self.tag_en, self.tag_fr)
+
+    class Meta:
+        db_table = 'record_tag'

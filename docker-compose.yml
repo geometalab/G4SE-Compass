@@ -1,10 +1,10 @@
 version: '2'
 services:
   api:
+    build: ./compass-api
+#      context: ./compass-api
+#      dockerfile: Dockerfile
     image: geometalab/g4se-api
-    build:
-      context: ./compass-api/
-      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     volumes:
@@ -22,7 +22,7 @@ services:
   harvester:
     image: geometalab/g4se-harvester
     build:
-      context: ./compass-harvester/
+      context: ./compass-harvester
       dockerfile: Dockerfile
     environment:
       - DATABASE_URL=postgres://postgres:postgres@database:5432/G4SE
@@ -32,7 +32,7 @@ services:
   db:
     image: geometalab/g4se-api-db
     build:
-      context: ./compass-api/
+      context: ./compass-api
       dockerfile: Dockerfile.database
     ports:
       - "5432:5432"

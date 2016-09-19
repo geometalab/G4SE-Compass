@@ -16,4 +16,14 @@ if os.environ.get('DATABASE_URL', None) is None:
     os.environ['DATABASE_URL'] = 'postgres://postgres:postgres@localhost:5432/G4SE'
 
 from .settings import *  # noqa
+DEBUG = True
 INTERNAL_IP_RANGES = ["127.0.0.1", '172.0.0.0/8']
+INSTALLED_APPS.append('django_extensions')
+
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+if DEBUG:
+    INSTALLED_APPS.append('debug_toolbar')
+    MIDDLEWARE.append('api.patch_debug_middleware.AtopdedTo110DebugMiddleware')
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TOOLBAR_CALLBACK': lambda x: True
+    }

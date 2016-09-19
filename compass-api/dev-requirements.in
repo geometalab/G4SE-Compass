@@ -1,2 +1,4 @@
 -r requirements.in
 pytest-django
+django-extensions
+django-debug-toolbar
