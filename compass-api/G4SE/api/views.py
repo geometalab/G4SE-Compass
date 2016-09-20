@@ -67,7 +67,8 @@ class RecordDetail(generics.RetrieveAPIView):
     queryset = Record.objects.all()
     serializer_class = AllRecordsSerializer
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request,  *args, **kwargs):
+        pk = kwargs.get('pk')
         try:
             record = CombinedRecord.objects.get(api_id=pk)
             if not self.request.user.is_authenticated and not is_internal(self.request.META['REMOTE_ADDR']):
@@ -179,7 +180,7 @@ class InternalRecordsList(generics.ListCreateAPIView):
     queryset = Record.objects.all()
     serializer_class = EditRecordSerializer
 
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = RecordSerializer(queryset, many=True)
         return Response(serializer.data)
@@ -203,7 +204,8 @@ class CreateAndEditRecord(generics.RetrieveUpdateDestroyAPIView):
     queryset = Record.objects.all()
     serializer_class = EditRecordSerializer
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
         try:
             record = Record.objects.get(api_id=pk)
         except Record.DoesNotExist:
