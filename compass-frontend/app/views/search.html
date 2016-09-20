@@ -19,7 +19,7 @@
       </div>
     </form>
       <div class="resultCount">
-
+        <div class="alert-warning" ng-show="error !== undefined">{{ error }}</div>
         <ul ng-show="totalItems != 0 && totalItems != undefined" uib-pagination items-per-page="itemsPerPage"
             total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></ul>
         <ul ng-show="totalItems == 0 || totalItems == undefined"></ul>

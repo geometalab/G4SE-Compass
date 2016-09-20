@@ -105,11 +105,11 @@ angular.module('g4seApp')
 
       $scope.singleResult = function(apiId) {
         $scope.text = null;
+        $scope.error = null;
         dataService.getSingleResult(apiId).then(function (result) {
           var record = result.data;
           record.showDetails = true;
           $scope.filteredRecords = [record];
-          console.log(record);
           // null so pagination section isn't shown
           $scope.totalItems = null;
           $location.search('id', result.data['api_id']);
@@ -122,6 +122,7 @@ angular.module('g4seApp')
       };
 
       $scope.enterSearch = function() {
+        $scope.error = null;
         if ($scope.text){
           $location.search('id', null);
           dataService.getSearchResult($scope.text).then(function (result) {
@@ -129,6 +130,15 @@ angular.module('g4seApp')
             $scope.totalItems = result.data.length;
             $scope.setPage(1);
             $scope.pageChanged();
+          }, function errorCallback(response) {
+            if (response.data !== undefined && response.data.error_message !== undefined) {
+              $scope.error = response.data.error_message;
+            } else {
+              $scope.error = "Couldn't process the query. Ensure the syntax is correct and try again.";
+            }
+            $timeout(function () {
+              $scope.$apply();
+            });
           });
         }
       };
