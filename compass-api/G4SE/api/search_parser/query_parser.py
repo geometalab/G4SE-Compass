@@ -2,11 +2,14 @@ import operator
 
 from grako.model import ModelBuilderSemantics
 
-from api.search_parser import search_query_parser
 from api.search_parser.patched_search_query import SearchQuery
 
 
 class SearchSemantics(ModelBuilderSemantics):
+    def __init__(self, *args, config='english', **kwargs):
+        self.config = config
+        super().__init__(*args, **kwargs)
+
     def start(self, ast):
         return ast
 
@@ -37,7 +40,7 @@ class SearchSemantics(ModelBuilderSemantics):
         return ast
 
     def search_word(self, ast):
-        return SearchQuery(ast)
+        return SearchQuery(ast, config=self.config)
 
     def quoted_string(self, ast):
         # unquote and un-escape
@@ -57,64 +60,3 @@ class SearchSemantics(ModelBuilderSemantics):
 
     def unary_op(self, ast):
         return operator.inv
-
-
-if __name__ == "__main__":
-    def test(s, expected_tokens, expected_value=None):
-        val = search_query_parser.UnknownParser().parse(s)
-        # print(json.dumps(val, indent=2))
-        if val == expected_tokens:
-            print('SUCCESS: ', s, "=", val)
-        else:
-            print("FAIL: in: ", s, "result: ", val, "!=", expected_tokens)
-
-        if expected_value is not None:
-            val = search_query_parser.UnknownParser().parse(s, semantics=SearchSemantics())
-
-            if str(val) == str(expected_value):
-                print('SUCCESS: ', s, "=", val)
-            else:
-                print("FAIL: in: ", s, "result: ", val, "!=", expected_value)
-
-
-    test('a', 'a', SearchQuery('a'))
-    test('foo', 'foo', SearchQuery('foo'))
-    test('a&b', ['a', '&', 'b'], SearchQuery('a') & SearchQuery('b'))
-    test('!a', ['!', 'a'], ~SearchQuery('a'))
-    test('!a&b', ['!', 'a', '&', 'b'], (~SearchQuery('a')) & SearchQuery('b'))
-    test('a & b', ['a', '&', 'b'], SearchQuery('a') & SearchQuery('b'))
-    test('! a', ['!', 'a'], ~SearchQuery('a'))
-    test('! a & b', ['!', 'a', '&', 'b'], (~SearchQuery('a')) & SearchQuery('b'))
-    test("'a & (!b | !c) & d | e'", "'a & (!b | !c) & d | e'", SearchQuery("a & (!b | !c) & d | e"))
-    test('"a & (!b | !c) & d | e"', '"a & (!b | !c) & d | e"', SearchQuery("a & (!b | !c) & d | e"))
-    test('""', '""', SearchQuery(""))
-    test("''", "''", SearchQuery(""))
-    test("'\"'", "'\"'", SearchQuery('"'))
-    test('"\'"', '"\'"', SearchQuery("'"))
-    test(r"'\''", r"'\''", SearchQuery("'"))
-    test('a b', ['a', ' ', 'b'], SearchQuery('a') | SearchQuery('b'))
-    test('a  b', ['a', ' ', 'b'], SearchQuery('a') | SearchQuery('b'))
-    test('a\t b', ['a', '\t', 'b'], SearchQuery('a') | SearchQuery('b'))
-    test('a \tb', ['a', ' ', 'b'], SearchQuery('a') | SearchQuery('b'))
-    test('foo  bar', ['foo', ' ', 'bar'], SearchQuery('foo') | SearchQuery('bar'))
-    test("(a)", 'a', SearchQuery('a'))
-    test("((a))", 'a', SearchQuery('a'))
-    test("(a & b)", ['a', '&', 'b'], SearchQuery('a') & SearchQuery('b'))
-    test("a & (b & c)", ['a', '&', ['b', '&', 'c']], SearchQuery('a') & (SearchQuery('b') & SearchQuery('c')))
-    test("(a | b) & (c | b)", [['a', '&', 'b'], '|', ['c', '&', 'd']], (SearchQuery('a') & SearchQuery('b')) | (SearchQuery('c') & SearchQuery('d')))
-    # test("a", SearchQuery('a'))
-    # test("!a", ~SearchQuery('a'))
-    # # test("!!a", SearchQuery('a'))  # error expected!
-    # test("a & b & c", SearchQuery('a') & SearchQuery('b') & SearchQuery('c'))
-    # test("a & !b & c", SearchQuery('a') & ~SearchQuery('b') & SearchQuery('c'))
-    # test("a | b | c", SearchQuery('a') | SearchQuery('b') | SearchQuery('c'))
-    # test("a | !b | c", SearchQuery('a') | ~SearchQuery('b') | SearchQuery('c'))
-    # test("a & !b | !c & d | e", SearchQuery('a') & ~SearchQuery('b') | ~SearchQuery('c') & SearchQuery('d') | SearchQuery('e'))
-    test(
-        "a & (!b | !c) & d | e", ['a', '&', '!', 'b', '|', '!', 'c', '&', 'd', '|', 'e'],
-        SearchQuery('a') & (~SearchQuery('b') | ~SearchQuery('c')) & SearchQuery('d') | SearchQuery('e')
-    )
-    test(
-        "!'a & (!b | !c) & d | e' & f | k", ['!', "'a & (!b | !c) & d | e'", '&', 'f', '|', 'k'],
-        ~SearchQuery('a & (!b | !c) & d | e') & SearchQuery('f') | SearchQuery('k')
-    )

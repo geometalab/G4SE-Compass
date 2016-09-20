@@ -1,7 +1,9 @@
-import re
 import logging
-from django.db import ProgrammingError
+
+import grako
 from django.contrib.auth.models import User
+from django.utils.translation import gettext as _
+from grako.exceptions import FailedParse
 from rest_framework import generics, permissions
 from rest_framework import status
 from rest_framework.response import Response
@@ -13,8 +15,10 @@ from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
 from api.helpers.helpers import is_internal
 from api.models import CombinedRecord, Record
+from api.search_parser import search_query_parser
+from api.search_parser.query_parser import SearchSemantics
 from api.serializers import AllRecordsSerializer, RecordSerializer, UserSerializer, EditRecordSerializer
-
+from db import VectorFieldSearchRank
 
 logger = logging.getLogger(__name__)
 
@@ -91,62 +95,51 @@ class Search(generics.ListAPIView):
     """
     serializer_class = AllRecordsSerializer
 
-    @staticmethod
-    def parse_language(language):
-        if language == 'de':
-            return ['search_vector_de', 'german']
-        elif language == 'en':
-            return ['search_vector_en', 'english']
-        elif language == 'fr':
-            return ['search_vector_fr', 'french']
-        else:
-            raise ParseError('Not a valid language.')
+    LANGUAGE_CONFIG_MATCH = dict(
+        de='german',
+        en='english',
+        fr='french',
+    )
 
-    @staticmethod
-    def parse_query(search_string):
-        """
-        Parses the passed search_string into a Postgres to_tsquery() compatible string
+    def config_for_language(self, language):
+        return self.LANGUAGE_CONFIG_MATCH[language]
 
-        Wrong User inputs won't be caught here but when the query is executed
-        """
-        parsed_string = " ".join(search_string.split())
-        # Remove all whitespaces around "&" characters
-        parsed_string = re.sub(r'\s?([&])\s?', r'\1', parsed_string)
-        # Replace all whitespaces with pipes
-        return re.sub(r"\s+", '|', parsed_string)
-
-    @staticmethod
-    def create_query(search_string, language, internal):
+    def create_query(self, search_string, language, internal):
         """
         Parses the passed search_string into a Postgres to_tsquery() compatible string
         """
-        exclude = ''
+
+        query = CombinedRecord.objects
+
         if not internal:
-            exclude = "visibility != 'hsr-internal' AND"
+            query = query.filter(visibility=CombinedRecord.PUBLIC)
 
-        query = CombinedRecord.objects.raw(
-            "SELECT *, ts_rank_cd( " + language[0] + """, query) AS rank
-              FROM all_records, to_tsquery(%s, %s) query
-              WHERE """ + exclude + """ query @@ """ + language[0] + """
-              ORDER BY rank DESC;""", [language[1], search_string]
+        search_query = search_query_parser.UnknownParser().parse(
+            search_string,
+            semantics=SearchSemantics(config=self.config_for_language(language))
         )
-        return query
+        vector = 'search_vector_{}'.format(language)
+        rank = VectorFieldSearchRank(vector, search_query)
+        return query.filter(search_vector_de=search_query).annotate(rank=rank).order_by('-rank')
 
     def get_queryset(self):
         search_string = self.request.query_params.get('query', None)
         passed_language = self.request.query_params.get('language', 'de')
         if search_string:
             internal = self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR'])
-            language = self.parse_language(passed_language)
-            parsed_search = self.parse_query(search_string)
-            try:
-                query = list(self.create_query(parsed_search, language, internal))
-            except ProgrammingError:
-                logger.exception('Invalid Query')
-                raise ParseError('Invalid Query')
-            return query
+            return self.create_query(search_string, passed_language, internal)
         else:
             raise ParseError('The query parameter is mandatory')
+
+    def list(self, request, *args, **kwargs):
+        try:
+            return super().list(request, *args, **kwargs)
+        except grako.exceptions.FailedParse as e:
+            error_message = e.message
+            logger.error(error_message)
+            user_message = _("Couldn't process the query. Ensure the syntax is correct and try again.")
+            return Response({'error_message': user_message, 'error_detail': error_message}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class MostRecentRecords(generics.ListAPIView):
