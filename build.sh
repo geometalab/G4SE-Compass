@@ -1,5 +1,6 @@
 #!/bin/bash
 cd compass-frontend
+grunt clean
 grunt build
 cd ..
 rm -rf nginx/g4se-frontend
