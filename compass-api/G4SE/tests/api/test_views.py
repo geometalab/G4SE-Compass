@@ -45,26 +45,6 @@ def test_most_recent_records(client, admin_client, setup_database):
     Record.objects.filter(identifier=1234567).delete()
 
 
-def test_parse_query(client, setup_database):
-    and_query = Search.parse_query('A & B')
-    assert and_query == 'A&B'
-    or_query = Search.parse_query('A B')
-    assert or_query == 'A|B'
-    and_or_query = Search.parse_query('A & B C')
-    assert and_or_query == 'A&B|C'
-    multiple_whitespaces = Search.parse_query('A  &   B')
-    assert multiple_whitespaces == 'A&B'
-
-
-def test_parse_language(client, setup_database):
-    german = Search.parse_language('de')
-    assert german[0] == 'search_vector_de'
-    assert german[1] == 'german'
-    # Invalid Language should raise an error
-    with pytest.raises(Exception) as exception_info:
-        Search.parse_language('jibberish')
-
-
 def test_search(client, setup_database):
     result_list = client.get('/api/metadata/search/?query=Zürich')
     for result in result_list.data:
