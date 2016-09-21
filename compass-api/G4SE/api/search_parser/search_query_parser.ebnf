@@ -1,5 +1,5 @@
 start = search_query $;
-search_query = search_term | combined_query | parenthesized_query;
+search_query = combined_query | search_term | parenthesized_query;
 parenthesized_query = '(' @:>search_query ')';  # Solution for BUG: https://bitbucket.org/apalala/grako/issues/81/left-recursion
 combined_query = search_query BIN_OP search_query;
 search_term = [ unary_op ] search_word;

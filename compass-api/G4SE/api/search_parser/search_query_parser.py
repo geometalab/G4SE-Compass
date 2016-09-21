@@ -18,7 +18,7 @@ from grako.parsing import graken, Parser
 from grako.util import re, RE_FLAGS, generic_main  # noqa
 
 
-__version__ = (2016, 9, 19, 11, 0, 57, 0)
+__version__ = (2016, 9, 21, 7, 52, 31, 2)
 
 __all__ = [
     'UnknownParser',
@@ -92,9 +92,9 @@ class UnknownParser(Parser):
             with self._option():
                 self._combined_query_()
             with self._option():
-                self._parenthesized_query_()
-            with self._option():
                 self._search_term_()
+            with self._option():
+                self._parenthesized_query_()
             self._error('no available options')
 
     @graken()
@@ -104,9 +104,9 @@ class UnknownParser(Parser):
             with self._option():
                 self._combined_query_()
             with self._option():
-                self._parenthesized_query_()
-            with self._option():
                 self._search_term_()
+            with self._option():
+                self._parenthesized_query_()
             self._error('no available options')
 
         self.name_last_node('@')
