@@ -59,12 +59,17 @@ def test_external_search(client, setup_database):
 
 
 def test_or_search(client, setup_database):
-    result = client.get('/api/metadata/search/?query=orthofotho digital&language=de')
+    pipe = '%7C'
+    result = client.get('/api/metadata/search/?query=orthofotho{}digital&language=de'.format(pipe))
     assert len(result.data) == 17
 
 
 def test_and_search(client, setup_database):
-    result = client.get('/api/metadata/search/?query=orthophoto%26digital&language=de')
+    ampersand = '%26'
+    space = '%20'
+    result = client.get('/api/metadata/search/?query=orthophoto{}digital&language=de'.format(ampersand))
+    assert len(result.data) == 4
+    result = client.get('/api/metadata/search/?query=orthophoto{}digital&language=de'.format(space))
     assert len(result.data) == 4
 
 
