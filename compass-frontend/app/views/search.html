@@ -3,9 +3,11 @@
     <div class="panel panel-default">
       <div class="panel-heading">Most recently updated or entered metadata</div>
       <div class="panel-body">
-        <a href ng-repeat="record in recentRecords" ng-click="singleResult(record.api_id)">
-          {{ record.content }} ({{ record.modified | date:'yyyy-MM-dd HH:mm'}})
-        </a>
+        <div ng-repeat="record in recentRecords" >
+          <a href ng-click="singleResult(record.api_id)">
+            {{ record.content }} ({{ record.modified | date:'yyyy-MM-dd HH:mm'}})
+          </a>
+        </div>
       </div>
     </div>
   </div>
