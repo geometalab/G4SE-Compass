@@ -18,7 +18,7 @@ from grako.parsing import graken, Parser
 from grako.util import re, RE_FLAGS, generic_main  # noqa
 
 
-__version__ = (2016, 9, 21, 7, 52, 31, 2)
+__version__ = (2016, 9, 21, 7, 56, 50, 2)
 
 __all__ = [
     'UnknownParser',
@@ -145,23 +145,27 @@ class UnknownParser(Parser):
     def _BIN_OP_(self):
         with self._choice():
             with self._option():
-                self._and_op_()
-            with self._option():
                 self._OR_OP_()
+            with self._option():
+                self._AND_OP_()
             self._error('no available options')
 
     @graken()
-    def _and_op_(self):
+    def _AND_OP_(self):
+        with self._choice():
+            with self._option():
+                self._ampersand_()
+            with self._option():
+                self._pattern(r'\s')
+            self._error('expecting one of: \\s')
+
+    @graken()
+    def _ampersand_(self):
         self._token('&')
 
     @graken()
     def _OR_OP_(self):
-        with self._choice():
-            with self._option():
-                self._pipe_()
-            with self._option():
-                self._pattern(r'\s')
-            self._error('expecting one of: \\s')
+        self._pipe_()
 
     @graken()
     def _pipe_(self):
@@ -200,7 +204,10 @@ class UnknownSemantics(object):
     def BIN_OP(self, ast):
         return ast
 
-    def and_op(self, ast):
+    def AND_OP(self, ast):
+        return ast
+
+    def ampersand(self, ast):
         return ast
 
     def OR_OP(self, ast):

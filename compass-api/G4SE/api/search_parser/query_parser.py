@@ -49,7 +49,7 @@ class SearchSemantics(ModelBuilderSemantics):
     def literal_search_word(self, ast):
         return ast
 
-    def and_op(self, ast):
+    def AND_OP(self, ast):
         return operator.and_
 
     def OR_OP(self, ast):
