@@ -1,9 +1,9 @@
 version: '2'
 services:
   api:
-    build: ./compass-api
-#      context: ./compass-api
-#      dockerfile: Dockerfile
+    build:
+      context: ./compass-api
+      dockerfile: Dockerfile
     image: geometalab/g4se-api
     ports:
       - "8000:8000"
