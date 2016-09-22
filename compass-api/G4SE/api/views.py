@@ -2,6 +2,7 @@ import logging
 
 import grako
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.utils.translation import gettext as _
 from grako.exceptions import FailedParse
 from rest_framework import generics, permissions
@@ -13,8 +14,9 @@ from rest_framework.decorators import api_view, renderer_classes
 from rest_framework import response, schemas
 from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
+from api import LANGUAGE_CONFIG_MATCH
 from api.helpers.helpers import is_internal
-from api.models import CombinedRecord, Record
+from api.models import CombinedRecord, Record, record_ids_for_search_query
 from api.search_parser import search_query_parser
 from api.search_parser.query_parser import SearchSemantics
 from api.serializers import AllRecordsSerializer, RecordSerializer, UserSerializer, EditRecordSerializer
@@ -95,18 +97,12 @@ class Search(generics.ListAPIView):
     """
     serializer_class = AllRecordsSerializer
 
-    LANGUAGE_CONFIG_MATCH = dict(
-        de='german',
-        en='english',
-        fr='french',
-    )
-
     def config_for_language(self, language):
-        return self.LANGUAGE_CONFIG_MATCH[language]
+        return LANGUAGE_CONFIG_MATCH[language]
 
     def create_query(self, search_string, language, internal):
         """
-        Parses the passed search_string into a Postgres to_tsquery() compatible string
+        Parses the passed search_string and returns a query.
         """
 
         query = CombinedRecord.objects
@@ -120,7 +116,9 @@ class Search(generics.ListAPIView):
         )
         vector = 'search_vector_{}'.format(language)
         rank = VectorFieldSearchRank(vector, search_query)
-        return query.filter(search_vector_de=search_query).annotate(rank=rank).order_by('-rank')
+        search_query_kwargs = {vector: search_query}
+        ids_kwargs = {'api_id__in': record_ids_for_search_query(search_string, language=language)}
+        return query.filter(Q(**ids_kwargs) | Q(**search_query_kwargs)).annotate(rank=rank).order_by('-rank')
 
     def get_queryset(self):
         search_string = self.request.query_params.get('query', None)
@@ -139,7 +137,6 @@ class Search(generics.ListAPIView):
             logger.error(error_message)
             user_message = _("Couldn't process the query. Ensure the syntax is correct and try again.")
             return Response({'error_message': user_message, 'error_detail': error_message}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class MostRecentRecords(generics.ListAPIView):

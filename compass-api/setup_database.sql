@@ -164,7 +164,7 @@ begin
 end
 $$ LANGUAGE plpgsql;
 
-
+DROP TRIGGER IF EXISTS tsvectorupdate_de ON records;
 CREATE TRIGGER tsvectorupdate_de BEFORE INSERT OR UPDATE
     ON records FOR EACH ROW EXECUTE PROCEDURE records_trigger_de();
 
@@ -181,12 +181,12 @@ begin
 end
 $$ LANGUAGE plpgsql;
 
-
+DROP TRIGGER IF EXISTS tsvectorupdate_en ON records;
 CREATE TRIGGER tsvectorupdate_en BEFORE INSERT OR UPDATE
     ON records FOR EACH ROW EXECUTE PROCEDURE records_trigger_en();
 
 
-CREATE OR REPLACE FUNCTION records_trigger_fr()RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION records_trigger_fr() RETURNS trigger AS $$
 begin
   new.search_vector_fr :=
     setweight(to_tsvector('pg_catalog.french', coalesce(new.content,'')), 'A') ||
@@ -198,7 +198,7 @@ begin
 end
 $$ LANGUAGE plpgsql;
 
-
+DROP TRIGGER IF EXISTS tsvectorupdate_fr ON records;
 CREATE TRIGGER tsvectorupdate_fr BEFORE INSERT OR UPDATE
     ON records FOR EACH ROW EXECUTE PROCEDURE records_trigger_fr();
 
@@ -216,7 +216,7 @@ begin
 end
 $$ LANGUAGE plpgsql;
 
-
+DROP TRIGGER IF EXISTS harvested_tsvectorupdate_de ON harvested_records;
 CREATE TRIGGER harvested_tsvectorupdate_de BEFORE INSERT OR UPDATE
     ON harvested_records FOR EACH ROW EXECUTE PROCEDURE harvested_records_trigger_de();
 
@@ -233,7 +233,7 @@ begin
 end
 $$ LANGUAGE plpgsql;
 
-
+DROP TRIGGER IF EXISTS harvested_tsvectorupdate_en ON harvested_records;
 CREATE TRIGGER harvested_tsvectorupdate_en BEFORE INSERT OR UPDATE
     ON harvested_records FOR EACH ROW EXECUTE PROCEDURE harvested_records_trigger_en();
 
@@ -250,6 +250,6 @@ begin
 end
 $$ LANGUAGE plpgsql;
 
-
+DROP TRIGGER IF EXISTS harvested_tsvectorupdate_fr ON harvested_records;
 CREATE TRIGGER harvested_tsvectorupdate_fr BEFORE INSERT OR UPDATE
     ON harvested_records FOR EACH ROW EXECUTE PROCEDURE harvested_records_trigger_fr();

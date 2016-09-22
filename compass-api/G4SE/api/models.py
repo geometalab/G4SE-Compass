@@ -1,12 +1,16 @@
 from __future__ import unicode_literals
 import uuid
 
-from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.contrib.postgres.search import SearchVectorField
 from django.utils.translation import ugettext_lazy as _
+
+from api import LANGUAGE_CONFIG_MATCH
+from api.search_parser import search_query_parser
+from api.search_parser.query_parser import SearchSemantics
 
 
 class Base(models.Model):
@@ -155,3 +159,20 @@ class RecordTag(models.Model):
 
     class Meta:
         db_table = 'record_tag'
+
+
+def record_ids_for_search_query(search_query, language='de'):
+    if isinstance(search_query, str):
+        language_for_pg = LANGUAGE_CONFIG_MATCH[language]
+        search_query = search_query_parser.UnknownParser().parse(
+            search_query,
+            semantics=SearchSemantics(config=language_for_pg)
+        )
+    vector = 'tag_{}_search_vector'.format(language)
+    search_kwargs = {
+        vector: search_query
+    }
+    tags = RecordTag.objects.filter(**search_kwargs)
+    return RecordTaggedItem.objects.filter(
+        record_tag__in=tags
+    ).values_list('object_id', flat=True)
