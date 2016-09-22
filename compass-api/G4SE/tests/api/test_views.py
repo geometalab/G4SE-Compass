@@ -1,7 +1,19 @@
 import pytest
-from api.models import CombinedRecord, Record
+from django.db.models.signals import post_save
+
+from api.models import CombinedRecord, Record, RecordTag, RecordTaggedItem
 from .testdata import data
 from api.views import Search
+
+
+@pytest.fixture
+def tag(db):
+    tagged_items = RecordTaggedItem.objects.count()
+    tag, _ = RecordTag.objects.get_or_create(
+        tag_de='präzise', tag_en='house', tag_fr='maison'
+    )
+    assert RecordTaggedItem.objects.count() == 2
+    return tag
 
 
 def test_record_list(client, setup_database):
@@ -71,6 +83,33 @@ def test_and_search(client, setup_database):
     assert len(result.data) == 4
     result = client.get('/api/metadata/search/?query=orthophoto{}digital&language=de'.format(space))
     assert len(result.data) == 4
+    result = client.get('/api/metadata/search/?query=orthophoto{}{}{}digital&language=de'.format(space, ampersand, space))
+    assert len(result.data) == 4
+
+
+@pytest.mark.skipif(
+    True,
+    reason='This test currently is broken, since triggers are not being execute inside the transaction.'
+)
+def test_search_with_tags(setup_database, db, tag, client):
+    pytest.set_trace()
+    # ensure tag isn't matching
+    result = client.get('/api/metadata/search/?query=house&language=de')
+    assert result.status_code == 200
+    assert len(result.data) == 0
+
+    # all should return the same
+    result = client.get('/api/metadata/search/?query=präzis&language=de')
+    assert result.status_code == 200
+    assert len(result.data) == 2
+
+    result = client.get('/api/metadata/search/?query={}&language=en'.format(tag.tag_en))
+    assert result.status_code == 200
+    assert len(result.data) == 2
+
+    result = client.get('/api/metadata/search/?query=maison&language=fr')
+    assert result.status_code == 200
+    assert len(result.data) == 2
 
 
 def test_invalid_search_query(client, setup_database):

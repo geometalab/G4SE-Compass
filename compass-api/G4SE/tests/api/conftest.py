@@ -1,3 +1,5 @@
+from time import sleep
+
 from django.db import connection, transaction
 import pytest
 from pathlib import Path, PurePath
