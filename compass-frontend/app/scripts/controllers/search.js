@@ -9,14 +9,37 @@
  */
 angular.module('g4seApp').service('dataService', ['$http', function ($http) {
   return {
-    getSearchResult: function (searchQuery) {
-      return $http.get(API_BASE_URL + '/api/metadata/search/?query=' + encodeURIComponent(searchQuery));
+    getRecords: function (language, page_size, page, searchQuery) {
+      if (page === undefined){
+        page = 1;
+      }
+      if (page_size === undefined){
+        page_size = 10;
+      }
+      if (language === undefined){
+        language = 'de';
+      }
+      if (searchQuery === undefined) {
+        searchQuery = '';
+      } else {
+        searchQuery = '&search=' + encodeURIComponent(searchQuery);
+      }
+      language = '?language=' + language;
+      page_size = '&page_size=' + page_size;
+      page = '&page=' + page;
+      return $http.get(API_BASE_URL + '/api/metadata/' + language + page_size + page + searchQuery);
     },
-    getSingleResult: function (id) {
+    getRecord: function (id) {
       return $http.get(API_BASE_URL + '/api/metadata/' + id + '/');
     },
-    getRecentlyUpdated: function () {
-      return $http.get(API_BASE_URL + '/api/metadata/recent/?count=5');
+    getRecentRecords: function () {
+      return $http.get(API_BASE_URL + '/api/metadata/?limit=5&ordering=-modified');
+    },
+    getResults: function (url) {
+      if (!API_BASE_URL in url) {
+        return null;
+      }
+      return $http.get(url);
     }
   };
 }]);
@@ -84,32 +107,55 @@ angular.module('g4seApp')
   }])
   .controller('SearchCtrl',['$scope', '$http', 'dataService', '$timeout', '$window', '$routeParams', '$location',
     function ($scope, $http, dataService, $timeout, $window, $routeParams, $location) {
+      $scope.showSpinner = false;
       $scope.itemsPerPage = 10;
+
+      dataService.getRecentRecords().then(function (result) {
+        $scope.recentRecords = result.data["results"];
+      });
+
+      function recordsChanged(result){
+        $scope.records = result.data["results"];
+        $scope.totalItems = result.data["count"];
+        if ($scope.currentPage === undefined) {
+          $scope.currentPage = 1;
+        }
+        $scope.showSpinner = false;
+        $timeout(function () {
+          $scope.$apply();
+        })
+      }
+
+      if ($scope.language == undefined) {
+        $scope.language = 'de';
+      }
+
+      if ($scope.records === undefined){
+        $scope.showSpinner = true;
+        dataService.getRecords($scope.language, $scope.itemsPerPage, $scope.currentPage, $scope.text).then(recordsChanged);
+      }
+
       $scope.setPage = function (pageNo) {
         $scope.currentPage = pageNo;
       };
 
       $scope.pageChanged = function() {
-        $scope.begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
-        $scope.end = $scope.begin + $scope.itemsPerPage;
-        $scope.filteredRecords = $scope.records.slice($scope.begin, $scope.end);
+        $scope.showSpinner = true;
+        dataService.getRecords($scope.language, $scope.itemsPerPage, $scope.currentPage, $scope.text).then(recordsChanged);
         $window.scrollTo(0, 0);
         $timeout(function () {
           $scope.$apply();
         });
       };
 
-      dataService.getRecentlyUpdated().then(function (result) {
-        $scope.recentRecords = result.data;
-      });
 
       $scope.singleResult = function(apiId) {
         $scope.text = null;
         $scope.error = null;
-        dataService.getSingleResult(apiId).then(function (result) {
+        dataService.getRecord(apiId).then(function (result) {
           var record = result.data;
           record.showDetails = true;
-          $scope.filteredRecords = [record];
+          $scope.records = [record];
           // null so pagination section isn't shown
           $scope.totalItems = null;
           $location.search('id', result.data['api_id']);
@@ -117,34 +163,20 @@ angular.module('g4seApp')
             $scope.$apply();
           });
         }, function errorCallback(response) {
-          // TODO error handling
+            $scope.error = "An error occurred, please try again. If the issue persist, please let us know.";
         });
       };
 
       $scope.enterSearch = function() {
+        $scope.showSpinner = true;
+        $scope.currentPage = undefined;
         $scope.error = null;
-        if ($scope.text){
-          $location.search('id', null);
-          dataService.getSearchResult($scope.text).then(function (result) {
-            $scope.records = result.data;
-            $scope.totalItems = result.data.length;
-            $scope.setPage(1);
-            $scope.pageChanged();
-          }, function errorCallback(response) {
-            if (response.data !== undefined && response.data.error_message !== undefined) {
-              $scope.error = response.data.error_message;
-            } else {
-              $scope.error = "Couldn't process the query. Ensure the syntax is correct and try again.";
-            }
-            $timeout(function () {
-              $scope.$apply();
-            });
-          });
-        }
+        $location.search('id', null);
+        dataService.getRecords($scope.language, $scope.itemsPerPage, $scope.currentPage, $scope.text).then(recordsChanged);
       };
 
       $scope.expand = function (index) {
-        $scope.filteredRecords[index.$index].showDetails = !$scope.filteredRecords[index.$index].showDetails;
+        $scope.records[index.$index].showDetails = !$scope.records[index.$index].showDetails;
         $scope.isHidden = !$scope.isHidden;
         $timeout(function () {
           $scope.$apply();

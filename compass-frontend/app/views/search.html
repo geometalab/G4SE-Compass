@@ -17,61 +17,68 @@
         <input type="text" class="form-control" ng-model="text">
         <span class="input-group-btn">
           <button class="btn btn-secondary search-button" type="submit">Search</button>
+          <span class="input-group-addon">
+            <input type="radio" name="language" ng-model="language" value="en"> English
+            <input type="radio" name="language" ng-model="language" value="de" checked="checked"> Deutsch
+            <input type="radio" name="language" ng-model="language" value="fr"> Français
+          </span>
         </span>
+        <span us-spinner="{radius: 6}" spinner-on="showSpinner"></span>
       </div>
     </form>
-      <div class="resultCount">
-        <div class="alert-warning" ng-show="error !== undefined">{{ error }}</div>
-        <ul ng-show="totalItems != 0 && totalItems != undefined" uib-pagination items-per-page="itemsPerPage"
-            total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></ul>
-        <ul ng-show="totalItems == 0 || totalItems == undefined"></ul>
+    <pre ng-show="totalItems">Results Total: {{totalItems}}</pre>
+      <ul ng-show="totalItems != 0 && totalItems != undefined" uib-pagination items-per-page="itemsPerPage" num-pages="numPages"
+          total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></ul>
+      <ul ng-show="totalItems == 0 || totalItems == undefined"></ul>
 
-        <div class="panel panel-info" ng-repeat="record in filteredRecords">
-          <div class="panel-heading cursor-pointer" ng-click="expand({ $index })">
-            <div class="row">
-              <!-- Short list -->
-              <div class="col-sm-4">
-                  <h4 uib-tooltip-html="record.abstract | linkify:50">{{record.content}}</h4>
+    <!--<pre>Page: {{currentPage}} / {{numPages}} ({{totalItems}})</pre>-->
+
+      <div class="panel panel-info" ng-repeat="record in records">
+        <div class="panel-heading cursor-pointer" ng-click="expand({ $index })">
+          <div class="row">
+            <!-- Short list -->
+            <div class="col-sm-4">
+              <h4 uib-tooltip-html="record.abstract | linkify:50">{{record.content}}</h4>
+            </div>
+            <div class="col-sm-3">
+              <div class="row">
+                Publication Year: {{record.publication_year}}
               </div>
-              <div class="col-sm-3">
-                <div class="row">
-                  Publication Year: {{record.publication_year}}
-                </div>
-                <div class="row">
-                  Service Type: {{record.service_type}}
-                </div>
+              <div class="row">
+                Service Type: {{record.service_type}}
               </div>
-              <div class="col-sm-4">
-                <div class="row">
-                  Geographical Coverage: {{record.geography}}
-                </div>
-                <div class="row">
-                  Source of original data: {{record.source}}
-                </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="row">
+                Geographical Coverage: {{record.geography}}
               </div>
-              <div class="col-sm-1">
-                  <div ng-show="record.showDetails != true">
-                    <h2>
-                      <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
-                    </h2>
-                  </div>  <!-- show more -->
-                  <div ng-show="record.showDetails == true">
-                    <h2>
-                      <span class="glyphicon glyphicon-collapse-up" aria-hidden="true"></span>
-                    </h2>
-                  </div>  <!-- show less -->
+              <div class="row">
+                Source of original data: {{record.source}}
               </div>
+            </div>
+            <div class="col-sm-1">
+              <div ng-show="record.showDetails != true">
+                <h2>
+                  <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+                </h2>
+              </div>  <!-- show more -->
+              <div ng-show="record.showDetails == true">
+                <h2>
+                  <span class="glyphicon glyphicon-collapse-up" aria-hidden="true"></span>
+                </h2>
+              </div>  <!-- show less -->
             </div>
           </div>
-          <div class="panel-body" ng-show="record.showDetails == true">
-            <div class="col-sm-12">
-              <ng-include src="'views/partials/record_details.html'"></ng-include>
-            </div>
+        </div>
+        <div class="panel-body" ng-show="record.showDetails == true">
+          <div class="col-sm-12">
+            <ng-include src="'views/partials/record_details.html'"></ng-include>
           </div>
         </div>
       </div>
       <ul ng-show="totalItems != 0 && totalItems != undefined" uib-pagination items-per-page="itemsPerPage"
           total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></ul>
+    </div>
     <div class="resultCount" ng-show="totalItems == 0">
       No results found.
     </div>
