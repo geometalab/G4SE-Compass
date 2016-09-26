@@ -229,7 +229,7 @@ module.exports = function (grunt) {
           '<%= yeoman.dist %>/scripts/{,*/}*.js',
           '<%= yeoman.dist %>/styles/{,*/}*.css',
           '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-          '<%= yeoman.dist %>/styles/fonts/*'
+          '<%= yeoman.dist %>/fonts/*'
         ]
       }
     },
@@ -380,13 +380,18 @@ module.exports = function (grunt) {
             '*.{ico,png,txt}',
             '*.html',
             'images/{,*/}*.{webp}',
-            'styles/fonts/{,*/}*.*'
+            'fonts/{,*/}*.*'
           ]
         }, {
           expand: true,
           cwd: '.tmp/images',
           dest: '<%= yeoman.dist %>/images',
           src: ['generated/*']
+        }, {
+          expand: true,
+          flatten: true,
+          src: ['bower_components/bootstrap/dist/fonts/**'],
+          dest: '<%= yeoman.dist %>/fonts'
         }]
       },
       styles: {

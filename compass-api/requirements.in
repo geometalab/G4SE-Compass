@@ -9,3 +9,4 @@ django-rest-swagger
 django-cors-middleware
 whitenoise
 brotlipy
+grako

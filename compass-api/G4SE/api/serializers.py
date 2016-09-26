@@ -1,7 +1,9 @@
-from .models import Record, CombinedRecord
+import datetime
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
-import datetime
+
+from .models import Record, CombinedRecord
 
 
 class BaseRecordSerializer(serializers.ModelSerializer):
@@ -9,8 +11,6 @@ class BaseRecordSerializer(serializers.ModelSerializer):
     search_vector_de = serializers.HiddenField(default=None)
     search_vector_en = serializers.HiddenField(default=None)
     search_vector_fr = serializers.HiddenField(default=None)
-
-    tags = serializers.ListField(child=serializers.CharField(read_only=True), read_only=True)
 
 
 class AllRecordsSerializer(BaseRecordSerializer):
@@ -21,14 +21,25 @@ class AllRecordsSerializer(BaseRecordSerializer):
         fields = '__all__'
 
 
-class RecordSerializer(BaseRecordSerializer):
-    class Meta:
-        model = Record
-        fields = '__all__'
-
-
 class EditRecordSerializer(BaseRecordSerializer):
-    modified = serializers.HiddenField(default=datetime.datetime.now())
+    api_id = serializers.HyperlinkedIdentityField(
+        view_name='admin-detail',
+        lookup_field='api_id',
+        lookup_url_kwarg='pk'
+    )
+    modified = serializers.ReadOnlyField(default=datetime.datetime.now())
+
+    def validate(self, attrs):
+        validated_values = super().validate(attrs=attrs)
+        for key, value in validated_values.items():
+            if value == '':
+                validated_values[key] = None
+        return validated_values
+
+    def validate_extent(self, value):
+        if value == '':
+            return None
+        return value
 
     def validate_login_name(self, value):
         user = self.context['request'].user.username

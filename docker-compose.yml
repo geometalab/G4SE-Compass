@@ -1,9 +1,9 @@
 version: '2'
 services:
   api:
-    build: ./compass-api
-#      context: ./compass-api
-#      dockerfile: Dockerfile
+    build:
+      context: ./compass-api
+      dockerfile: Dockerfile
     image: geometalab/g4se-api
     ports:
       - "8000:8000"
@@ -40,7 +40,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=G4SE
   nginx:
-    image: geometalab/g4se-frontend
+    image: geometalab/g4se-nginx
     ports:
       - "8080:80"
     build:
