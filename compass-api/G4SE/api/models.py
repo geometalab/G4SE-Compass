@@ -34,7 +34,7 @@ class Base(models.Model):
     publication_year = models.CharField(max_length=20)
     publication_lineage = models.CharField(max_length=255, blank=True, null=True)
     geography = models.CharField(max_length=255)
-    extent = models.CharField(max_length=255, null=True, blank=True)
+    extent = models.CharField(max_length=255, null=True, blank=True, help_text='needs follow the form `BOX(0 0,1 1)`')
     geodata_type = models.CharField(max_length=255)
     source = models.CharField(max_length=2083)
     metadata_link = models.URLField(max_length=2083)
