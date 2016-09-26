@@ -29,6 +29,13 @@ class EditRecordSerializer(BaseRecordSerializer):
     )
     modified = serializers.ReadOnlyField(default=datetime.datetime.now())
 
+    def validate(self, attrs):
+        validated_values = super().validate(attrs=attrs)
+        for key, value in validated_values.items():
+            if value == '':
+                validated_values[key] = None
+        return validated_values
+
     def validate_extent(self, value):
         if value == '':
             return None

@@ -10,7 +10,6 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework import response, schemas
 from rest_framework.settings import api_settings
@@ -22,14 +21,6 @@ from api.models import CombinedRecord, Record
 from api.serializers import AllRecordsSerializer, UserSerializer, EditRecordSerializer
 
 logger = logging.getLogger(__name__)
-
-
-class CsrfExemptSessionAuthentication(SessionAuthentication):
-    """
-    Fix for CSRF error on put and delete requests after upgrade from 3.3 to 3.4, overwirte csrf check to do nothing
-    """
-    def enforce_csrf(self, request):
-        return
 
 
 @api_view()
