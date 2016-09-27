@@ -3,23 +3,27 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
+import { Ng2BootstrapModule  } from 'ng2-bootstrap/ng2-bootstrap';
+import { LinkyModule } from 'angular2-linky';
+
 import { AppComponent } from './app.component';
 import { MetadataComponent } from './metadata/metadata.component';
 import {MetadataService} from "./metadata/metadata.service";
 import {routing} from "./app.routing";
-import { LinkifyPipe } from './metadata/linkify.pipe';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    MetadataComponent,
-    LinkifyPipe
+    MetadataComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     routing,
-    HttpModule
+    HttpModule,
+    Ng2BootstrapModule,
+    LinkyModule
   ],
   providers: [MetadataService],
   bootstrap: [AppComponent]
