@@ -16,12 +16,11 @@ export class MetadataService {
     if (params == undefined) {
       params = new MetadataParameters();
     }
-    console.log(params, params.toUrlQuery());
     var urlParams = params.toUrlQuery();
     return this.http
       .get(this.metadataUrl + urlParams)
       .toPromise()
-      .then(response => response.json().results as any[])
+      .then(response => response.json() as any[])
       .catch(this.handleError);
   }
   private handleError(error: any): Promise<Metadata> {

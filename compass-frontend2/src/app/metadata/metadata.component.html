@@ -1,4 +1,38 @@
-<app-metadata-search></app-metadata-search>
+<!-- Search -->
+<div class="row">
+  <form class="search" #searchBox>
+    <div class="col-sm-12">
+      <div class="input-group">
+        <input name="searchTerm" class="form-control" />
+        <span class="input-group-btn">
+            <button class="btn btn-secondary search-button" (click)="filterMetadata(searchBox.searchTerm.value, searchBox.languageSelector.value)">Search</button>
+        <span us-spinner="{radius: 6}" spinner-on="showSpinner"></span>
+        </span>
+      </div>
+    </div>
+    <div class="col-sm-12">
+      <div class="input-group">
+    <span class="input-group-addon">
+      <input type="radio" name="languageSelector" value="en"> English
+      <input type="radio" name="languageSelector" value="de" checked="checked"> Deutsch
+      <input type="radio" name="languageSelector" value="fr"> Français
+    </span>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- paginator -->
+<pre>Results Total: {{totalItems}}</pre>
+<div [hidden]="totalItems == 0">
+<pagination
+  [totalItems]="totalItems"
+  [(ngModel)]="currentPage"
+  (pageChanged)="pageChanged($event)">
+</pagination>
+</div>
+
+<!-- Result List -->
 <div *ngFor="let metadataItem of metadataList" class="panel panel-info">
   <div class="panel-heading cursor-pointer" (click)="metadataItem.showDetails = !metadataItem.showDetails">
     <div class="row">
@@ -85,4 +119,12 @@
       </p>
     </div>
   </div>
+</div>
+
+<div [hidden]="totalItems == 0">
+<pagination
+  [totalItems]="totalItems"
+  [(ngModel)]="currentPage"
+  (pageChanged)="pageChanged($event)">
+</pagination>
 </div>
