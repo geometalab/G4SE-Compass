@@ -1,101 +1,87 @@
-<!--<div class="grid grid-pad">-->
-  <!--(click)="gotoDetail(hero)"-->
-  <div *ngFor="let metadataItem of metadataList" class="panel panel-info">
-    <div class="panel-heading cursor-pointer" (click)="metadataItem.showDetails = !metadataItem.showDetails">
-      <div class="row">
-        <!-- Short list -->
-        <div class="col-sm-4">
-          <h4>{{metadataItem.content}} ({{metadataItem.api_id}})</h4>
+<div *ngFor="let metadataItem of metadataList" class="panel panel-info">
+  <div class="panel-heading cursor-pointer" (click)="metadataItem.showDetails = !metadataItem.showDetails">
+    <div class="row">
+      <!-- Short list -->
+      <div class="col-sm-4">
+        <h4>{{metadataItem.content}} ({{metadataItem.api_id}})</h4>
+      </div>
+      <div class="col-sm-3">
+        <div class="row">
+          Publication Year: {{metadataItem.publication_year}}
         </div>
-        <div class="col-sm-3">
-          <div class="row">
-            Publication Year: {{metadataItem.publication_year}}
-          </div>
-          <div class="row">
-            Service Type: {{metadataItem.service_type}}
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="row">
-            Geographical Coverage: {{metadataItem.geography}}
-          </div>
-          <div class="row">
-            Source of original data: {{metadataItem.source}}
-          </div>
-        </div>
-        <div class="col-sm-1 hidden-xs">
-          <div [hidden]="!metadataItem.showDetails">
-            <h2>
-              <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
-            </h2>
-          </div>  <!-- show more -->
-          <div [hidden]="metadataItem.showDetails">
-            <h2>
-              <span class="glyphicon glyphicon-collapse-up" aria-hidden="true"></span>
-            </h2>
-          </div>  <!-- show less -->
+        <div class="row">
+          Service Type: {{metadataItem.service_type}}
         </div>
       </div>
-    </div>
-    <div [collapse]="!metadataItem.showDetails">
-      <div>
-        <p [hidden]="!metadataItem.geodata_type">
-          <strong>Data Type</strong>: {{metadataItem.geodata_type}}
-        </p>
-        <p [hidden]="!metadataItem.abstract">
-          <!--<strong>Abstract</strong>: <span [innerHTML]="metadataItem.abstract | linky"></span>-->
-          <strong>Abstract</strong>: <span [innerHTML]="metadataItem.abstract | linky"></span>
-        </p>
-        <p [hidden]="!metadataItem.publication_lineage">
-          <strong>Publication lineage</strong>: {{metadataItem.publication_lineage}}
-        </p>
-        <p [hidden]="!metadataItem.extent">
-          <strong>Geographical extent</strong>: {{metadataItem.extent}}
-        </p>
-        <p [hidden]="!metadataItem.access_link">
-          <!--<strong>Access to data</strong>: {{metadataItem.access_link}}-->
-          <strong>Access to data</strong>: <span [innerHTML]="metadataItem.access_link | linky"></span>
-        </p>
-        <p [hidden]="!metadataItem.base_link">
-          <!--<strong>Entry point</strong>: {{metadataItem.base_link}}-->
-          <strong>Entry point</strong>:  <span [innerHTML]="metadataItem.base_link | linky"></span>
-        </p>
-        <p [hidden]="!metadataItem.collection">
-          <!--<strong>Group</strong>: {{metadataItem.collection}}-->
-          <strong>Group</strong>: <span [innerHTML]="metadataItem.collection | linky"></span>
-        </p>
-        <p [hidden]="!metadataItem.dataset">
-          <!--<strong>Dataset name</strong>: {{metadataItem.dataset}}-->
-          <strong>Dataset name</strong>: <span [innerHTML]="metadataItem.dataset | linky"></span>
-        </p>
-        <p [hidden]="!metadataItem.arcgis_layer_link">
-          <!--<strong>ArcGIS layer link</strong>: <span [innerHTML]="metadataItem.arcgis_layer_link | linky"></span>-->
-          <strong>ArcGIS layer link</strong>: <span [innerHTML]="metadataItem.arcgis_layer_link | linky"></span>
-        </p>
-        <p [hidden]="!metadataItem.qgis_layer_link">
-          <!--<strong>QGIS layer link</strong>: {{metadataItem.qgis_layer_link}}-->
-          <strong>QGIS layer link</strong>: <span [innerHTML]="metadataItem.qgis_layer_link | linky"></span>
-        </p>
-        <p [hidden]="!metadataItem.service_type">
-          <!--<strong>Service type</strong>: {{metadataItem.service_type}}-->
-          <strong>Service type</strong>: <span [innerHTML]="metadataItem.service_type | linky"></span>
-        </p>
-        <p [hidden]="!metadataItem.crs">
-          <strong>Coordinate reference system</strong>: {{metadataItem.crs}}
-        </p>
-        <p [hidden]="!metadataItem.term_link">
-          <!--<strong>Terms of use</strong>: {{metadataItem.term_link }}-->
-          <strong>Terms of use</strong>: <span [innerHTML]="metadataItem.term_link | linky"></span>
-        </p>
-        <p [hidden]="!metadataItem.proved">
-          <!--<strong>Proving date</strong>: {{metadataItem.proved | date }}-->
-          <strong>Proving date</strong>: <span [innerHTML]="metadataItem.proved | date"></span>
-        </p>
-        <p [hidden]="!metadataItem.metadata_link">
-          <!--<strong>Additional metadata</strong>: {{metadataItem.metadata_link}}-->
-          <strong>Additional metadata</strong>: <span [innerHTML]="metadataItem.metadata_link | linky"></span>
-        </p>
+      <div class="col-sm-4">
+        <div class="row">
+          Geographical Coverage: {{metadataItem.geography}}
+        </div>
+        <div class="row">
+          Source of original data: {{metadataItem.source}}
+        </div>
+      </div>
+      <div class="col-sm-1 hidden-xs">
+        <div [hidden]="!metadataItem.showDetails">
+          <h2>
+            <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+          </h2>
+        </div>  <!-- show more -->
+        <div [hidden]="metadataItem.showDetails">
+          <h2>
+            <span class="glyphicon glyphicon-collapse-up" aria-hidden="true"></span>
+          </h2>
+        </div>  <!-- show less -->
       </div>
     </div>
   </div>
-<!--</div>-->
+  <div [collapse]="!metadataItem.showDetails">
+    <div>
+      <p [hidden]="!metadataItem.geodata_type">
+        <strong>Data Type</strong>: {{metadataItem.geodata_type}}
+      </p>
+      <p [hidden]="!metadataItem.abstract">
+        <strong>Abstract</strong>: <span [innerHTML]="metadataItem.abstract | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.publication_lineage">
+        <strong>Publication lineage</strong>: {{metadataItem.publication_lineage}}
+      </p>
+      <p [hidden]="!metadataItem.extent">
+        <strong>Geographical extent</strong>: {{metadataItem.extent}}
+      </p>
+      <p [hidden]="!metadataItem.access_link">
+        <strong>Access to data</strong>: <span [innerHTML]="metadataItem.access_link | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.base_link">
+        <strong>Entry point</strong>:  <span [innerHTML]="metadataItem.base_link | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.collection">
+        <strong>Group</strong>: <span [innerHTML]="metadataItem.collection | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.dataset">
+        <strong>Dataset name</strong>: <span [innerHTML]="metadataItem.dataset | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.arcgis_layer_link">
+        <strong>ArcGIS layer link</strong>: <span [innerHTML]="metadataItem.arcgis_layer_link | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.qgis_layer_link">
+        <strong>QGIS layer link</strong>: <span [innerHTML]="metadataItem.qgis_layer_link | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.service_type">
+        <strong>Service type</strong>: <span [innerHTML]="metadataItem.service_type | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.crs">
+        <strong>Coordinate reference system</strong>: {{metadataItem.crs}}
+      </p>
+      <p [hidden]="!metadataItem.term_link">
+        <strong>Terms of use</strong>: <span [innerHTML]="metadataItem.term_link | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.proved">
+        <strong>Proving date</strong>: <span [innerHTML]="metadataItem.proved | date"></span>
+      </p>
+      <p [hidden]="!metadataItem.metadata_link">
+        <strong>Additional metadata</strong>: <span [innerHTML]="metadataItem.metadata_link | linky"></span>
+      </p>
+    </div>
+  </div>
+</div>
