@@ -4,16 +4,22 @@ import { Headers, Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import {Metadata} from "./metadata";
+import {MetadataParameters} from "./metadata-parameters";
 
 @Injectable()
 export class MetadataService {
-  private metadataUrl = 'api/metadata';  // URL to web API
+  private metadataUrl = 'api/metadata/';  // URL to web API
 
   constructor(private http: Http) { }
 
-  getMetadataList(): Promise<Metadata[]> {
+  getMetadataList(params: MetadataParameters=undefined): Promise<Metadata[]> {
+    if (params == undefined) {
+      params = new MetadataParameters();
+    }
+    console.log(params, params.toUrlQuery());
+    var urlParams = params.toUrlQuery();
     return this.http
-      .get(this.metadataUrl)
+      .get(this.metadataUrl + urlParams)
       .toPromise()
       .then(response => response.json().results as any[])
       .catch(this.handleError);
