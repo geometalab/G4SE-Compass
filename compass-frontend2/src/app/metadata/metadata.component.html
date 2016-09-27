@@ -1,3 +1,42 @@
-<p>
-  metadata works!
-</p>
+<div class="grid grid-pad">
+  <!--(click)="gotoDetail(hero)"-->
+  <div *ngFor="let metadataItem of metadataList" class="panel panel-info">
+    <div class="panel-heading cursor-pointer" ng-click="">
+      <div class="row">
+        <!-- Short list -->
+        <div class="col-sm-4">
+          <h4>{{metadataItem.content}}</h4>
+        </div>
+        <div class="col-sm-3">
+          <div class="row">
+            Publication Year: {{metadataItem.publication_year}}
+          </div>
+          <div class="row">
+            Service Type: {{metadataItem.service_type}}
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="row">
+            Geographical Coverage: {{metadataItem.geography}}
+          </div>
+          <div class="row">
+            Source of original data: {{metadataItem.source}}
+          </div>
+        </div>
+        <div class="col-sm-1">
+          <div ng-show="metadataItem.showDetails != true">
+            <h2>
+              <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+            </h2>
+          </div>  <!-- show more -->
+          <div ng-show="metadataItem.showDetails == true">
+            <h2>
+              <span class="glyphicon glyphicon-collapse-up" aria-hidden="true"></span>
+            </h2>
+          </div>  <!-- show less -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
