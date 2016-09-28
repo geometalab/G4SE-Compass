@@ -31,8 +31,6 @@
           total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></ul>
       <ul ng-show="totalItems == 0 || totalItems == undefined"></ul>
 
-    <!--<pre>Page: {{currentPage}} / {{numPages}} ({{totalItems}})</pre>-->
-
       <div class="panel panel-info" ng-repeat="record in records">
         <div class="panel-heading cursor-pointer" ng-click="expand({ $index })">
           <div class="row">
