@@ -70,8 +70,7 @@ def assert_search_query(input_string, expected_tokens, expected_value=None):
     [
         "!'a & (!b | !c) & d | e' & f | k", ['!', "'a & (!b | !c) & d | e'", '&', 'f', '|', 'k'],
         ~SearchQuery('a & (!b | !c) & d | e') & SearchQuery('f') | SearchQuery('k')
-    ]
-
+    ],
 ])
 def search_query(request):
     return request.param

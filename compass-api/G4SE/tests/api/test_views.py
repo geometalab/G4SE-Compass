@@ -124,7 +124,7 @@ def test_invalid_search_query(client, setup_database):
 
 def test_internal_records_list(admin_client, setup_database):
     result_list = admin_client.get('/api/admin/')
-    assert len(result_list.data) == 10
+    assert len(result_list.data['results']) == 10
 
 
 def test_insert_record(client, admin_client, setup_database):
