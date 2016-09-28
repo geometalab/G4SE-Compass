@@ -23,6 +23,15 @@ export class MetadataService {
       .then(response => response.json() as any[])
       .catch(this.handleError);
   }
+
+  getMetadataDetail(api_id: string): Promise<Metadata> {
+    return this.http
+      .get(this.metadataUrl + api_id + '/')
+      .toPromise()
+      .then(response => response.json() as any[])
+      .catch(this.handleError);
+  }
+
   private handleError(error: any): Promise<Metadata> {
     console.error('An error occurred', error);
     return Promise.reject(error.message || error);

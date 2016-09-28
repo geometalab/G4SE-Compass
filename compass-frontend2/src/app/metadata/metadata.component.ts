@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Metadata} from "./metadata";
 import {MetadataService} from "./metadata.service";
 import {MetadataParameters} from "./metadata-parameters";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-metadata',
@@ -15,14 +16,17 @@ export class MetadataComponent implements OnInit {
   currentPage:number = 1;
   language: string = 'de';
   ordering: string = null;
-
+  showSpinner: boolean = true;
   // pagination settings
   private itemsPerPage: number = 10;
   maxSize: number = 5; // maxNumberButtonsVisible
 
   private params: MetadataParameters = new MetadataParameters();
 
-  constructor(private metadataService: MetadataService) {}
+  constructor(
+    private metadataService: MetadataService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.getMostRecentMetadata();
@@ -61,6 +65,11 @@ export class MetadataComponent implements OnInit {
     if (this.params.search) {
       this.getMetadataList();
     }
+  }
+
+  gotoSingleEntry(metadata: Metadata): void {
+    let link = ['/metadata', metadata.api_id];
+    this.router.navigate(link);
   }
 
   getAllMetadata(): void {

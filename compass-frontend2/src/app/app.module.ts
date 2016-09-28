@@ -10,12 +10,14 @@ import { AppComponent } from './app.component';
 import { MetadataComponent } from './metadata/metadata.component';
 import {MetadataService} from "./metadata/metadata.service";
 import {routing} from "./app.routing";
+import { MetadataDetailComponent } from './metadata/metadata-detail.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    MetadataComponent
+    MetadataComponent,
+    MetadataDetailComponent
   ],
   imports: [
     BrowserModule,

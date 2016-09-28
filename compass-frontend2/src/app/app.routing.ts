@@ -1,5 +1,6 @@
 import { Routes, RouterModule } from '@angular/router';
 import {MetadataComponent} from "./metadata/metadata.component";
+import {MetadataDetailComponent} from "./metadata/metadata-detail.component";
 
 
 const appRoutes: Routes = [
@@ -15,6 +16,10 @@ const appRoutes: Routes = [
   {
     path: 'metadata',
     component: MetadataComponent
+  },
+  {
+    path: 'metadata/:id',
+    component: MetadataDetailComponent
   }
 ];
 

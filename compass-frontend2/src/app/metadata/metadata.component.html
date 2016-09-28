@@ -6,26 +6,26 @@
         <input name="searchTerm" class="form-control" />
         <span class="input-group-btn">
             <button class="btn btn-secondary search-button" (click)="filterMetadata(searchBox.searchTerm.value)">Search</button>
-        <span us-spinner="{radius: 6}" spinner-on="showSpinner"></span>
         </span>
       </div>
     </div>
     <div class="col-sm-12">
         <span class="small pull-right cursor-pointer" (click)="isCollapsedSearchOptions = !isCollapsedSearchOptions">
-          <span [hidden]="isCollapsedSearchOptions">Hide</span>
-          <span [hidden]="!isCollapsedSearchOptions">Show</span>
+          <span [hidden]="!isCollapsedSearchOptions">Hide</span>
+          <span [hidden]="isCollapsedSearchOptions">Show</span>
           search options
         </span>
       <div class="well well-sm">
-        <div [collapse]="isCollapsedSearchOptions">
+        <div [collapse]="!isCollapsedSearchOptions">
           <label for="languageSelector">Search in language:</label>
           <select [(ngModel)]="language" (change)="languageChanged(searchBox.languageSelector.value)" id="languageSelector" name="languageSelector">
             <option value="en">English</option>
             <option value="de">Deutsch</option>
             <option value="fr">Français</option>
           </select>
+          [ordered by: {{params.ordering}}]
           <!--<label for="orderingSelector">Ordering:</label>-->
-          <!--<select [(ngModel)]="params.ordering" id="orderingSelector" name="ordering" disabled="disabled" class="select">-->
+          <!--<select [(ngModel)]="params.ordering" id="orderingSelector" name="ordering" disabled="disabled" class="disabled">-->
           <!--<option value="-modified">most recent first</option>-->
           <!--<option value="modified">least recent first</option>-->
           <!--<option value="rank">highest search rank first</option>-->
@@ -94,6 +94,9 @@
   </div>
   <div [collapse]="!metadataItem.showDetails">
     <div>
+      <p>
+        <a [routerLink]="['/metadata', metadataItem.api_id]">direct Link to this entry</a>
+      </p>
       <p [hidden]="!metadataItem.geodata_type">
         <strong>Data Type</strong>: {{metadataItem.geodata_type}}
       </p>
