@@ -1,7 +1,7 @@
 <!-- Search -->
 <div class="row">
   <form class="search" #searchBox>
-    <div class="col-sm-12">
+    <div class="col-sm-12 last">
       <div class="input-group">
         <input name="searchTerm" class="form-control" />
         <span class="input-group-btn">
@@ -11,27 +11,47 @@
       </div>
     </div>
     <div class="col-sm-12">
-      <div class="input-group">
-    <span class="input-group-addon">
-      <input type="radio" [(ngModel)]="language" name="languageSelector" value="en"> English
-      <input type="radio" [(ngModel)]="language" name="languageSelector" value="de" checked="checked"> Deutsch
-      <input type="radio" [(ngModel)]="language" name="languageSelector" value="fr"> Français
-    </span>
+        <span class="small pull-right cursor-pointer" (click)="isCollapsedSearchOptions = !isCollapsedSearchOptions">
+          <span [hidden]="isCollapsedSearchOptions">Hide</span>
+          <span [hidden]="!isCollapsedSearchOptions">Show</span>
+          search options
+        </span>
+      <div class="well well-sm">
+        <div [collapse]="isCollapsedSearchOptions">
+          <label for="languageSelector">Search in language:</label>
+          <select [(ngModel)]="language" (change)="languageChanged(searchBox.languageSelector.value)" id="languageSelector" name="languageSelector">
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Français</option>
+          </select>
+          <!--<label for="orderingSelector">Ordering:</label>-->
+          <!--<select [(ngModel)]="params.ordering" id="orderingSelector" name="ordering" disabled="disabled" class="select">-->
+          <!--<option value="-modified">most recent first</option>-->
+          <!--<option value="modified">least recent first</option>-->
+          <!--<option value="rank">highest search rank first</option>-->
+          <!--<option value="-rank">lowest search rank first</option>-->
+          <!--</select>-->
+        </div>
       </div>
     </div>
   </form>
 </div>
 
 <!-- paginator -->
-<pre>Results Total: {{totalItems}}</pre>
-<div [hidden]="totalItems == 0">
-<pagination
-  [totalItems]="totalItems"
-  [(ngModel)]="currentPage"
-  [maxSize]="maxSize"
-  (pageChanged)="pageChanged($event)"
-  [rotate]="false">
-</pagination>
+<pre>
+  Results Total: <strong>{{totalItems}}</strong><span [hidden]="searchBox.searchTerm.value"> (showing all records)</span><span [hidden]="!ordering"> | <strong>{{ordering}}</strong></span>
+</pre>
+
+<div [hidden]="totalItems == 0" class="row">
+  <div class="col-sm-6">
+    <pagination
+      [totalItems]="totalItems"
+      [(ngModel)]="currentPage"
+      [maxSize]="maxSize"
+      (pageChanged)="pageChanged($event)"
+      [rotate]="false">
+    </pagination>
+  </div>
 </div>
 
 <!-- Result List -->
@@ -124,11 +144,11 @@
 </div>
 
 <div [hidden]="totalItems == 0">
-<pagination
-  [totalItems]="totalItems"
-  [(ngModel)]="currentPage"
-  (pageChanged)="pageChanged($event)"
-  [maxSize]="maxSize"
-  [rotate]="false">
-</pagination>
+  <pagination
+    [totalItems]="totalItems"
+    [(ngModel)]="currentPage"
+    [maxSize]="maxSize"
+    (pageChanged)="pageChanged($event)"
+    [rotate]="false">
+  </pagination>
 </div>

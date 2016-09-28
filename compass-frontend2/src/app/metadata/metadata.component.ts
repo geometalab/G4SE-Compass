@@ -14,6 +14,7 @@ export class MetadataComponent implements OnInit {
   totalItems:number = 0;
   currentPage:number = 1;
   language: string = 'de';
+  ordering: string = null;
 
   // pagination settings
   private itemsPerPage: number = 10;
@@ -30,14 +31,15 @@ export class MetadataComponent implements OnInit {
 
   private clearParams(): void {
     this.params.clear();
+    this.ordering = null;
     this.params.page_size = this.itemsPerPage;
     this.params.language = this.language;
   }
 
   getMostRecentMetadata(): void {
     this.clearParams();
-    // this.params.limit = 6;
     this.params.ordering = '-modified';
+    this.ordering = 'most recent first';
     this.getMetadataList();
   }
 
@@ -46,10 +48,19 @@ export class MetadataComponent implements OnInit {
     this.currentPage = 1;
     this.clearParams();
     this.params.page_size = this.itemsPerPage;
-    this.params.ordering = '-rank';
+    this.params.ordering = 'rank';
+    this.ordering = 'highest search rank first';
     this.params.search = search;
     this.params.language = this.language;
     this.getMetadataList();
+  }
+
+  languageChanged(language): void {
+    this.language = language;
+    this.params.language = this.language;
+    if (this.params.search) {
+      this.getMetadataList();
+    }
   }
 
   getAllMetadata(): void {
