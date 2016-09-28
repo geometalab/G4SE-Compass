@@ -15,7 +15,7 @@ from rest_framework import response, schemas
 from rest_framework.settings import api_settings
 from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
-from api.filters import RecordSearch, LimitRecordFilter
+from api.filters import RecordSearch, LimitRecordFilter, DateLimitRecordFilter
 from api.helpers.helpers import is_internal
 from api.models import CombinedRecord, Record
 from api.serializers import AllRecordsSerializer, UserSerializer, EditRecordSerializer
@@ -68,6 +68,7 @@ class MetaDataReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
         filters.OrderingFilter,
         RecordSearch,
         LimitRecordFilter,
+        DateLimitRecordFilter,
     )
 
     def get_queryset(self):

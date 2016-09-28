@@ -23,6 +23,15 @@
             <option value="de">Deutsch</option>
             <option value="fr">Français</option>
           </select>
+          <div class="input-group">
+          <label for="yearSelector">Year:</label>
+          <input name="year" id="yearSelector" type="text" [(ngModel)]="params.year" />
+          <strong>OR</strong>
+          <label for="fromYearSelector">From Year:</label>
+          <input name="from-year" id="fromYearSelector" type="text" [(ngModel)]="params.from" />
+          <label for="toYearSelector">To Year:</label>
+          <input name="to-year" id="toYearSelector" type="text" [(ngModel)]="params.to" />
+          </div>
           [ordered by: {{params.ordering}}]
           <!--<label for="orderingSelector">Ordering:</label>-->
           <!--<select [(ngModel)]="params.ordering" id="orderingSelector" name="ordering" disabled="disabled" class="disabled">-->

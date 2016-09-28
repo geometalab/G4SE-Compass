@@ -1,7 +1,7 @@
-from django.db.models import Q
+from django.db.models import Q, IntegerField
+from django.db.models.functions import Cast
+from django.utils import timezone
 from rest_framework import filters
-from rest_framework import serializers
-from django.utils.translation import gettext as _
 
 from api import LANGUAGE_CONFIG_MATCH
 from api.models import CombinedRecord, record_ids_for_search_query
@@ -57,6 +57,53 @@ class RecordSearch(filters.SearchFilter):
 
     def get_fields(self, view):
         return [self.search_param, self.language_param]
+
+
+class DateLimitRecordFilter(filters.BaseFilterBackend):
+    year_param = 'year'
+    from_param = 'from'
+    to_param = 'to'
+
+    def _filter_queryset(self, request, queryset):
+        single_year = self._get_year(request)
+        if single_year is not None:  # if we have one year defined, just ignore the possible range given
+            return queryset.filter(publication_year=single_year)
+        return self._get_year_range(request, queryset)
+
+    def _get_year(self, request):
+        year = request.query_params.get(self.year_param, '')
+        if year.lower() == 'latest':
+            return 'latest'
+        else:
+            return self._to_int_or_None(year)
+
+    def _get_year_range(self, request, queryset):
+        from_year = self._to_int_or_None(request.query_params.get(self.from_param, ''))
+        to_year = self._to_int_or_None(request.query_params.get(self.to_param, ''))
+
+        if to_year is None and from_year is None:
+            return queryset
+
+        # FIXME: ugly hack to only include numbers, beacuse publication_year is not an integer :-(
+        queryset = queryset.filter(publication_year__startswith='2')
+        queryset = queryset.annotate(publication_year_int=Cast('publication_year', IntegerField()))
+        if to_year is not None:
+            queryset = queryset.filter(publication_year_int__lte=to_year)
+        if from_year is not None:
+            queryset = queryset.filter(publication_year_int__gte=from_year)
+        return queryset
+
+    def _to_int_or_None(self, value):
+        try:
+            return int(value)
+        except ValueError:
+            return None
+
+    def filter_queryset(self, request, queryset, view):
+        return self._filter_queryset(request, queryset)
+
+    def get_fields(self, view):
+        return [self.year_param, self.from_param, self.to_param]
 
 
 class LimitRecordFilter(filters.BaseFilterBackend):
