@@ -5,7 +5,7 @@
       <div class="input-group">
         <input name="searchTerm" class="form-control" />
         <span class="input-group-btn">
-            <button class="btn btn-secondary search-button" (click)="filterMetadata(searchBox.searchTerm.value, searchBox.languageSelector.value)">Search</button>
+            <button class="btn btn-secondary search-button" (click)="filterMetadata(searchBox.searchTerm.value)">Search</button>
         <span us-spinner="{radius: 6}" spinner-on="showSpinner"></span>
         </span>
       </div>
@@ -13,9 +13,9 @@
     <div class="col-sm-12">
       <div class="input-group">
     <span class="input-group-addon">
-      <input type="radio" name="languageSelector" value="en"> English
-      <input type="radio" name="languageSelector" value="de" checked="checked"> Deutsch
-      <input type="radio" name="languageSelector" value="fr"> Français
+      <input type="radio" [(ngModel)]="language" name="languageSelector" value="en"> English
+      <input type="radio" [(ngModel)]="language" name="languageSelector" value="de" checked="checked"> Deutsch
+      <input type="radio" [(ngModel)]="language" name="languageSelector" value="fr"> Français
     </span>
       </div>
     </div>
@@ -28,17 +28,19 @@
 <pagination
   [totalItems]="totalItems"
   [(ngModel)]="currentPage"
-  (pageChanged)="pageChanged($event)">
+  [maxSize]="maxSize"
+  (pageChanged)="pageChanged($event)"
+  [rotate]="false">
 </pagination>
 </div>
 
 <!-- Result List -->
 <div *ngFor="let metadataItem of metadataList" class="panel panel-info">
-  <div class="panel-heading cursor-pointer" (click)="metadataItem.showDetails = !metadataItem.showDetails">
+  <div [tooltipHtml]="metadataItem.abstract | linky" class="panel-heading cursor-pointer" (click)="metadataItem.showDetails = !metadataItem.showDetails">
     <div class="row">
       <!-- Short list -->
       <div class="col-sm-4">
-        <h4>{{metadataItem.content}} ({{metadataItem.api_id}})</h4>
+        <h4>{{metadataItem.content}}</h4>
       </div>
       <div class="col-sm-3">
         <div class="row">
@@ -125,6 +127,8 @@
 <pagination
   [totalItems]="totalItems"
   [(ngModel)]="currentPage"
-  (pageChanged)="pageChanged($event)">
+  (pageChanged)="pageChanged($event)"
+  [maxSize]="maxSize"
+  [rotate]="false">
 </pagination>
 </div>

@@ -7,6 +7,10 @@ export class MetadataParameters {
   page_size: number;
   page: number;
 
+  clear(): void {
+    this.search = this.language = this.ordering = this.limit = this.page_size = this.page = null;
+  }
+
   toUrlQuery(): string {
     var options_list: string[] = [];
 

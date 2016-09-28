@@ -13,7 +13,11 @@ export class MetadataComponent implements OnInit {
   error: any;
   totalItems:number = 0;
   currentPage:number = 1;
+  language: string = 'de';
+
+  // pagination settings
   private itemsPerPage: number = 10;
+  maxSize: number = 5; // maxNumberButtonsVisible
 
   private params: MetadataParameters = new MetadataParameters();
 
@@ -24,9 +28,15 @@ export class MetadataComponent implements OnInit {
     this.totalItems = 0;
   }
 
+  private clearParams(): void {
+    this.params.clear();
+    this.params.page_size = this.itemsPerPage;
+    this.params.language = this.language;
+  }
+
   getMostRecentMetadata(): void {
-    this.params = new MetadataParameters();
-    this.params.limit = 6;
+    this.clearParams();
+    // this.params.limit = 6;
     this.params.ordering = '-modified';
     this.getMetadataList();
   }
@@ -34,29 +44,27 @@ export class MetadataComponent implements OnInit {
   filterMetadata(search): void {
     this.totalItems = 0;
     this.currentPage = 1;
-    this.params = new MetadataParameters();
+    this.clearParams();
     this.params.page_size = this.itemsPerPage;
-    this.params.ordering = '-modified';
+    this.params.ordering = '-rank';
     this.params.search = search;
+    this.params.language = this.language;
     this.getMetadataList();
   }
 
   getAllMetadata(): void {
-    this.params = new MetadataParameters();
+    this.clearParams();
     this.getMetadataList();
   }
 
   public pageChanged(event:any):void {
     this.params.page = event.page;
-    console.log('Page changed to: ' + event.page);
-    console.log('Number items per page: ' + event.itemsPerPage);
     this.getMetadataList();
   }
 
   private processData(metadata): void {
     this.metadataList = metadata.results;
     this.totalItems = metadata.count;
-    // metadata => this.metadataList = metadata;
   }
 
   private getMetadataList(): void {
