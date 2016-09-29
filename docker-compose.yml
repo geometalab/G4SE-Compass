@@ -39,6 +39,13 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=G4SE
+  frontend:
+    image: geometalab/g4se-frontend
+    build:
+      context: ./compass-frontend2/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
   nginx:
     image: geometalab/g4se-nginx
     ports:
@@ -48,8 +55,10 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - api
+      - frontend
     links:
       - api
+      - frontend
     volumes:
       - api-static:/var/www/g4se-api/static
     environment:
