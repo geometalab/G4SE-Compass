@@ -10,5 +10,5 @@ ADD dist /var/data/www/compass
 
 WORKDIR /var/data/www/compass
 
-CMD live-server --entry-file=/index.html --host=0.0.0.0 --port=$PORT
+CMD live-server --entry-file=/index.html --host=0.0.0.0 --port=$PORT --no-browser
 
