@@ -27,3 +27,8 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
         'SHOW_TOOLBAR_CALLBACK': lambda x: True
     }
+
+HAYSTACK_CONNECTIONS['default']['URL'] = 'http://localhost:9200/'
+HAYSTACK_CONNECTIONS['en']['URL'] = 'http://localhost:9200/'
+HAYSTACK_CONNECTIONS['de']['URL'] = 'http://localhost:9200/'
+HAYSTACK_CONNECTIONS['fr']['URL'] = 'http://localhost:9200/'

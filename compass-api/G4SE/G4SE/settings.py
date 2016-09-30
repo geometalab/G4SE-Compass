@@ -62,6 +62,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework_swagger',
+
+    'haystack',
+
     'corsheaders',
     'rest_framework',
     'api',
@@ -160,3 +163,114 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
+# HAYSTACK CONFIGURATION
+DEFAULT_INDEX_SETUP = {
+    "settings": {
+        "index": {
+            "analysis": {
+                "analyzer": {
+                    "ngram_analyzer": {
+                        "type": "custom",
+                        "tokenizer": "standard",
+                        "filter": ["haystack_ngram", "lowercase"]
+                    },
+                    "edgengram_analyzer": {
+                        "type": "custom",
+                        "tokenizer": "standard",
+                        "filter": ["haystack_edgengram", "lowercase"]
+                    },
+                },
+                "tokenizer": {
+                    "haystack_ngram_tokenizer": {
+                        "type": "nGram",
+                        "min_gram": 3,
+                        "max_gram": 15,
+                    },
+                    "haystack_edgengram_tokenizer": {
+                        "type": "edgeNGram",
+                        "min_gram": 2,
+                        "max_gram": 15,
+                        "side": "front"
+                    }
+                },
+                "filter": {
+                    "haystack_ngram": {
+                        "type": "nGram",
+                        "min_gram": 3,
+                        "max_gram": 15
+                    },
+                    "haystack_edgengram": {
+                        "type": "edgeNGram",
+                        "min_gram": 2,
+                        "max_gram": 15
+                    },
+                }
+            }
+        },
+    },
+}
+
+GERMAN_INDEX_SETTINGS = DEFAULT_INDEX_SETUP.copy()
+GERMAN_INDEX_SETTINGS["settings"]["index"]["analysis"]["analyzer"]["german_stemmer"] = {
+    "tokenizer": "standard",
+    "filter": ["standard", "lowercase", "german_stemmer"],
+}
+GERMAN_INDEX_SETTINGS["settings"]["index"]["analysis"]["filter"]["german_stemmer"] = {
+    "type": "stemmer",
+    "name": "german",
+}
+ENGLISH_INDEX_SETTINGS = DEFAULT_INDEX_SETUP.copy()
+ENGLISH_INDEX_SETTINGS["settings"]["index"]["analysis"]["analyzer"]["english_stemmer"] = {
+    "tokenizer": "standard",
+    "filter": ["standard", "lowercase", "english_stemmer"],
+}
+ENGLISH_INDEX_SETTINGS["settings"]["index"]["analysis"]["filter"]["english_stemmer"] = {
+    "type": "stemmer",
+    "name": "english",
+}
+FRENCH_INDEX_SETTINGS = DEFAULT_INDEX_SETUP.copy()
+FRENCH_INDEX_SETTINGS["settings"]["index"]["analysis"]["analyzer"]["french_stemmer"] = {
+    "tokenizer": "standard",
+    "filter": ["standard", "lowercase", "french_stemmer"],
+}
+FRENCH_INDEX_SETTINGS["settings"]["index"]["analysis"]["filter"]["french_stemmer"] = {
+    "type": "stemmer",
+    "name": "english",
+}
+
+HAYSTACK_CONNECTIONS = {
+    # default is english!
+    'default': {
+        'ENGINE': 'configurable_elastic_search_backend.backends.ConfigurableElasticEngine',
+        'URL': 'http://elasticsearch:9200/',
+        'INDEX_NAME': 'haystack',
+
+    },
+    'en': {
+        'ENGINE': 'configurable_elastic_search_backend.backends.EnglishConfigurableElasticEngine',
+        'URL': 'http://elasticsearch:9200/',
+        'INDEX_NAME': 'haystack_english',
+        "OPTIONS": {
+            **ENGLISH_INDEX_SETTINGS,
+        },
+    },
+    'de': {
+        'ENGINE': 'configurable_elastic_search_backend.backends.GermanConfigurableElasticEngine',
+        'URL': 'http://elasticsearch:9200/',
+        'INDEX_NAME': 'haystack_german',
+        "OPTIONS": {
+            **GERMAN_INDEX_SETTINGS,
+        },
+    },
+    'fr': {
+        'ENGINE': 'configurable_elastic_search_backend.backends.FrenchConfigurableElasticEngine',
+        'URL': 'http://elasticsearch:9200/',
+        'INDEX_NAME': 'haystack_french',
+        "OPTIONS": {
+            **FRENCH_INDEX_SETTINGS,
+        },
+    },
+}
+HAYSTACK_DOCUMENT_FIELD = 'text'
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'

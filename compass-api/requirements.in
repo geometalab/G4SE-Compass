@@ -10,3 +10,5 @@ django-cors-middleware
 whitenoise
 brotlipy
 grako
+drf-haystack
+elasticsearch<2.0.0

@@ -3,7 +3,11 @@ import logging
 import grako
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
+from drf_haystack.filters import HaystackHighlightFilter, HaystackFilter
+from drf_haystack.viewsets import HaystackViewSet
 from grako.exceptions import FailedParse
+from haystack.inputs import AutoQuery, Raw, Clean
+from haystack.query import SearchQuerySet
 from rest_framework import filters
 from rest_framework import generics, permissions
 from rest_framework import status
@@ -18,7 +22,7 @@ from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 from api.filters import RecordSearch, LimitRecordFilter, DateLimitRecordFilter
 from api.helpers.helpers import is_internal
 from api.models import CombinedRecord, Record
-from api.serializers import AllRecordsSerializer, UserSerializer, EditRecordSerializer
+from api.serializers import AllRecordsSerializer, UserSerializer, EditRecordSerializer, CombinedRecordsSearchSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -109,3 +113,33 @@ class RecordsAdminViewSet(viewsets.ModelViewSet):
     queryset = Record.objects.all()
     serializer_class = EditRecordSerializer
     pagination_class = SmallResultsSetPagination
+
+
+class CombinedRecordsSearchView(HaystackViewSet):
+    # `index_models` is an optional list of which models you would like to include
+    # in the search result. You might have several models indexed, and this provides
+    # a way to filter out those of no interest for this particular view.
+    # (Translates to `SearchQuerySet().models(*index_models)` behind the scenes.
+    FALLBACK_LANGUAGE = CombinedRecord.ENGLISH
+    pagination_class = StandardResultsSetPagination
+    index_models = [CombinedRecord]
+    document_uid_field = "api_id"
+    filter_backends = [
+        HaystackFilter,
+        HaystackHighlightFilter,
+    ]
+    serializer_class = CombinedRecordsSearchSerializer
+
+    def get_queryset(self):
+        using = self.request.GET.get('language', self.FALLBACK_LANGUAGE)
+        queryset = SearchQuerySet().using(using)
+        query_string = self.request.GET.get('q', None)
+        if query_string is None or query_string == '':
+            return queryset
+        cleaned_query_string = Clean(query_string)
+        sqs_raw = queryset.filter(text=Raw(cleaned_query_string.query_string))
+        internal = self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR'])
+        # TODO: make this into an optional list of publicity
+        if not internal:
+            sqs_raw = sqs_raw.filter(visibility=CombinedRecord.PUBLIC)
+        return sqs_raw
