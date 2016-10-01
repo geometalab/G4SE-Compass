@@ -22,6 +22,7 @@ from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 from api.filters import RecordSearch, LimitRecordFilter, DateLimitRecordFilter
 from api.helpers.helpers import is_internal
 from api.models import CombinedRecord, Record
+from api.search_indexes import CombinedRecordIndex
 from api.serializers import AllRecordsSerializer, UserSerializer, EditRecordSerializer, CombinedRecordsSearchSerializer
 
 logger = logging.getLogger(__name__)
@@ -122,7 +123,7 @@ class CombinedRecordsSearchView(HaystackViewSet):
     # (Translates to `SearchQuerySet().models(*index_models)` behind the scenes.
     FALLBACK_LANGUAGE = CombinedRecord.ENGLISH
     pagination_class = StandardResultsSetPagination
-    index_models = [CombinedRecord]
+    index_models = [CombinedRecordIndex]
     document_uid_field = "api_id"
     filter_backends = [
         HaystackFilter,

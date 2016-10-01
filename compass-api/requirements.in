@@ -12,3 +12,5 @@ brotlipy
 grako
 drf-haystack
 elasticsearch<2.0.0
+celery-haystack
+Celery[redis]<4.0

@@ -32,3 +32,6 @@ HAYSTACK_CONNECTIONS['default']['URL'] = 'http://localhost:9200/'
 HAYSTACK_CONNECTIONS['en']['URL'] = 'http://localhost:9200/'
 HAYSTACK_CONNECTIONS['de']['URL'] = 'http://localhost:9200/'
 HAYSTACK_CONNECTIONS['fr']['URL'] = 'http://localhost:9200/'
+
+BROKER_URL = 'redis://localhost/0'
+CELERY_RESULT_BACKEND = 'redis://localhost/0'

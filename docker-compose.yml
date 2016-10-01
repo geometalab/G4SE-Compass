@@ -4,6 +4,10 @@ services:
     image: elasticsearch:1
     ports:
       - "9200:9200"
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
   api:
     build:
       context: ./compass-api
@@ -11,10 +15,32 @@ services:
     image: geometalab/g4se-api
     links:
       - "elasticsearch"
+      - "redis"
     ports:
       - "8000:8000"
     volumes:
       - api-static:/var/www/g4se-api/static
+    environment:
+      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+      - DATABASE_URL=postgres://postgres:postgres@database:5432/G4SE
+      - SECRET_KEY=secret_key
+      - DEBUG=True
+      - STATIC_ROOT=/var/www/g4se-api/static/
+      - STATIC_URL=/api/static/
+      - ALLOWED_HOSTS=['*']
+    links:
+      - db:database
+  celery:
+    build:
+      context: ./compass-api
+      dockerfile: Dockerfile
+    image: geometalab/g4se-api
+    links:
+      - "elasticsearch"
+      - "redis"
+    volumes:
+      - api-static:/var/www/g4se-api/static
+    command: celery -A  G4SE worker -l info
     environment:
       - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
       - DATABASE_URL=postgres://postgres:postgres@database:5432/G4SE

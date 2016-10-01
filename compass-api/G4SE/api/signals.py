@@ -1,7 +1,11 @@
+from celery_haystack.indexes import CelerySearchIndex
+from celery_haystack.signals import CelerySignalProcessor
+from celery_haystack.utils import enqueue_task
 from django.contrib.postgres.search import SearchQuery
 from django.db.models import Q
+from haystack.exceptions import NotHandled
 
-from api.models import Record, RecordTaggedItem, RecordTag
+from api.models import Record, RecordTaggedItem, RecordTag, CombinedRecord
 
 
 def changed_or_added_tag_update_records_signal(sender, instance, created, raw, using, update_fields, *args, **kwargs):
@@ -65,3 +69,31 @@ def changed_or_added_record_update_tag_signal(sender, instance, created, *args, 
             record_tag=tag,
             content_object=instance,
         )
+
+
+class CombinedRecordCelerySignalProcessor(CelerySignalProcessor):
+    def enqueue(self, action, instance, sender, **kwargs):
+        """
+        Given an individual model instance, determine if a backend
+        handles the model, check if the index is Celery-enabled and
+        enqueue task.
+        """
+        # FIXME: ugly hack to pass an CombinedRecord, since the search index only handles those
+        if sender == Record:
+            sender = CombinedRecord
+            instance = CombinedRecord.objects.get(api_id=instance.api_id)
+        using_backends = self.connection_router.for_write(instance=instance)
+
+        for using in using_backends:
+            try:
+                connection = self.connections[using]
+                index = connection.get_unified_index().get_index(sender)
+            except NotHandled:
+                continue  # Check next backend
+
+            if isinstance(index, CelerySearchIndex):
+                if action == 'update' and not index.should_update(instance):
+                    continue
+                enqueue_task(action, instance)
+
+        super().enqueue(action, instance, sender, **kwargs)
