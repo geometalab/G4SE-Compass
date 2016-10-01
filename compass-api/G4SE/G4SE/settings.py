@@ -64,7 +64,6 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
 
     'haystack',
-    'celery_haystack',
 
     'corsheaders',
     'rest_framework',
@@ -274,8 +273,4 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 HAYSTACK_DOCUMENT_FIELD = 'text'
-HAYSTACK_SIGNAL_PROCESSOR = 'api.signals.CombinedRecordCelerySignalProcessor'
-
-# CELERY
-BROKER_URL = 'redis://redis:6379/0'
-CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+HAYSTACK_SIGNAL_PROCESSOR = 'api.signals.CombinedRecordRealtimeSignalProcessor'

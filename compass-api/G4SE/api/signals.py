@@ -1,9 +1,7 @@
-from celery_haystack.indexes import CelerySearchIndex
-from celery_haystack.signals import CelerySignalProcessor
-from celery_haystack.utils import enqueue_task
 from django.contrib.postgres.search import SearchQuery
 from django.db.models import Q
 from haystack.exceptions import NotHandled
+from haystack.signals import RealtimeSignalProcessor
 
 from api.models import Record, RecordTaggedItem, RecordTag, CombinedRecord
 
@@ -71,29 +69,46 @@ def changed_or_added_record_update_tag_signal(sender, instance, created, *args, 
         )
 
 
-class CombinedRecordCelerySignalProcessor(CelerySignalProcessor):
-    def enqueue(self, action, instance, sender, **kwargs):
-        """
-        Given an individual model instance, determine if a backend
-        handles the model, check if the index is Celery-enabled and
-        enqueue task.
-        """
+class CombinedRecordRealtimeSignalProcessor(RealtimeSignalProcessor):
+    def _using_backend(self, instance):
+        if hasattr(instance, 'language'):
+            using_backends = [instance.language]
+        else:
+            using_backends = self.connection_router.for_write(instance=instance)
+        return using_backends
+
+    def handle_save(self, sender, instance, **kwargs):
         # FIXME: ugly hack to pass an CombinedRecord, since the search index only handles those
+        # to fox this, combining all records into one table would be appropriate
         if sender == Record:
             sender = CombinedRecord
             instance = CombinedRecord.objects.get(api_id=instance.api_id)
-        using_backends = self.connection_router.for_write(instance=instance)
+
+        using_backends = self._using_backend(instance)
 
         for using in using_backends:
             try:
-                connection = self.connections[using]
-                index = connection.get_unified_index().get_index(sender)
+                index = self.connections[using].get_unified_index().get_index(sender)
+                index.update_object(instance, using=using)
             except NotHandled:
-                continue  # Check next backend
+                # TODO: Maybe log it or let the exception bubble?
+                pass
 
-            if isinstance(index, CelerySearchIndex):
-                if action == 'update' and not index.should_update(instance):
-                    continue
-                enqueue_task(action, instance)
+    def handle_delete(self, sender, instance, **kwargs):
+        # FIXME: ugly hack to pass an CombinedRecord, since the search index only handles those
+        # to fox this, combining all records into one table would be appropriate
+        if sender == Record:
+            sender = CombinedRecord
+            instance._meta.app_label, instance._meta.model_name = \
+                CombinedRecord._meta.app_label, CombinedRecord._meta.model_name
 
-        super().enqueue(action, instance, sender, **kwargs)
+        using_backends = self._using_backend(instance)
+
+        for using in using_backends:
+            try:
+                index = self.connections[using].get_unified_index().get_index(sender)
+                print(index, instance, using)
+                index.remove_object(instance, using=using)
+            except NotHandled:
+                # TODO: Maybe log it or let the exception bubble?
+                pass

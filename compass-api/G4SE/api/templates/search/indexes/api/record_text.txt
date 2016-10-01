@@ -1,5 +1,0 @@
-{{ object.content }}
-{{ object.abstract }}
-{{ object.geography }}
-{{ object.collection }}
-{{ object.dataset }}

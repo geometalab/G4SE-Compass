@@ -1,4 +1,3 @@
-from celery_haystack.indexes import CelerySearchIndex
 from haystack import indexes
 
 from configurable_elastic_search_backend import fields
@@ -6,8 +5,7 @@ from configurable_elastic_search_backend import fields
 from api.models import CombinedRecord
 
 
-class CombinedRecordIndex(CelerySearchIndex, indexes.Indexable):
-
+class CombinedRecordIndex(indexes.BasicSearchIndex, indexes.Indexable):
     text = fields.CharField(document=True, use_template=True, analyzer='german_stemmer')
     api_id = fields.CharField(model_attr="api_id", boost=0.1, analyzer='german_stemmer')
     content = fields.CharField(model_attr="content", analyzer='german_stemmer')
