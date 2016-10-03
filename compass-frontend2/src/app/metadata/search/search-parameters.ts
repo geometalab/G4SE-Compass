@@ -9,6 +9,8 @@ export class SearchParameters {
   from_year: number;
   to_year: number;
 
+  loading: boolean = false; // to display spinner
+
   clear(): void {
     this.search = this.language = this.ordering = this.limit = this.page_size = this.page = null;
   }

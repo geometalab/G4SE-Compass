@@ -13,6 +13,7 @@ import {routing} from "./app.routing";
 import { MetadataDetailComponent } from './metadata/metadata-detail.component';
 import {SearchService} from "./metadata/search/search.service";
 import {SearchComponent} from "./metadata/search/search.component";
+import { SpinnerComponent } from './spinner/spinner.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import {SearchComponent} from "./metadata/search/search.component";
     MetadataComponent,
     MetadataDetailComponent,
     SearchComponent,
+    SpinnerComponent,
   ],
   imports: [
     BrowserModule,

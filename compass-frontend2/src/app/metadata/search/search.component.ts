@@ -4,10 +4,11 @@ import {Router} from "@angular/router";
 import {SearchParameters} from "./search-parameters";
 import {SearchService} from "./search.service";
 
+
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.css']
+  styleUrls: ['./search.component.css'],
 })
 export class SearchComponent implements OnInit {
   searchResultList: SearchResult[];
@@ -34,6 +35,7 @@ export class SearchComponent implements OnInit {
   }
 
   executeSearch(): void {
+    this.searchResultList = [];
     this.searchParams.page = 1;
     this.getMetadataList();
   }
@@ -48,10 +50,12 @@ export class SearchComponent implements OnInit {
   }
 
   private loading(): void {
+    this.searchParams.loading = true;
     console.log('loading');
   }
 
   private loadingFinished(): void {
+    this.searchParams.loading = false;
     console.log('loading done');
   }
 

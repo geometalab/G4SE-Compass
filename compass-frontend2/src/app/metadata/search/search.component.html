@@ -24,10 +24,10 @@
             <option value="fr">Français</option>
           </select>
           <div class="input-group">
-          <label for="fromYearSelector">From Year:</label>
-          <input name="from-year" id="fromYearSelector" type="text" [(ngModel)]="searchParams.from_year" />
-          <label for="toYearSelector">To Year:</label>
-          <input name="to-year" id="toYearSelector" type="text" [(ngModel)]="searchParams.to_year" />
+            <label for="fromYearSelector">From Year:</label>
+            <input name="from-year" id="fromYearSelector" type="text" [(ngModel)]="searchParams.from_year" />
+            <label for="toYearSelector">To Year:</label>
+            <input name="to-year" id="toYearSelector" type="text" [(ngModel)]="searchParams.to_year" />
           </div>
           [ordered by: {{searchParams.ordering}}]
           <!--<label for="orderingSelector">Ordering:</label>-->
@@ -60,7 +60,10 @@
   </div>
 </div>
 
+
 <!-- Result List -->
+<my-spinner [isRunning]="searchParams.loading" [delay]="100"></my-spinner>
+
 <div *ngFor="let searchResult of searchResultList" class="panel panel-info">
   <div [tooltipHtml]="searchResult.abstract | slice:0:100 | linky"
        class="panel-heading cursor-pointer" (click)="searchResult.showDetails = !searchResult.showDetails">
