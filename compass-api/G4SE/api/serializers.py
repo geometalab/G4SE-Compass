@@ -14,6 +14,7 @@ class BaseRecordSerializer(serializers.ModelSerializer):
     search_vector_de = serializers.HiddenField(default=None)
     search_vector_en = serializers.HiddenField(default=None)
     search_vector_fr = serializers.HiddenField(default=None)
+    tag_list_display = serializers.CharField(read_only=True)
 
 
 class AllRecordsSerializer(BaseRecordSerializer):

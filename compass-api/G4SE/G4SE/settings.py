@@ -245,12 +245,21 @@ HAYSTACK_CONNECTIONS = {
         'ENGINE': 'configurable_elastic_search_backend.backends.ConfigurableElasticEngine',
         'URL': 'http://elasticsearch:9200/',
         'INDEX_NAME': 'haystack',
-
+        'EXCLUDED_INDEXES': [
+            'api.search_indexes.EnglishCombinedRecordIndex',
+            'api.search_indexes.GermanCombinedRecordIndex',
+            'api.search_indexes.FrenchCombinedRecordIndex',
+        ],
     },
     'en': {
         'ENGINE': 'configurable_elastic_search_backend.backends.EnglishConfigurableElasticEngine',
         'URL': 'http://elasticsearch:9200/',
         'INDEX_NAME': 'haystack_english',
+        'EXCLUDED_INDEXES': [
+            'api.search_indexes.CombinedRecordIndex',
+            'api.search_indexes.GermanCombinedRecordIndex',
+            'api.search_indexes.FrenchCombinedRecordIndex',
+        ],
         "OPTIONS": {
             **ENGLISH_INDEX_SETTINGS,
         },
@@ -259,6 +268,11 @@ HAYSTACK_CONNECTIONS = {
         'ENGINE': 'configurable_elastic_search_backend.backends.GermanConfigurableElasticEngine',
         'URL': 'http://elasticsearch:9200/',
         'INDEX_NAME': 'haystack_german',
+        'EXCLUDED_INDEXES': [
+            'api.search_indexes.CombinedRecordIndex',
+            'api.search_indexes.EnglishCombinedRecordIndex',
+            'api.search_indexes.FrenchCombinedRecordIndex',
+        ],
         "OPTIONS": {
             **GERMAN_INDEX_SETTINGS,
         },
@@ -267,6 +281,11 @@ HAYSTACK_CONNECTIONS = {
         'ENGINE': 'configurable_elastic_search_backend.backends.FrenchConfigurableElasticEngine',
         'URL': 'http://elasticsearch:9200/',
         'INDEX_NAME': 'haystack_french',
+        'EXCLUDED_INDEXES': [
+            'api.search_indexes.CombinedRecordIndex',
+            'api.search_indexes.EnglishCombinedRecordIndex',
+            'api.search_indexes.GermanCombinedRecordIndex',
+        ],
         "OPTIONS": {
             **FRENCH_INDEX_SETTINGS,
         },

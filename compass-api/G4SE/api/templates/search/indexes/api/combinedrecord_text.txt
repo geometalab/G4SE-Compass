@@ -3,3 +3,10 @@
 {{ object.geography }}
 {{ object.collection }}
 {{ object.dataset }}
+{% for tag in objects.tags_en %}
+{{ tag }}
+{% endfor %}{% for tag in objects.tags_de %}
+{{ tag }}
+{% endfor %}{% for tag in objects.tags_fr %}
+{{ tag }}
+{% endfor %}
