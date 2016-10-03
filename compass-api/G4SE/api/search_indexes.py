@@ -45,7 +45,10 @@ class CombinedRecordIndex(indexes.BasicSearchIndex, indexes.Indexable):
         return CombinedRecord
 
     def index_queryset(self, using=None):
-        return self.get_model().objects.filter(language=using)
+        # always index all records, more traditional would be to
+        # only index the corresponding language using
+        # self.get_model().objects.filter(language=using)
+        return self.get_model().objects.all()
 
 
 class EnglishCombinedRecordIndex(CombinedRecordIndex):
@@ -58,42 +61,3 @@ class GermanCombinedRecordIndex(CombinedRecordIndex):
 
 class FrenchCombinedRecordIndex(CombinedRecordIndex):
     STEMMER = 'french_stemmer'
-
-
-class RecordTagIndex(indexes.BasicSearchIndex, indexes.Indexable):
-    STEMMER = 'german_stemmer'
-    text = fields.CharField(document=True, use_template=True, analyzer=STEMMER)
-    id = fields.CharField(model_attr="id", boost=0.1, analyzer=STEMMER)
-    tag = None
-    tag_synonyms = None
-    autocomplete = indexes.EdgeNgramField()
-
-    @staticmethod
-    def prepare_autocomplete(obj):
-        autocomplete_string = " ".join((
-            obj.tag_en, obj.tag_de, obj.tag_fr
-        ))
-        if obj.tag_alternatives_de is not None:
-            autocomplete_string += " ".join(obj.tag_alternatives_de)
-        if obj.tag_alternatives_en is not None:
-            autocomplete_string += " ".join(obj.tag_alternatives_en)
-        if obj.tag_alternatives_fr is not None:
-            autocomplete_string += " ".join(obj.tag_alternatives_fr)
-        return autocomplete_string
-
-    def get_model(self):
-        return RecordTag
-
-    def index_queryset(self, using=None):
-        if using in [c[0] for c in CombinedRecord.language_choices]:
-            STEMMERS = dict(
-                en='english_stemmer',
-                de='german_stemmer',
-                fr='french_stemmer',
-            )
-            stemmer = STEMMERS[using]
-            self.tag = fields.CharField(model_attr="tag_{}".format(using), analyzer=stemmer)
-            self.tag_synonyms = fields.CharField(model_attr="tag_alternatives_{}".format(using), analyzer=stemmer)
-            return self.get_model().objects.all()
-        # hack to return no object
-        return self.get_model().objects.filter(id__isnull=True)

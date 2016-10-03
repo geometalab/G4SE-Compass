@@ -1,4 +1,0 @@
-{{ object.tag }}
-{% for tag in objects.tag_synonyms %}
-{{ tag }}
-{% endfor %}

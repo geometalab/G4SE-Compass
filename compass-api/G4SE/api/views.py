@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from drf_haystack.filters import HaystackHighlightFilter, HaystackFilter
 from drf_haystack.viewsets import HaystackViewSet
 from grako.exceptions import FailedParse
-from haystack.inputs import AutoQuery, Raw, Clean
+from haystack.inputs import Raw, Clean
 from haystack.query import SearchQuerySet
 from rest_framework import filters
 from rest_framework import generics, permissions
@@ -23,7 +23,7 @@ from api.filters import RecordSearch, LimitRecordFilter, DateLimitRecordFilter
 from api.helpers.helpers import is_internal
 from api.models import CombinedRecord, Record
 from api.search_indexes import CombinedRecordIndex, EnglishCombinedRecordIndex, GermanCombinedRecordIndex, \
-    FrenchCombinedRecordIndex, RecordTagIndex
+    FrenchCombinedRecordIndex
 from api.serializers import AllRecordsSerializer, UserSerializer, EditRecordSerializer, CombinedRecordsSearchSerializer
 
 logger = logging.getLogger(__name__)
@@ -129,7 +129,6 @@ class CombinedRecordsSearchView(HaystackViewSet):
         EnglishCombinedRecordIndex,
         GermanCombinedRecordIndex,
         FrenchCombinedRecordIndex,
-        RecordTagIndex,
     ]
     document_uid_field = "api_id"
     filter_backends = [
