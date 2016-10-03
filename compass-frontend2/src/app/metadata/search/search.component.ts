@@ -14,9 +14,7 @@ export class SearchComponent implements OnInit {
   error: any;
   totalItems:number = 0;
   currentPage:number = 1;
-  language: string = 'de';
-  ordering: string = null;
-  showSpinner: boolean = true;
+  isLoading: boolean = false;
   // pagination settings
   private itemsPerPage: number = 10;
   maxSize: number = 5; // maxNumberButtonsVisible
@@ -31,33 +29,50 @@ export class SearchComponent implements OnInit {
   ngOnInit() {
     this.searchParams.language = 'de';
     this.searchParams.page = 1;
+    this.searchParams.page_size = this.itemsPerPage;
     this.executeSearch();
   }
 
   executeSearch(): void {
+    this.searchParams.page = 1;
     this.getMetadataList();
   }
 
   languageChanged(): void {
-    this.executeSearch();
+    this.getMetadataList();
   }
 
-  pageChanged(): void {
-    this.executeSearch();
+  pageChanged(event:any): void {
+    this.searchParams.page = event.page;
+    this.getMetadataList();
   }
 
+  private loading(): void {
+    console.log('loading');
+  }
+
+  private loadingFinished(): void {
+    console.log('loading done');
+  }
 
   private processData(searchResults): void {
     this.searchResultList = searchResults.results;
     this.totalItems = searchResults.count;
     console.log(searchResults);
+    this.loadingFinished();
+  }
+
+  private processError(error): void {
+    console.log(error);
+    this.loadingFinished();
   }
 
   private getMetadataList(): void {
+    this.loading();
     this.searchService
       .getSearchResultList(this.searchParams)
       .then(searchResults => this.processData(searchResults))
-      .catch(error => this.error = error);
+      .catch(error => this.processError(error));
   }
 
 

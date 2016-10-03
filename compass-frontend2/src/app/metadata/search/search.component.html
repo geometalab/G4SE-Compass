@@ -24,13 +24,10 @@
             <option value="fr">Français</option>
           </select>
           <div class="input-group">
-          <label for="yearSelector">Year:</label>
-          <input name="year" id="yearSelector" type="text" [(ngModel)]="searchParams.year" />
-          <strong>OR</strong>
           <label for="fromYearSelector">From Year:</label>
-          <input name="from-year" id="fromYearSelector" type="text" [(ngModel)]="searchParams.from" />
+          <input name="from-year" id="fromYearSelector" type="text" [(ngModel)]="searchParams.from_year" />
           <label for="toYearSelector">To Year:</label>
-          <input name="to-year" id="toYearSelector" type="text" [(ngModel)]="searchParams.to" />
+          <input name="to-year" id="toYearSelector" type="text" [(ngModel)]="searchParams.to_year" />
           </div>
           [ordered by: {{searchParams.ordering}}]
           <!--<label for="orderingSelector">Ordering:</label>-->
@@ -48,7 +45,7 @@
 
 <!-- paginator -->
 <pre>
-  Results Total: <strong>{{totalItems}}</strong><span [hidden]="searchBox.searchTerm.value"> (showing all records)</span><span [hidden]="!ordering"> | <strong>{{ordering}}</strong></span>
+  Results Total: <strong>{{totalItems}}</strong><span [hidden]="searchParams.search"> (showing all records)</span><span [hidden]="!searchParams.ordering"> | <strong>{{searchParams.ordering}}</strong></span>
 </pre>
 
 <div [hidden]="totalItems == 0" class="row">
@@ -65,7 +62,8 @@
 
 <!-- Result List -->
 <div *ngFor="let searchResult of searchResultList" class="panel panel-info">
-  <div [tooltipHtml]="searchResult.abstract | linky" class="panel-heading cursor-pointer" (click)="searchResult.showDetails = !searchResult.showDetails">
+  <div [tooltipHtml]="searchResult.abstract | slice:0:100 | linky"
+       class="panel-heading cursor-pointer" (click)="searchResult.showDetails = !searchResult.showDetails">
     <div class="row">
       <!-- Short list -->
       <div class="col-sm-4">
@@ -109,6 +107,10 @@
       <p [hidden]="!searchResult.abstract">
         <strong>Abstract</strong>: <span [innerHTML]="searchResult.abstract | linky"></span>
       </p>
+      {{searchResult.highlighted}}
+      <p [hidden]="!searchResult.highlighted">
+        <strong>Found in</strong>: <span [innerHTML]="searchResult.highlighted | linky"></span>
+      </p>
     </div>
   </div>
 </div>
@@ -116,7 +118,7 @@
 <div [hidden]="totalItems == 0">
   <pagination
     [totalItems]="totalItems"
-    [(ngModel)]="currentPage"
+    [(ngModel)]="searchParams.page"
     [maxSize]="maxSize"
     (pageChanged)="pageChanged($event)"
     [rotate]="false">

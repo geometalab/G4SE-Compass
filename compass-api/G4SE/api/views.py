@@ -19,7 +19,7 @@ from rest_framework import response, schemas
 from rest_framework.settings import api_settings
 from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
-from api.filters import RecordSearch, LimitRecordFilter, DateLimitRecordFilter
+from api.filters import RecordSearch, LimitRecordFilter, DateLimitRecordFilter, DateLimitSearchRecordFilter
 from api.helpers.helpers import is_internal
 from api.models import CombinedRecord, Record
 from api.search_indexes import CombinedRecordIndex, EnglishCombinedRecordIndex, GermanCombinedRecordIndex, \
@@ -134,6 +134,7 @@ class CombinedRecordsSearchView(HaystackViewSet):
     filter_backends = [
         HaystackFilter,
         HaystackHighlightFilter,
+        DateLimitSearchRecordFilter,
     ]
     serializer_class = CombinedRecordsSearchSerializer
 

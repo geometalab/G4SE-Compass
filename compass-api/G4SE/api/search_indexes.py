@@ -1,8 +1,9 @@
 from haystack import indexes
+from haystack.fields import DateTimeField
 
 from configurable_elastic_search_backend import fields
 
-from api.models import CombinedRecord, RecordTag
+from api.models import CombinedRecord
 
 
 class CombinedRecordIndex(indexes.BasicSearchIndex, indexes.Indexable):
@@ -14,7 +15,12 @@ class CombinedRecordIndex(indexes.BasicSearchIndex, indexes.Indexable):
     geography = fields.CharField(model_attr="geography", boost=1.4, analyzer=STEMMER)
     collection = fields.CharField(model_attr="collection", null=True, analyzer=STEMMER)
     dataset = fields.CharField(model_attr="dataset", null=True, analyzer=STEMMER)
+    publication_year = fields.CharField(model_attr="publication_year")
+    service_type = fields.CharField(model_attr="service_type", null=True)
+    source = fields.CharField(model_attr="source", null=True)
     visibility = fields.CharField(model_attr="visibility")
+    crs = fields.CharField(model_attr="crs")
+    modified = DateTimeField(model_attr="modified", null=True)
     language = fields.CharField(model_attr="language")
     keywords_en = fields.CharField(model_attr="tags_en")
     keywords_de = fields.CharField(model_attr="tags_de")

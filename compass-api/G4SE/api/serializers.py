@@ -111,6 +111,8 @@ class CombinedRecordsSearchSerializer(HaystackSerializer):
         # NOTE: Make sure you don't confuse these with model attributes. These
         # fields belong to the search index!
         fields = [
-            "text", "content", "abstract", "geography", "collection", "dataset", "autocomplete", "api_id", "visibility"
+            "text", "content", "abstract", "geography", "collection", "dataset",
+            "autocomplete", "api_id", "visibility", "publication_year",
+            "service_type", "source", "highlighted",
         ]
 

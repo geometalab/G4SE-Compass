@@ -1,6 +1,6 @@
 from django.db.models import Q, IntegerField
 from django.db.models.functions import Cast
-from django.utils import timezone
+from drf_haystack.filters import HaystackFilter
 from rest_framework import filters
 
 from api import LANGUAGE_CONFIG_MATCH
@@ -120,3 +120,40 @@ class LimitRecordFilter(filters.BaseFilterBackend):
 
     def get_fields(self, view):
         return [self.limit_param]
+
+
+class DateLimitSearchRecordFilter(HaystackFilter):
+    from_param = 'from_year'
+    to_param = 'to_year'
+
+    def _filter_queryset(self, request, queryset):
+        if request.query_params.get(self.from_param, '') == 'latest':
+            return queryset.filter(publication_year='latest')
+        return self._get_year_range(request, queryset)
+
+    def _get_year_range(self, request, queryset):
+        from_year = self._to_int_or_None(request.query_params.get(self.from_param, ''))
+        to_year = self._to_int_or_None(request.query_params.get(self.to_param, ''))
+
+        if to_year is None and from_year is None:
+            return queryset
+
+        # FIXME: ugly hack to only include numbers, beacuse publication_year is not an integer :-(
+        queryset = queryset.filter(publication_year__startswith='2')
+        if to_year is not None:
+            queryset = queryset.filter(publication_year__lte=to_year)
+        if from_year is not None:
+            queryset = queryset.filter(publication_year__gte=from_year)
+        return queryset
+
+    def _to_int_or_None(self, value):
+        try:
+            return int(value)
+        except ValueError:
+            return None
+
+    def filter_queryset(self, request, queryset, view):
+        return self._filter_queryset(request, queryset)
+
+    def get_fields(self, view):
+        return [self.from_param, self.to_param]

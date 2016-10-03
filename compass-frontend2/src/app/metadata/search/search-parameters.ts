@@ -6,9 +6,8 @@ export class SearchParameters {
   limit: number;
   page_size: number;
   page: number;
-  from: number;
-  to: number;
-  year: string;
+  from_year: number;
+  to_year: number;
 
   clear(): void {
     this.search = this.language = this.ordering = this.limit = this.page_size = this.page = null;
@@ -39,14 +38,11 @@ export class SearchParameters {
     if(!this.exists(this.page)){
       options_list.push('page=' + this.page);
     }
-    if(!this.exists(this.from)){
-      options_list.push('from=' + this.from);
+    if(!this.exists(this.from_year)){
+      options_list.push('from_year=' + this.from_year);
     }
-    if(!this.exists(this.to)){
-      options_list.push('to=' + this.to);
-    }
-    if(!this.exists(this.year)){
-      options_list.push('year=' + this.year);
+    if(!this.exists(this.to_year)){
+      options_list.push('to_year=' + this.to_year);
     }
     var query_string = options_list.join('&');
     return '?' + query_string;
