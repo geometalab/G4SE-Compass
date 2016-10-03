@@ -1,6 +1,5 @@
 import {isNullOrUndefined} from "util";
-
-export class MetadataParameters {
+export class SearchParameters {
   search: string;
   language: string;
   ordering: string;
@@ -23,7 +22,7 @@ export class MetadataParameters {
     var options_list: string[] = [];
 
     if (!this.exists(this.search)){
-      options_list.push('search=' + this.search);
+      options_list.push('text=' + this.search);
     }
     if (!this.exists(this.language)){
       options_list.push('language=' + this.language);

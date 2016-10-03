@@ -1,12 +1,13 @@
 import { Routes, RouterModule } from '@angular/router';
 import {MetadataComponent} from "./metadata/metadata.component";
 import {MetadataDetailComponent} from "./metadata/metadata-detail.component";
+import {SearchComponent} from "./metadata/search/search.component";
 
 
 const appRoutes: Routes = [
   {
     path: '',
-    redirectTo: '/metadata',
+    redirectTo: '/search',
     pathMatch: 'full'
   },
   // {
@@ -20,7 +21,11 @@ const appRoutes: Routes = [
   {
     path: 'metadata/:id',
     component: MetadataDetailComponent
-  }
+  },
+  {
+    path: 'search',
+    component: SearchComponent
+  },
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

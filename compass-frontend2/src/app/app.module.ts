@@ -11,13 +11,16 @@ import { MetadataComponent } from './metadata/metadata.component';
 import {MetadataService} from "./metadata/metadata.service";
 import {routing} from "./app.routing";
 import { MetadataDetailComponent } from './metadata/metadata-detail.component';
+import {SearchService} from "./metadata/search/search.service";
+import {SearchComponent} from "./metadata/search/search.component";
 
 
 @NgModule({
   declarations: [
     AppComponent,
     MetadataComponent,
-    MetadataDetailComponent
+    MetadataDetailComponent,
+    SearchComponent,
   ],
   imports: [
     BrowserModule,
@@ -26,9 +29,11 @@ import { MetadataDetailComponent } from './metadata/metadata-detail.component';
     HttpModule,
     Ng2BootstrapModule,
     PaginationModule,
-    LinkyModule
+    LinkyModule,
   ],
-  providers: [MetadataService],
+  providers: [
+    MetadataService, SearchService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
