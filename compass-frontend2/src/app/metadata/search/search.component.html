@@ -102,14 +102,13 @@
   <div [collapse]="!searchResult.showDetails">
     <div>
       <p>
-        <a [routerLink]="['/metadata', searchResult.api_id]">direct Link to this entry</a>
+        <strong>All Details</strong>: <a [routerLink]="['/metadata', searchResult.api_id]">See details of this entry</a>
       </p>
       <p [hidden]="!searchResult.abstract">
         <strong>Abstract</strong>: <span [innerHTML]="searchResult.abstract | linky"></span>
       </p>
-      {{searchResult.highlighted}}
       <p [hidden]="!searchResult.highlighted">
-        <strong>Found in</strong>: <span [innerHTML]="searchResult.highlighted | linky"></span>
+        <strong>Found in</strong>: <span [innerHTML]="searchResult.highlighted"></span>
       </p>
     </div>
   </div>

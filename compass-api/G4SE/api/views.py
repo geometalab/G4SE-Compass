@@ -141,7 +141,7 @@ class CombinedRecordsSearchView(HaystackViewSet):
     def get_queryset(self):
         using = self.request.GET.get('language', self.FALLBACK_LANGUAGE)
         queryset = SearchQuerySet().using(using)
-        query_string = self.request.GET.get('q', None)
+        query_string = self.request.GET.get('search', None)
         if query_string is None or query_string == '':
             return queryset
         cleaned_query_string = Clean(query_string)

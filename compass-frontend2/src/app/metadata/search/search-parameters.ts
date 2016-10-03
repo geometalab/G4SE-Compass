@@ -21,7 +21,7 @@ export class SearchParameters {
     var options_list: string[] = [];
 
     if (!this.exists(this.search)){
-      options_list.push('text=' + this.search);
+      options_list.push('search=' + this.search);
     }
     if (!this.exists(this.language)){
       options_list.push('language=' + this.language);
