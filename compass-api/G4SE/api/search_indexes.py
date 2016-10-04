@@ -9,11 +9,11 @@ from api.models import CombinedRecord
 class CombinedRecordIndex(indexes.BasicSearchIndex, indexes.Indexable):
     STEMMER = 'german_stemmer'
     text = fields.CharField(document=True, use_template=True, analyzer=STEMMER)
-    api_id = fields.CharField(model_attr="api_id", boost=0.1, analyzer=STEMMER)
+    api_id = fields.CharField(model_attr="api_id", boost=0.1)
     content = fields.CharField(model_attr="content", analyzer=STEMMER)
     abstract = fields.CharField(model_attr="abstract", analyzer=STEMMER)
-    geography = fields.CharField(model_attr="geography", boost=1.4, analyzer=STEMMER)
-    collection = fields.CharField(model_attr="collection", null=True, analyzer=STEMMER)
+    geography = fields.CharField(model_attr="geography", boost=1.4)
+    collection = fields.CharField(model_attr="collection", null=True)
     dataset = fields.CharField(model_attr="dataset", null=True, analyzer=STEMMER)
     publication_year = fields.CharField(model_attr="publication_year")
     service_type = fields.CharField(model_attr="service_type", null=True)

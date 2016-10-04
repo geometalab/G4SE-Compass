@@ -239,11 +239,13 @@ FRENCH_INDEX_SETTINGS["settings"]["index"]["analysis"]["filter"]["french_stemmer
     "name": "english",
 }
 
+HAYSTACK_CONNECTIONS_URL = os.environ.get('ELASTIC_SEARCH_URL', 'http://localhost:9200/')
+
 HAYSTACK_CONNECTIONS = {
     # default is english!
     'default': {
         'ENGINE': 'configurable_elastic_search_backend.backends.ConfigurableElasticEngine',
-        'URL': 'http://elasticsearch:9200/',
+        'URL': HAYSTACK_CONNECTIONS_URL,
         'INDEX_NAME': 'haystack',
         'EXCLUDED_INDEXES': [
             'api.search_indexes.EnglishCombinedRecordIndex',
@@ -253,7 +255,7 @@ HAYSTACK_CONNECTIONS = {
     },
     'en': {
         'ENGINE': 'configurable_elastic_search_backend.backends.EnglishConfigurableElasticEngine',
-        'URL': 'http://elasticsearch:9200/',
+        'URL': HAYSTACK_CONNECTIONS_URL,
         'INDEX_NAME': 'haystack_english',
         'EXCLUDED_INDEXES': [
             'api.search_indexes.CombinedRecordIndex',
@@ -266,7 +268,7 @@ HAYSTACK_CONNECTIONS = {
     },
     'de': {
         'ENGINE': 'configurable_elastic_search_backend.backends.GermanConfigurableElasticEngine',
-        'URL': 'http://elasticsearch:9200/',
+        'URL': HAYSTACK_CONNECTIONS_URL,
         'INDEX_NAME': 'haystack_german',
         'EXCLUDED_INDEXES': [
             'api.search_indexes.CombinedRecordIndex',
@@ -279,7 +281,7 @@ HAYSTACK_CONNECTIONS = {
     },
     'fr': {
         'ENGINE': 'configurable_elastic_search_backend.backends.FrenchConfigurableElasticEngine',
-        'URL': 'http://elasticsearch:9200/',
+        'URL': HAYSTACK_CONNECTIONS_URL,
         'INDEX_NAME': 'haystack_french',
         'EXCLUDED_INDEXES': [
             'api.search_indexes.CombinedRecordIndex',

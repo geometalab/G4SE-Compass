@@ -14,6 +14,8 @@ if os.environ.get('SECRET_KEY', None) is None:
     os.environ['SECRET_KEY'] = 'dev_secret_key'
 if os.environ.get('DATABASE_URL', None) is None:
     os.environ['DATABASE_URL'] = 'postgres://postgres:postgres@localhost:5432/G4SE'
+if os.environ.get('ELASTIC_SEARCH_URL', None) is None:
+    os.environ['ELASTIC_SEARCH_URL'] = 'http://localhost:9200/'
 
 from .settings import *  # noqa
 DEBUG = True
@@ -27,8 +29,3 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
         'SHOW_TOOLBAR_CALLBACK': lambda x: True
     }
-
-HAYSTACK_CONNECTIONS['default']['URL'] = 'http://localhost:9200/'
-HAYSTACK_CONNECTIONS['en']['URL'] = 'http://localhost:9200/'
-HAYSTACK_CONNECTIONS['de']['URL'] = 'http://localhost:9200/'
-HAYSTACK_CONNECTIONS['fr']['URL'] = 'http://localhost:9200/'

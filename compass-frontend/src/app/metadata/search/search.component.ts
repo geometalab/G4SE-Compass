@@ -51,18 +51,15 @@ export class SearchComponent implements OnInit {
 
   private loading(): void {
     this.searchParams.loading = true;
-    console.log('loading');
   }
 
   private loadingFinished(): void {
     this.searchParams.loading = false;
-    console.log('loading done');
   }
 
   private processData(searchResults): void {
     this.searchResultList = searchResults.results;
     this.totalItems = searchResults.count;
-    console.log(searchResults);
     this.loadingFinished();
   }
 
