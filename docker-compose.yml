@@ -5,36 +5,25 @@ services:
     ports:
       - "9200:9200"
   api:
-    build:
-      context: ./compass-api
-      dockerfile: Dockerfile
-    image: geometalab/g4se-api
+    extends:
+      file: common.yml
+      service: backend
     ports:
       - "8000:8000"
-    volumes:
-      - api-static:/var/www/g4se-api/static
     environment:
-      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
-      - DATABASE_URL=postgres://postgres:postgres@database:5432/G4SE
-      - ELASTIC_SEARCH_URL=http://elasticsearch:9200/
-      - SECRET_KEY=secret_key
-      - DEBUG=True
-      - STATIC_ROOT=/var/www/g4se-api/static/
-      - STATIC_URL=/api/static/
       - ALLOWED_HOSTS=['*']
     links:
       - db:database
       - elasticsearch:elasticsearch
   harvester:
-    image: geometalab/g4se-harvester
-    build:
-      context: ./compass-harvester
-      dockerfile: Dockerfile
-    environment:
-      - DATABASE_URL=postgres://postgres:postgres@database:5432/G4SE
-      - FILESHARE_URL=https://geodata4edu.ethz.ch/metadata/
+    extends:
+      file: common.yml
+      service: backend
+    command: python3 scheduled_import_geovite.py
+    entrypoint: wait_only_docker-entrypoint.sh
     links:
       - db:database
+      - elasticsearch:elasticsearch
   db:
     image: geometalab/g4se-api-db
     build:

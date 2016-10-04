@@ -1,0 +1,17 @@
+version: '2'
+services:
+  backend:
+    build:
+      context: ./compass-api
+      dockerfile: Dockerfile
+    image: geometalab/g4se-api
+    volumes:
+      - api-static:/var/www/g4se-api/static
+    environment:
+      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+      - DATABASE_URL=postgres://postgres:postgres@database:5432/G4SE
+      - ELASTIC_SEARCH_URL=http://elasticsearch:9200/
+      - SECRET_KEY=secret_key
+      - DEBUG=True
+      - STATIC_ROOT=/var/www/g4se-api/static/
+      - STATIC_URL=/api/static/

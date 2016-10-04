@@ -3,7 +3,21 @@ from django.db.models import Q
 from haystack.exceptions import NotHandled
 from haystack.signals import RealtimeSignalProcessor
 
-from api.models import Record, RecordTaggedItem, RecordTag, CombinedRecord
+from api.models import Record, RecordTaggedItem, RecordTag, CombinedRecord, HarvestedRecord
+
+
+def retag_all():
+    for tag in RecordTag.objects.all():
+        add_tag_to_records(tag)
+
+
+def add_tag_to_records(tag_instance):
+    # a new tag, find in all records and tag them accordingly
+    for record in _taggable_records(tag_instance):
+        RecordTaggedItem.objects.create(
+            record_tag=tag_instance,
+            content_object=record,
+        )
 
 
 def changed_or_added_tag_update_records_signal(sender, instance, created, raw, using, update_fields, *args, **kwargs):
@@ -13,11 +27,7 @@ def changed_or_added_tag_update_records_signal(sender, instance, created, raw, u
         RecordTaggedItem.objects.filter(record_tag=instance).delete()
 
     # a new tag, find in all records and tag them accordingly
-    for record in _taggable_records(instance):
-        RecordTaggedItem.objects.create(
-            record_tag=instance,
-            content_object=record,
-        )
+    add_tag_to_records(instance)
 
 
 def _combined_query(main_tag, tags, language):
@@ -80,7 +90,7 @@ class CombinedRecordRealtimeSignalProcessor(RealtimeSignalProcessor):
     def handle_save(self, sender, instance, **kwargs):
         # FIXME: ugly hack to pass an CombinedRecord, since the search index only handles those
         # to fox this, combining all records into one table would be appropriate
-        if sender == Record:
+        if sender == Record or sender == HarvestedRecord:
             sender = CombinedRecord
             instance = CombinedRecord.objects.get(api_id=instance.api_id)
 
@@ -97,7 +107,7 @@ class CombinedRecordRealtimeSignalProcessor(RealtimeSignalProcessor):
     def handle_delete(self, sender, instance, **kwargs):
         # FIXME: ugly hack to pass an CombinedRecord, since the search index only handles those
         # to fox this, combining all records into one table would be appropriate
-        if sender == Record:
+        if sender == Record or sender == HarvestedRecord:
             sender = CombinedRecord
             instance._meta.app_label, instance._meta.model_name = \
                 CombinedRecord._meta.app_label, CombinedRecord._meta.model_name

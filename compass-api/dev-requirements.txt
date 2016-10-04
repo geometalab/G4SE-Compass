@@ -29,6 +29,7 @@ pytest-django==3.0.0
 pytest==3.0.2             # via pytest-django
 python-dateutil==2.5.3    # via drf-haystack
 requests==2.11.1          # via coreapi
+schedule==0.3.2
 simplejson==3.8.2         # via django-rest-swagger
 six==1.10.0               # via django-environ, django-extensions, python-dateutil
 sqlparse==0.2.1           # via django-debug-toolbar
