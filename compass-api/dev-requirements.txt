@@ -4,7 +4,6 @@
 #
 #    pip-compile --output-file dev-requirements.txt dev-requirements.in
 #
--e git+https://github.com/django/django.git@stable/1.10.x#egg=Django  # via django-debug-toolbar, django-environ, django-haystack, drf-haystack
 brotlipy==0.5.1
 cffi==1.8.2               # via brotlipy
 coreapi==1.32.3           # via django-rest-swagger, openapi-codec
@@ -14,6 +13,7 @@ django-environ==0.4.0
 django-extensions==1.7.4
 django-haystack==2.5.0    # via drf-haystack
 django-rest-swagger==2.0.5
+Django==1.10.2            # via django-debug-toolbar, django-environ, django-haystack, drf-haystack
 djangorestframework==3.4.6
 drf-haystack==1.5.6
 elasticsearch==1.9.0
