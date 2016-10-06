@@ -10,7 +10,7 @@ class CombinedRecordIndex(indexes.BasicSearchIndex, indexes.Indexable):
     STEMMER = 'german_stemmer'
     text = fields.CharField(document=True, use_template=True, analyzer=STEMMER)
     api_id = fields.CharField(model_attr="api_id", boost=0.1)
-    content = fields.CharField(model_attr="content", analyzer=STEMMER)
+    title = fields.CharField(model_attr="content", analyzer=STEMMER)
     abstract = fields.CharField(model_attr="abstract", analyzer=STEMMER)
     geography = fields.CharField(model_attr="geography", boost=1.4)
     collection = fields.CharField(model_attr="collection", null=True)

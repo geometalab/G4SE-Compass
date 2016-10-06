@@ -10,6 +10,7 @@ from .models import Record, CombinedRecord
 
 
 class BaseRecordSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(max_length=200, source='content')
     login_name = serializers.HiddenField(default=None)
     search_vector_de = serializers.HiddenField(default=None)
     search_vector_en = serializers.HiddenField(default=None)
@@ -18,11 +19,9 @@ class BaseRecordSerializer(serializers.ModelSerializer):
 
 
 class AllRecordsSerializer(BaseRecordSerializer):
-    content = serializers.CharField(max_length=200)
-
     class Meta:
         model = CombinedRecord
-        fields = '__all__'
+        exclude = ['content']
 
 
 class EditRecordSerializer(BaseRecordSerializer):
@@ -111,7 +110,7 @@ class CombinedRecordsSearchSerializer(HaystackSerializer):
         # NOTE: Make sure you don't confuse these with model attributes. These
         # fields belong to the search index!
         fields = [
-            "text", "content", "abstract", "geography", "collection", "dataset",
+            "text", "title", "abstract", "geography", "collection", "dataset",
             "autocomplete", "api_id", "visibility", "publication_year",
             "service_type", "source", "highlighted",
         ]
