@@ -16,6 +16,7 @@ services:
       - db:database
       - elasticsearch:elasticsearch
   harvester:
+    image: geometalab/g4se-api-harvester
     extends:
       file: common.yml
       service: backend
