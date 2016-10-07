@@ -1,6 +1,6 @@
 import { CompassFrontend2Page } from './app.po';
 
-describe('compass-frontend2 App', function() {
+describe('compass-frontend App', function() {
   let page: CompassFrontend2Page;
 
   beforeEach(() => {
