@@ -26,7 +26,7 @@ export class MetadataService {
 
   getMetadataDetail(api_id: string): Promise<Metadata> {
     return this.http
-      .get(this.metadataUrl + api_id + '/')
+      .get(this.metadataUrl + api_id + '/?format=json')
       .toPromise()
       .then(response => response.json() as any[])
       .catch(this.handleError);

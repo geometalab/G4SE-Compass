@@ -1,4 +1,5 @@
 import {isNullOrUndefined} from "util";
+
 export class SearchParameters {
   search: string;
   language: string;
@@ -20,7 +21,7 @@ export class SearchParameters {
   }
 
   toUrlQuery(): string {
-    var options_list: string[] = [];
+    var options_list: string[] = ["format=json"];
 
     if (!this.exists(this.search)){
       options_list.push('search=' + this.search);
