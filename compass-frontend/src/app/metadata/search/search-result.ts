@@ -1,7 +1,7 @@
 export class SearchResult {
   api_id: string;
   text: string;
-  content: string;
+  title: string;
   language: string; // de, fr, en
   abstract: string;
   publication_year: string; // should change to number soonish

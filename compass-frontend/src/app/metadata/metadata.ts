@@ -1,6 +1,6 @@
 export class Metadata {
   api_id: string;
-  content: string;
+  title: string;
   identifier: string;
   language: string; // de, fr, en
   abstract: string;
