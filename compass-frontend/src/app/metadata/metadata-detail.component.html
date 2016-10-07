@@ -1,0 +1,78 @@
+<a [routerLink]="['/search']">back to search</a>
+
+<div *ngIf="metadataItem">
+  <h2>{{metadataItem.title}}</h2>
+
+  <div [hidden]="!metadataItem.service_type">
+    <h4>Service Type</h4>
+    {{metadataItem.service_type}}
+  </div>
+  <div [hidden]="!metadataItem.geography">
+    <h4>Geographical Coverage</h4>
+    {{metadataItem.geography}}
+  </div>
+  <div [hidden]="!metadataItem.source">
+    <h4>Source of original data</h4>
+    {{metadataItem.source}}
+  </div>
+  <div [hidden]="!metadataItem.geodata_type">
+    <h4>Data Type</h4>
+    {{metadataItem.geodata_type}}
+  </div>
+  <div [hidden]="!metadataItem.abstract">
+    <h4>Abstract</h4>
+    <span [innerHTML]="metadataItem.abstract | linky"></span>
+  </div>
+  <div [hidden]="!metadataItem.publication_lineage">
+    <h4>Publication lineage</h4>
+    {{metadataItem.publication_lineage}}
+  </div>
+  <div [hidden]="!metadataItem.extent">
+    <h4>Geographical extent</h4>
+    {{metadataItem.extent}}
+  </div>
+  <div [hidden]="!metadataItem.access_link">
+    <h4>Access to data</h4>
+    <span [innerHTML]="metadataItem.access_link | linky"></span>
+  </div>
+  <div [hidden]="!metadataItem.base_link">
+    <h4>Entry point</h4>
+    <span [innerHTML]="metadataItem.base_link | linky"></span>
+  </div>
+  <div [hidden]="!metadataItem.collection">
+    <h4>Group</h4>
+    <span [innerHTML]="metadataItem.collection | linky"></span>
+  </div>
+  <div [hidden]="!metadataItem.dataset">
+    <h4>Dataset name</h4>
+    <span [innerHTML]="metadataItem.dataset | linky"></span>
+  </div>
+  <div [hidden]="!metadataItem.arcgis_layer_link">
+    <h4>ArcGIS layer link</h4>
+    <span [innerHTML]="metadataItem.arcgis_layer_link | linky"></span>
+  </div>
+  <div [hidden]="!metadataItem.qgis_layer_link">
+    <h4>QGIS layer link</h4>
+    <span [innerHTML]="metadataItem.qgis_layer_link | linky"></span>
+  </div>
+  <div [hidden]="!metadataItem.service_type">
+    <h4>Service type</h4>
+    <span [innerHTML]="metadataItem.service_type | linky"></span>
+  </div>
+  <div [hidden]="!metadataItem.crs">
+    <h4>Coordinate reference system</h4>
+    {{metadataItem.crs}}
+  </div>
+  <div [hidden]="!metadataItem.term_link">
+    <h4>Terms of use</h4>
+    <span [innerHTML]="metadataItem.term_link | linky"></span>
+  </div>
+  <div [hidden]="!metadataItem.proved">
+    <h4>Proving date</h4>
+    <span [innerHTML]="metadataItem.proved | date"></span>
+  </div>
+  <div [hidden]="!metadataItem.metadata_link">
+    <h4>Additional metadata</h4>
+    <span [innerHTML]="metadataItem.metadata_link | linky"></span>
+  </div>
+</div>

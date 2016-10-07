@@ -7,7 +7,7 @@
       <xs:sequence>
          <xs:element name="identifier" type="string" />
          <xs:element name="language" type="string" />
-         <xs:element name="content" type="string" />
+         <xs:element name="title" type="string" />
          <xs:element name="abstract" type="string" />
          <xs:element name="publicationyear" type="int" />
          <xs:element name="publicationlineage" type="string" nillable="true" />

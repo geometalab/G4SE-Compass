@@ -70,6 +70,27 @@ class Base(models.Model):
     def tags(self):
         return RecordTaggedItem.objects.filter(object_id=self.api_id).order_by('id')
 
+    @property
+    def tags_de(self):
+        tags = []
+        for tag in self.tags:
+            tags += tag.all_tag_list(self.GERMAN)
+        return tags
+
+    @property
+    def tags_en(self):
+        tags = []
+        for tag in self.tags:
+            tags += tag.all_tag_list(self.ENGLISH)
+        return tags
+
+    @property
+    def tags_fr(self):
+        tags = []
+        for tag in RecordTaggedItem.objects.filter(object_id=self.api_id).order_by('id'):
+            tags += tag.all_tag_list(self.FRENCH)
+        return tags
+
     def tag_list_display(self):
         tags = self.tags
         if len(tags) > 0:
@@ -117,6 +138,11 @@ class RecordTaggedItem(models.Model):
     object_id = models.UUIDField()
     content_object = GenericForeignKey('content_type', 'object_id')
     record_tag = models.ForeignKey('RecordTag')
+
+    def all_tag_list(self, language):
+        main_tag = getattr(self.record_tag, 'tag_{}'.format(language))
+        translations = getattr(self.record_tag, 'tag_alternatives_{}'.format(language))
+        return [main_tag] + translations
 
     def __str__(self):
         return "{}/{}/{}".format(self.record_tag.tag_de, self.record_tag.tag_en, self.record_tag.tag_fr)

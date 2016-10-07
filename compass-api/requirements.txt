@@ -4,14 +4,17 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
--e git+https://github.com/django/django.git@stable/1.10.x#egg=Django  # via django-environ
 brotlipy==0.5.1
 cffi==1.8.2               # via brotlipy
 coreapi==1.32.3           # via django-rest-swagger, openapi-codec
 django-cors-middleware==1.3.1
 django-environ==0.4.0
+django-haystack==2.5.0    # via drf-haystack
 django-rest-swagger==2.0.5
+Django==1.10.2            # via django-environ, django-haystack, drf-haystack
 djangorestframework==3.4.6
+drf-haystack==1.5.6
+elasticsearch==1.9.0
 grako==3.14.0
 gunicorn==19.6.0
 itypes==1.1.0             # via coreapi
@@ -19,8 +22,11 @@ netaddr==0.7.18
 openapi-codec==1.0.0      # via django-rest-swagger
 psycopg2==2.6.2
 pycparser==2.14           # via cffi
+python-dateutil==2.5.3    # via drf-haystack
 requests==2.11.1          # via coreapi
+schedule==0.3.2
 simplejson==3.8.2         # via django-rest-swagger
-six==1.10.0               # via django-environ
+six==1.10.0               # via django-environ, python-dateutil
 uritemplate==3.0.0        # via coreapi
+urllib3==1.18             # via elasticsearch
 whitenoise==3.2.1

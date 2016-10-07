@@ -1,9 +1,23 @@
+from django import forms
 from django.contrib import admin
 
 # Register your models here.
 from django.contrib.admin.utils import flatten_fieldsets
 
 from api.models import RecordTag, CombinedRecord, Record
+
+
+class EditableRecordForm(forms.ModelForm):
+    def clean(self):
+        cleaned_values = super().clean()
+        for key, value in cleaned_values.items():
+            if value == '':
+                cleaned_values[key] = None
+        return cleaned_values
+
+    class Meta:
+        model = Record
+        exclude = ['search_vector_de', 'search_vector_fr', 'search_vector_en']
 
 
 class ReadOnlyAdmin(admin.ModelAdmin):
@@ -42,7 +56,7 @@ admin.site.register(RecordTag, RecordTagAdmin)
 
 
 class RecordAdmin(RecordAdminMixin, admin.ModelAdmin):
-    pass
+    form = EditableRecordForm
 admin.site.register(Record, RecordAdmin)
 
 

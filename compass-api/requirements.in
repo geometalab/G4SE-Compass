@@ -1,5 +1,4 @@
-#Django
--e git+https://github.com/django/django.git@stable/1.10.x#egg=Django
+Django>=1.10.2
 djangorestframework
 gunicorn
 psycopg2
@@ -10,3 +9,6 @@ django-cors-middleware
 whitenoise
 brotlipy
 grako
+drf-haystack
+elasticsearch<2.0.0
+schedule

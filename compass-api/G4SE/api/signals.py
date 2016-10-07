@@ -1,7 +1,23 @@
 from django.contrib.postgres.search import SearchQuery
 from django.db.models import Q
+from haystack.exceptions import NotHandled
+from haystack.signals import RealtimeSignalProcessor
 
-from api.models import Record, RecordTaggedItem, RecordTag
+from api.models import Record, RecordTaggedItem, RecordTag, CombinedRecord, HarvestedRecord
+
+
+def retag_all():
+    for tag in RecordTag.objects.all():
+        add_tag_to_records(tag)
+
+
+def add_tag_to_records(tag_instance):
+    # a new tag, find in all records and tag them accordingly
+    for record in _taggable_records(tag_instance):
+        RecordTaggedItem.objects.create(
+            record_tag=tag_instance,
+            content_object=record,
+        )
 
 
 def changed_or_added_tag_update_records_signal(sender, instance, created, raw, using, update_fields, *args, **kwargs):
@@ -11,11 +27,7 @@ def changed_or_added_tag_update_records_signal(sender, instance, created, raw, u
         RecordTaggedItem.objects.filter(record_tag=instance).delete()
 
     # a new tag, find in all records and tag them accordingly
-    for record in _taggable_records(instance):
-        RecordTaggedItem.objects.create(
-            record_tag=instance,
-            content_object=record,
-        )
+    add_tag_to_records(instance)
 
 
 def _combined_query(main_tag, tags, language):
@@ -65,3 +77,48 @@ def changed_or_added_record_update_tag_signal(sender, instance, created, *args, 
             record_tag=tag,
             content_object=instance,
         )
+
+
+class CombinedRecordRealtimeSignalProcessor(RealtimeSignalProcessor):
+    def _using_backend(self, instance):
+        if hasattr(instance, 'language'):
+            using_backends = [instance.language]
+        else:
+            using_backends = self.connection_router.for_write(instance=instance)
+        return using_backends
+
+    def handle_save(self, sender, instance, **kwargs):
+        # FIXME: ugly hack to pass an CombinedRecord, since the search index only handles those
+        # to fox this, combining all records into one table would be appropriate
+        if sender == Record or sender == HarvestedRecord:
+            sender = CombinedRecord
+            instance = CombinedRecord.objects.get(api_id=instance.api_id)
+
+        using_backends = self._using_backend(instance)
+
+        for using in using_backends:
+            try:
+                index = self.connections[using].get_unified_index().get_index(sender)
+                index.update_object(instance, using=using)
+            except NotHandled:
+                # TODO: Maybe log it or let the exception bubble?
+                pass
+
+    def handle_delete(self, sender, instance, **kwargs):
+        # FIXME: ugly hack to pass an CombinedRecord, since the search index only handles those
+        # to fox this, combining all records into one table would be appropriate
+        if sender == Record or sender == HarvestedRecord:
+            sender = CombinedRecord
+            instance._meta.app_label, instance._meta.model_name = \
+                CombinedRecord._meta.app_label, CombinedRecord._meta.model_name
+
+        using_backends = self._using_backend(instance)
+
+        for using in using_backends:
+            try:
+                index = self.connections[using].get_unified_index().get_index(sender)
+                print(index, instance, using)
+                index.remove_object(instance, using=using)
+            except NotHandled:
+                # TODO: Maybe log it or let the exception bubble?
+                pass

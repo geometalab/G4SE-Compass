@@ -14,6 +14,8 @@ if os.environ.get('SECRET_KEY', None) is None:
     os.environ['SECRET_KEY'] = 'dev_secret_key'
 if os.environ.get('DATABASE_URL', None) is None:
     os.environ['DATABASE_URL'] = 'postgres://postgres:postgres@localhost:5432/G4SE'
+if os.environ.get('ELASTIC_SEARCH_URL', None) is None:
+    os.environ['ELASTIC_SEARCH_URL'] = 'http://localhost:9200/'
 
 from .settings import *  # noqa
 DEBUG = True
@@ -23,7 +25,7 @@ INSTALLED_APPS.append('django_extensions')
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 if DEBUG:
     INSTALLED_APPS.append('debug_toolbar')
-    MIDDLEWARE.append('api.patch_debug_middleware.AtopdedTo110DebugMiddleware')
+    MIDDLEWARE.append('api.patch_debug_middleware.AdopdedTo110DebugMiddleware')
     DEBUG_TOOLBAR_CONFIG = {
         'SHOW_TOOLBAR_CALLBACK': lambda x: True
     }

@@ -1,0 +1,127 @@
+<!-- Search -->
+<div class="row">
+  <form class="search" #searchBox>
+    <div class="col-sm-12 last">
+      <div class="input-group">
+        <input name="searchTerm" [(ngModel)]="searchParams.search" class="form-control" />
+        <span class="input-group-btn">
+            <button class="btn btn-secondary search-button" (click)="executeSearch()">Search</button>
+        </span>
+      </div>
+    </div>
+    <div class="col-sm-12">
+        <span class="small pull-right cursor-pointer" (click)="isCollapsedSearchOptions = !isCollapsedSearchOptions">
+          <span [hidden]="!isCollapsedSearchOptions">Hide</span>
+          <span [hidden]="isCollapsedSearchOptions">Show</span>
+          search options
+        </span>
+      <div class="well well-sm">
+        <div [collapse]="!isCollapsedSearchOptions">
+          <label for="languageSelector">Search in language:</label>
+          <select [(ngModel)]="searchParams.language" (change)="languageChanged()" id="languageSelector" name="language">
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Français</option>
+          </select>
+          <div class="input-group">
+            <label for="fromYearSelector">From Year:</label>
+            <input name="from-year" id="fromYearSelector" type="text" [(ngModel)]="searchParams.from_year" />
+            <label for="toYearSelector">To Year:</label>
+            <input name="to-year" id="toYearSelector" type="text" [(ngModel)]="searchParams.to_year" />
+          </div>
+          <!--<label for="orderingSelector">Ordering:</label>-->
+          <!--<select [(ngModel)]="searchParams.ordering" id="orderingSelector" name="ordering" disabled="disabled" class="disabled">-->
+          <!--<option value="-modified">most recent first</option>-->
+          <!--<option value="modified">least recent first</option>-->
+          <!--<option value="rank">highest search rank first</option>-->
+          <!--<option value="-rank">lowest search rank first</option>-->
+          <!--</select>-->
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- paginator -->
+<pre>
+  Results Total: <strong>{{totalItems}}</strong><span [hidden]="searchParams.search"> (showing all records)</span><span [hidden]="!searchParams.ordering"> | <strong>{{searchParams.ordering}}</strong></span>
+</pre>
+
+<div [hidden]="totalItems == 0" class="row">
+  <div class="col-sm-6">
+    <pagination
+      [totalItems]="totalItems"
+      [(ngModel)]="searchParams.page"
+      [maxSize]="maxSize"
+      (pageChanged)="pageChanged($event)"
+      [rotate]="false">
+    </pagination>
+  </div>
+</div>
+
+
+<!-- Result List -->
+<my-spinner [isRunning]="searchParams.loading" [delay]="100"></my-spinner>
+
+<div *ngFor="let searchResult of searchResultList" class="panel panel-info">
+  <div [tooltipHtml]="searchResult.abstract | slice:0:100 | linky"
+       class="panel-heading cursor-pointer" (click)="searchResult.showDetails = !searchResult.showDetails">
+    <div class="row">
+      <!-- Short list -->
+      <div class="col-sm-4">
+        <h4>{{searchResult.title}}</h4>
+      </div>
+      <div class="col-sm-3">
+        <div class="row">
+          Publication Year: {{searchResult.publication_year}}
+        </div>
+        <div class="row">
+          Service Type: {{searchResult.service_type}}
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="row">
+          Geographical Coverage: {{searchResult.geography}}
+        </div>
+        <div class="row">
+          Source of original data: {{searchResult.source}}
+        </div>
+      </div>
+      <div class="col-sm-1 hidden-xs">
+        <div [hidden]="!searchResult.showDetails">
+          <h2>
+            <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+          </h2>
+        </div>  <!-- show more -->
+        <div [hidden]="searchResult.showDetails">
+          <h2>
+            <span class="glyphicon glyphicon-collapse-up" aria-hidden="true"></span>
+          </h2>
+        </div>  <!-- show less -->
+      </div>
+    </div>
+  </div>
+  <div [collapse]="!searchResult.showDetails">
+    <div>
+      <p>
+        <strong>All Details</strong>: <a [routerLink]="['/metadata', searchResult.api_id]">See details of this entry</a>
+      </p>
+      <p [hidden]="!searchResult.abstract">
+        <strong>Abstract</strong>: <span [innerHTML]="searchResult.abstract | linky"></span>
+      </p>
+      <p [hidden]="!searchResult.highlighted">
+        <strong>Found in</strong>: <span [innerHTML]="searchResult.highlighted"></span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="totalItems == 0">
+  <pagination
+    [totalItems]="totalItems"
+    [(ngModel)]="searchParams.page"
+    [maxSize]="maxSize"
+    (pageChanged)="pageChanged($event)"
+    [rotate]="false">
+  </pagination>
+</div>

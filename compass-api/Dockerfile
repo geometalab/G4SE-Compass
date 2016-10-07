@@ -10,6 +10,7 @@ RUN pip3 install -r /var/data/G4SE/dev-requirements.txt
 
 ADD ./G4SE /G4SE
 COPY ./docker-entrypoint.sh /bin/docker-entrypoint.sh
+COPY ./wait_only_docker-entrypoint.sh /bin/wait_only_docker-entrypoint.sh
 
 ENTRYPOINT ["/bin/docker-entrypoint.sh"]
 

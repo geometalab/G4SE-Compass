@@ -1,0 +1,166 @@
+<!-- Search -->
+<div class="row">
+  <form class="search" #searchBox>
+    <div class="col-sm-12 last">
+      <div class="input-group">
+        <input name="searchTerm" class="form-control" />
+        <span class="input-group-btn">
+            <button class="btn btn-secondary search-button" (click)="filterMetadata(searchBox.searchTerm.value)">Search</button>
+        </span>
+      </div>
+    </div>
+    <div class="col-sm-12">
+        <span class="small pull-right cursor-pointer" (click)="isCollapsedSearchOptions = !isCollapsedSearchOptions">
+          <span [hidden]="!isCollapsedSearchOptions">Hide</span>
+          <span [hidden]="isCollapsedSearchOptions">Show</span>
+          search options
+        </span>
+      <div class="well well-sm">
+        <div [collapse]="!isCollapsedSearchOptions">
+          <label for="languageSelector">Search in language:</label>
+          <select [(ngModel)]="language" (change)="languageChanged(searchBox.languageSelector.value)" id="languageSelector" name="languageSelector">
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Français</option>
+          </select>
+          <div class="input-group">
+          <label for="yearSelector">Year:</label>
+          <input name="year" id="yearSelector" type="text" [(ngModel)]="params.year" />
+          <strong>OR</strong>
+          <label for="fromYearSelector">From Year:</label>
+          <input name="from-year" id="fromYearSelector" type="text" [(ngModel)]="params.from" />
+          <label for="toYearSelector">To Year:</label>
+          <input name="to-year" id="toYearSelector" type="text" [(ngModel)]="params.to" />
+          </div>
+          [ordered by: {{params.ordering}}]
+          <!--<label for="orderingSelector">Ordering:</label>-->
+          <!--<select [(ngModel)]="params.ordering" id="orderingSelector" name="ordering" disabled="disabled" class="disabled">-->
+          <!--<option value="-modified">most recent first</option>-->
+          <!--<option value="modified">least recent first</option>-->
+          <!--<option value="rank">highest search rank first</option>-->
+          <!--<option value="-rank">lowest search rank first</option>-->
+          <!--</select>-->
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- paginator -->
+<pre>
+  Results Total: <strong>{{totalItems}}</strong><span [hidden]="searchBox.searchTerm.value"> (showing all records)</span><span [hidden]="!ordering"> | <strong>{{ordering}}</strong></span>
+</pre>
+
+<div [hidden]="totalItems == 0" class="row">
+  <div class="col-sm-6">
+    <pagination
+      [totalItems]="totalItems"
+      [(ngModel)]="currentPage"
+      [maxSize]="maxSize"
+      (pageChanged)="pageChanged($event)"
+      [rotate]="false">
+    </pagination>
+  </div>
+</div>
+
+<!-- Result List -->
+<div *ngFor="let metadataItem of metadataList" class="panel panel-info">
+  <div [tooltipHtml]="metadataItem.abstract | linky" class="panel-heading cursor-pointer" (click)="metadataItem.showDetails = !metadataItem.showDetails">
+    <div class="row">
+      <!-- Short list -->
+      <div class="col-sm-4">
+        <h4>{{metadataItem.title}}</h4>
+      </div>
+      <div class="col-sm-3">
+        <div class="row">
+          Publication Year: {{metadataItem.publication_year}}
+        </div>
+        <div class="row">
+          Service Type: {{metadataItem.service_type}}
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="row">
+          Geographical Coverage: {{metadataItem.geography}}
+        </div>
+        <div class="row">
+          Source of original data: {{metadataItem.source}}
+        </div>
+      </div>
+      <div class="col-sm-1 hidden-xs">
+        <div [hidden]="!metadataItem.showDetails">
+          <h2>
+            <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+          </h2>
+        </div>  <!-- show more -->
+        <div [hidden]="metadataItem.showDetails">
+          <h2>
+            <span class="glyphicon glyphicon-collapse-up" aria-hidden="true"></span>
+          </h2>
+        </div>  <!-- show less -->
+      </div>
+    </div>
+  </div>
+  <div [collapse]="!metadataItem.showDetails">
+    <div>
+      <p>
+        <a [routerLink]="['/metadata', metadataItem.api_id]">direct Link to this entry</a>
+      </p>
+      <p [hidden]="!metadataItem.geodata_type">
+        <strong>Data Type</strong>: {{metadataItem.geodata_type}}
+      </p>
+      <p [hidden]="!metadataItem.abstract">
+        <strong>Abstract</strong>: <span [innerHTML]="metadataItem.abstract | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.publication_lineage">
+        <strong>Publication lineage</strong>: {{metadataItem.publication_lineage}}
+      </p>
+      <p [hidden]="!metadataItem.extent">
+        <strong>Geographical extent</strong>: {{metadataItem.extent}}
+      </p>
+      <p [hidden]="!metadataItem.access_link">
+        <strong>Access to data</strong>: <span [innerHTML]="metadataItem.access_link | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.base_link">
+        <strong>Entry point</strong>:  <span [innerHTML]="metadataItem.base_link | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.collection">
+        <strong>Group</strong>: <span [innerHTML]="metadataItem.collection | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.dataset">
+        <strong>Dataset name</strong>: <span [innerHTML]="metadataItem.dataset | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.arcgis_layer_link">
+        <strong>ArcGIS layer link</strong>: <span [innerHTML]="metadataItem.arcgis_layer_link | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.qgis_layer_link">
+        <strong>QGIS layer link</strong>: <span [innerHTML]="metadataItem.qgis_layer_link | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.service_type">
+        <strong>Service type</strong>: <span [innerHTML]="metadataItem.service_type | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.crs">
+        <strong>Coordinate reference system</strong>: {{metadataItem.crs}}
+      </p>
+      <p [hidden]="!metadataItem.term_link">
+        <strong>Terms of use</strong>: <span [innerHTML]="metadataItem.term_link | linky"></span>
+      </p>
+      <p [hidden]="!metadataItem.proved">
+        <strong>Proving date</strong>: <span [innerHTML]="metadataItem.proved | date"></span>
+      </p>
+      <p [hidden]="!metadataItem.metadata_link">
+        <strong>Additional metadata</strong>: <span [innerHTML]="metadataItem.metadata_link | linky"></span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="totalItems == 0">
+  <pagination
+    [totalItems]="totalItems"
+    [(ngModel)]="currentPage"
+    [maxSize]="maxSize"
+    (pageChanged)="pageChanged($event)"
+    [rotate]="false">
+  </pagination>
+</div>
