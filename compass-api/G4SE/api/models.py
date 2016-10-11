@@ -229,9 +229,11 @@ class GeoServiceMetadata(models.Model):
 
     GEO_DATA_TYPE_RASTER = 'raster'
     GEO_DATA_TYPE_VECTOR = 'vector'
+    GEO_DATA_TYPE_OTHER = 'other'
     GEO_DATA_TYPES = (
         (GEO_DATA_TYPE_RASTER, _('raster')),
         (GEO_DATA_TYPE_VECTOR, _('vector')),
+        (GEO_DATA_TYPE_OTHER, _('other')),
     )
 
     api_id = models.UUIDField(_('uuid'), primary_key=True, editable=False, default=uuid.uuid4)
@@ -304,3 +306,35 @@ class GeoServiceMetadata(models.Model):
 
     def __str__(self):
         return self.content
+
+
+GEO_SERVICE_METADATA_AGREED_FIELDS = [
+    'api_id',
+    'identifier',
+    'language',
+    'title',
+    'abstract',
+    'publication_year',
+    'publication_lineage',
+    'is_latest',
+    'geography',
+    'extent',
+    'geodata_type',
+    'source',
+    'metadata_link',
+    'access_link',
+    'base_link',
+    'collection',
+    'dataset',
+    'arcgis_layer_link',
+    'qgis_layer_link',
+    'arcgis_symbology_link',
+    'qgis_symbology_link',
+    'service_type',
+    'crs',
+    'term_link',
+    'proved',
+    'visibility',
+    'login_name',
+    'modified',
+]

@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('is_latest', models.BooleanField(default=False, max_length=255, verbose_name='latest of series')),
                 ('geography', models.CharField(default='Schweiz', max_length=255, verbose_name='geography')),
                 ('extent', models.CharField(blank=True, help_text='needs follow the form `BOX(x1 y1,x2 y2)`', max_length=255, null=True, verbose_name='extent')),
-                ('geodata_type', models.CharField(choices=[('raster', 'raster'), ('vector', 'vector')], max_length=255, verbose_name='geodata type')),
+                ('geodata_type', models.CharField(choices=[('raster', 'raster'), ('vector', 'vector'), ('other', 'other')], max_length=255, verbose_name='geodata type')),
                 ('source', models.CharField(max_length=2083, verbose_name='source')),
                 ('metadata_link', models.URLField(max_length=2083, verbose_name='metadata link')),
                 ('access_link', models.URLField(max_length=2083, verbose_name='access link')),
