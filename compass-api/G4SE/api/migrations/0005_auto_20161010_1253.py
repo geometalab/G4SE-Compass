@@ -21,6 +21,8 @@ def _extract_publication_year(record_kwargs):
 
 def _normalize_kwargs(record_kwargs, record_object):
     record_kwargs['title'] = getattr(record_object, 'content')
+    if record_kwargs['login_name'] is None:
+        record_kwargs['login_name'] = 'UNKNOWN'
     record_kwargs = _extract_publication_year(record_kwargs)
     return record_kwargs
 
