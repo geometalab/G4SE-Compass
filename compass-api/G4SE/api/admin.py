@@ -17,10 +17,10 @@ class EditableGeoServiceMetadataForm(forms.ModelForm):
         fields = GEO_SERVICE_METADATA_AGREED_FIELDS[1:-1]
 
 
-class RecordTagAdmin(admin.ModelAdmin):
+class TranslationTagAdmin(admin.ModelAdmin):
     list_display = ['tag_de', 'tag_en', 'tag_fr', 'tag_alternatives_de', 'tag_alternatives_en', 'tag_alternatives_fr', ]
     search_fields = ['tag_de', 'tag_en', 'tag_fr', 'tag_alternatives_de', 'tag_alternatives_en', 'tag_alternatives_fr', ]
-admin.site.register(TranslationTag, RecordTagAdmin)
+admin.site.register(TranslationTag, TranslationTagAdmin)
 
 
 class GeoServiceMetadataAdmin(admin.ModelAdmin):
