@@ -55,6 +55,14 @@ class MetaDataReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_url_kwarg = 'pk'
     lookup_field = 'api_id'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        internal = self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR'])
+        # TODO: make this into an optional list of publicity
+        if not internal:
+            queryset = queryset.filter(visibility=GeoServiceMetadata.VISIBILITY_PUBLIC)
+        return queryset
+
     filter_backends = (
         filters.OrderingFilter,
         LimitRecordFilter,
@@ -93,13 +101,14 @@ class GeoServiceMetadataSearchView(HaystackViewSet):
     def get_queryset(self):
         using = self.request.GET.get('language', self.FALLBACK_LANGUAGE)
         queryset = SearchQuerySet().using(using)
+        internal = self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR'])
+        # TODO: make this into an optional list of publicity
+        if not internal:
+            queryset = queryset.filter(visibility=GeoServiceMetadata.VISIBILITY_PUBLIC)
+
         query_string = self.request.GET.get('search', None)
         if query_string is None or query_string == '':
             return queryset
         cleaned_query_string = Clean(query_string)
         sqs_raw = queryset.filter(text=Raw(cleaned_query_string.query_string))
-        internal = self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR'])
-        # TODO: make this into an optional list of publicity
-        if not internal:
-            sqs_raw = sqs_raw.filter(visibility=GeoServiceMetadata.PUBLIC)
         return sqs_raw

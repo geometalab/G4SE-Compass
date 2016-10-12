@@ -31,11 +31,11 @@ def changed_or_added_tag_update_records_signal(sender, instance, created, raw, u
 
 
 def _search_query_string(tag):
-    de_tags = tag.tag_alternatives_de
+    de_tags = tag.tag_alternatives_de if tag.tag_alternatives_de else []
     de_tags.append(tag.tag_de)
-    en_tags = tag.tag_alternatives_en
+    en_tags = tag.tag_alternatives_en if tag.tag_alternatives_en else []
     en_tags.append(tag.tag_en)
-    fr_tags = tag.tag_alternatives_fr
+    fr_tags = tag.tag_alternatives_fr if tag.tag_alternatives_fr else []
     fr_tags.append(tag.tag_fr)
     return {
         GeoServiceMetadata.GERMAN: ' OR '.join(de_tags),
