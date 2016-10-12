@@ -50,9 +50,6 @@ class TranslationTag(models.Model):
     def __str__(self):
         return "{}/{}/{}".format(self.tag_de, self.tag_en, self.tag_fr)
 
-    class Meta:
-        db_table = 'record_tag'
-
 
 class GeoServiceMetadata(models.Model):
     """
