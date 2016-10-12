@@ -43,6 +43,5 @@ class Migration(migrations.Migration):
         migrations.DeleteModel(name='RecordTaggedItem'),
         migrations.DeleteModel(name='CombinedRecord'),
         migrations.DeleteModel(name='Record'),
-        migrations.DeleteModel(name='RecordTag'),
         migrations.DeleteModel(name='HarvestedRecord'),
     ]
