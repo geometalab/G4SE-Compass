@@ -6,6 +6,8 @@ import uuid
 
 from django.db import migrations, models
 
+from api.migrations._private.setup_database_initial_scripts import db_setup
+
 
 class Migration(migrations.Migration):
 
@@ -52,4 +54,5 @@ class Migration(migrations.Migration):
                 'managed': False,
             },
         ),
+        migrations.RunSQL(db_setup),
     ]
