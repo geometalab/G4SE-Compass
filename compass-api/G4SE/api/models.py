@@ -137,7 +137,7 @@ class RecordTaggedItem(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.UUIDField()
     content_object = GenericForeignKey('content_type', 'object_id')
-    record_tag = models.ForeignKey('RecordTag')
+    record_tag = models.ForeignKey('TranslationTag')
 
     def all_tag_list(self, language):
         main_tag = getattr(self.record_tag, 'tag_{}'.format(language))
@@ -148,7 +148,15 @@ class RecordTaggedItem(models.Model):
         return "{}/{}/{}".format(self.record_tag.tag_de, self.record_tag.tag_en, self.record_tag.tag_fr)
 
 
-class RecordTag(models.Model):
+class GeoServiceMetadataTagItem(models.Model):
+    geo_service_metadata = models.ForeignKey('GeoServiceMetadata')
+    tag = models.ForeignKey('TranslationTag')
+
+    def __str__(self):
+        return "{}/{}/{}".format(self.tag.tag_de, self.tag.tag_en, self.tag.tag_fr)
+
+
+class TranslationTag(models.Model):
     """
     A single tag with language associations
     """
@@ -176,9 +184,10 @@ class RecordTag(models.Model):
         help_text=_('comma separated extra fields'),
     )
 
-    tag_de_search_vector = SearchVectorField(blank=True, null=True)
-    tag_en_search_vector = SearchVectorField(blank=True, null=True)
-    tag_fr_search_vector = SearchVectorField(blank=True, null=True)
+    def tags_for_language(self, language):
+        main_tag = getattr(self, 'tag_{}'.format(language))
+        translations = getattr(self, 'tag_alternatives_{}'.format(language))
+        return [main_tag] + translations
 
     def __str__(self):
         return "{}/{}/{}".format(self.tag_de, self.tag_en, self.tag_fr)
@@ -198,7 +207,7 @@ def record_ids_for_search_query(search_query, language='de'):
     search_kwargs = {
         vector: search_query
     }
-    tags = RecordTag.objects.filter(**search_kwargs)
+    tags = TranslationTag.objects.filter(**search_kwargs)
     return RecordTaggedItem.objects.filter(
         record_tag__in=tags
     ).values_list('object_id', flat=True)
@@ -272,40 +281,38 @@ class GeoServiceMetadata(models.Model):
     created = models.DateTimeField(_('created on'), auto_now_add=True)
     imported = models.BooleanField(_('imported'), editable=False, default=False)
 
-    @property
-    def tags(self):
-        return RecordTaggedItem.objects.filter(object_id=self.api_id).order_by('id')
+    tags = models.ManyToManyField(TranslationTag, through='GeoServiceMetadataTagItem')
 
     @property
     def tags_de(self):
         tags = []
-        for tag in self.tags:
-            tags += tag.all_tag_list(self.GERMAN)
+        for tag in self.tags.all():
+            tags += tag.tags_for_language(self.GERMAN)
         return tags
 
     @property
     def tags_en(self):
         tags = []
-        for tag in self.tags:
-            tags += tag.all_tag_list(self.ENGLISH)
+        for tag in self.tags.all():
+            tags += tag.tags_for_language(self.ENGLISH)
         return tags
 
     @property
     def tags_fr(self):
         tags = []
-        for tag in RecordTaggedItem.objects.filter(object_id=self.api_id).order_by('id'):
-            tags += tag.all_tag_list(self.FRENCH)
+        for tag in self.tags.all():
+            tags += tag.tags_for_language(self.FRENCH)
         return tags
 
     def tag_list_display(self):
-        tags = self.tags
+        tags = self.tags.all()
         if len(tags) > 0:
             return ', '.join([str(t) for t in tags])
         return ' - '
     tag_list_display.short_description = 'tags'
 
     def __str__(self):
-        return self.content
+        return self.title
 
 
 GEO_SERVICE_METADATA_AGREED_FIELDS = [
@@ -318,7 +325,6 @@ GEO_SERVICE_METADATA_AGREED_FIELDS = [
     'publication_lineage',
     'is_latest',
     'geography',
-    'extent',
     'geodata_type',
     'source',
     'metadata_link',

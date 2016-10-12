@@ -1,13 +1,13 @@
 import pytest
 
-from api.models import CombinedRecord, Record, RecordTag, RecordTaggedItem
+from api.models import CombinedRecord, Record, TranslationTag, RecordTaggedItem
 from api.views import StandardResultsSetPagination
 from .testdata import data
 
 
 @pytest.fixture
 def tag(db):
-    tag, _ = RecordTag.objects.get_or_create(
+    tag, _ = TranslationTag.objects.get_or_create(
         tag_de='präzise', tag_en='house', tag_fr='maison'
     )
     assert RecordTaggedItem.objects.count() == 2

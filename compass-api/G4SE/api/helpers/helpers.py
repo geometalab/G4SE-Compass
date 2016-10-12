@@ -6,7 +6,7 @@ from django.conf import settings
 
 
 # Check if connection comes from internal IP range
-from api.models import RecordTag
+from api.models import TranslationTag
 
 
 def is_internal(client_ip):
@@ -47,11 +47,11 @@ def tag_loader(tag_csv_file):
                 syn_de = _clean_syn(syn[0:3])
                 syn_en = _clean_syn(syn[3:6])
                 syn_fr = _clean_syn(syn[6:9])
-                RecordTag.objects.filter(
+                TranslationTag.objects.filter(
                     Q(tag_de=tag_de) | Q(tag_en=tag_en) | Q(tag_fr=tag_fr)
                 ).delete()
 
-                RecordTag.objects.create(
+                TranslationTag.objects.create(
                     tag_de=tag_de,
                     tag_en=tag_en,
                     tag_fr=tag_fr,

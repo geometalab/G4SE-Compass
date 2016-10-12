@@ -1,21 +1,22 @@
 from haystack import indexes
-from haystack.fields import DateTimeField
+from haystack.fields import DateTimeField, IntegerField, BooleanField
 
 from configurable_elastic_search_backend import fields
 
-from api.models import CombinedRecord
+from api.models import GeoServiceMetadata
 
 
-class CombinedRecordIndex(indexes.BasicSearchIndex, indexes.Indexable):
+class GeoServiceMetadataIndex(indexes.BasicSearchIndex, indexes.Indexable):
     STEMMER = 'german_stemmer'
     text = fields.CharField(document=True, use_template=True, analyzer=STEMMER)
     api_id = fields.CharField(model_attr="api_id", boost=0.1)
-    title = fields.CharField(model_attr="content", analyzer=STEMMER)
+    title = fields.CharField(model_attr="title", analyzer=STEMMER)
     abstract = fields.CharField(model_attr="abstract", analyzer=STEMMER)
     geography = fields.CharField(model_attr="geography", boost=1.4)
     collection = fields.CharField(model_attr="collection", null=True)
     dataset = fields.CharField(model_attr="dataset", null=True, analyzer=STEMMER)
-    publication_year = fields.CharField(model_attr="publication_year")
+    publication_year = IntegerField(model_attr="publication_year")
+    is_latest = BooleanField(model_attr="is_latest")
     service_type = fields.CharField(model_attr="service_type", null=True)
     source = fields.CharField(model_attr="source", null=True)
     visibility = fields.CharField(model_attr="visibility")
@@ -31,7 +32,7 @@ class CombinedRecordIndex(indexes.BasicSearchIndex, indexes.Indexable):
     @staticmethod
     def prepare_autocomplete(obj):
         autocomplete_string = " ".join((
-            obj.content, obj.abstract, obj.geography
+            obj.title, obj.abstract, obj.geography
         ))
         if obj.collection is not None:
             autocomplete_string += " ".join((obj.collection,))
@@ -48,7 +49,7 @@ class CombinedRecordIndex(indexes.BasicSearchIndex, indexes.Indexable):
         return autocomplete_string
 
     def get_model(self):
-        return CombinedRecord
+        return GeoServiceMetadata
 
     def index_queryset(self, using=None):
         # always index all records, more traditional would be to
@@ -57,13 +58,13 @@ class CombinedRecordIndex(indexes.BasicSearchIndex, indexes.Indexable):
         return self.get_model().objects.all()
 
 
-class EnglishCombinedRecordIndex(CombinedRecordIndex):
+class EnglishGeoServiceMetadataIndex(GeoServiceMetadataIndex):
     STEMMER = 'english_stemmer'
 
 
-class GermanCombinedRecordIndex(CombinedRecordIndex):
+class GermanGeoServiceMetadataIndex(GeoServiceMetadataIndex):
     STEMMER = 'german_stemmer'
 
 
-class FrenchCombinedRecordIndex(CombinedRecordIndex):
+class FrenchGeoServiceMetadataIndex(GeoServiceMetadataIndex):
     STEMMER = 'french_stemmer'

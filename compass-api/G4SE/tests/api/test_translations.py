@@ -1,6 +1,6 @@
 import pytest
 
-from api.models import Record, RecordTag
+from api.models import Record, TranslationTag
 
 
 @pytest.fixture
@@ -71,7 +71,7 @@ def test_tagging_all(record_de, record_en, record_fr):
     A bit a long test, since it tests various interactions.
     """
     assert list(record_de.tags) == list(record_en.tags) == list(record_fr.tags) == []
-    one_tag_for_them_all = RecordTag.objects.create(
+    one_tag_for_them_all = TranslationTag.objects.create(
         tag_de='inhalt', tag_en='house', tag_fr='maison'
     )
     assert record_de.tag_list_display() == record_en.tag_list_display()
@@ -83,7 +83,7 @@ def test_tagging_all(record_de, record_en, record_fr):
 
 
 def test_tagging_one_language_only(record_de, record_en, record_fr):
-    tag_that_only_tags_german = RecordTag.objects.create(
+    tag_that_only_tags_german = TranslationTag.objects.create(
         tag_de='inhalt', tag_en='other', tag_fr='autre'
     )
     assert record_de.tags[0].record_tag.id == tag_that_only_tags_german.id
@@ -91,7 +91,7 @@ def test_tagging_one_language_only(record_de, record_en, record_fr):
     assert list(record_en.tags) == []
     tag_that_only_tags_german.delete()
 
-    tag_that_only_tags_french = RecordTag.objects.create(
+    tag_that_only_tags_french = TranslationTag.objects.create(
         tag_de='achtung', tag_en='other', tag_fr='example'
     )
     assert record_fr.tags[0].record_tag.id == tag_that_only_tags_french.id
@@ -105,7 +105,7 @@ def test_tagging_identical_key(record_de, record_en, record_fr):
     since "digital" is in every language, this will tag every
     language.
     """
-    tag_that_only_tags_french = RecordTag.objects.create(
+    tag_that_only_tags_french = TranslationTag.objects.create(
         tag_de='digital', tag_en='other', tag_fr='autre'
     )
     assert record_en.tags[0].record_tag.id == \

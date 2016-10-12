@@ -4,7 +4,7 @@ from drf_haystack.filters import HaystackFilter
 from rest_framework import filters
 
 from api import LANGUAGE_CONFIG_MATCH
-from api.models import CombinedRecord, record_ids_for_search_query
+from api.models import record_ids_for_search_query, GeoServiceMetadata
 from api.search_parser import search_query_parser
 from api.search_parser.query_parser import SearchSemantics
 from db import VectorFieldSearchRank
@@ -14,7 +14,7 @@ class RecordSearch(filters.SearchFilter):
     search_param = 'search'
     language_param = 'language'
     # having German as fallback is completely arbitrary
-    language = CombinedRecord.GERMAN  # default language
+    language = GeoServiceMetadata.GERMAN  # default language
 
     def get_search_params(self, request):
         """
@@ -84,7 +84,7 @@ class DateLimitRecordFilter(filters.BaseFilterBackend):
         if to_year is None and from_year is None:
             return queryset
 
-        # FIXME: ugly hack to only include numbers, beacuse publication_year is not an integer :-(
+        # FIXME: ugly hack to only include numbers, because publication_year is not an integer :-(
         queryset = queryset.filter(publication_year__startswith='2')
         queryset = queryset.annotate(publication_year_int=Cast('publication_year', IntegerField()))
         if to_year is not None:
@@ -111,11 +111,8 @@ class LimitRecordFilter(filters.BaseFilterBackend):
 
     def filter_queryset(self, request, queryset, view):
         limit_by = request.query_params.get(self.limit_param, '')
-        try:
-            if limit_by:
-                queryset = queryset[:int(limit_by)]
-        except:
-            raise
+        if limit_by:
+            queryset = queryset[:int(limit_by)]
         return queryset
 
     def get_fields(self, view):
@@ -138,7 +135,7 @@ class DateLimitSearchRecordFilter(HaystackFilter):
         if to_year is None and from_year is None:
             return queryset
 
-        # FIXME: ugly hack to only include numbers, beacuse publication_year is not an integer :-(
+        # FIXME: ugly hack to only include numbers, because publication_year is not an integer :-(
         queryset = queryset.filter(publication_year__startswith='2')
         if to_year is not None:
             queryset = queryset.filter(publication_year__lte=to_year)

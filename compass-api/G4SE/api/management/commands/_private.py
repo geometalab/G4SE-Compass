@@ -41,6 +41,7 @@ def read_xml(url):
         tag = child.tag.split('}', 1)[1]
         record[tag] = content
     record['login_name'] = 'GEOVITE_AUTOIMPORTER'
+    record['title'] = record.pop('content')
     return record
 
 
