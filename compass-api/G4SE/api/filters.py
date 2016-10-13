@@ -104,8 +104,8 @@ class IsLatestSearchRecordFilter(HaystackFilter):
 
     def filter_queryset(self, request, queryset, view):
         is_latest = request.query_params.get(self.param, None)
-        if is_latest in ['true', 'false']:
-            queryset = queryset.filter(is_latest=is_latest)
+        if is_latest is not None:
+            queryset = queryset.order_by('-is_latest')
         return queryset
 
     def get_fields(self, view):
