@@ -37,7 +37,6 @@ export class SearchComponent implements OnInit {
   executeSearch(event:any): void {
     this.searchResultList = [];
     this.searchParams.page = 1;
-    console.log(this.searchParams);
     this.getMetadataList();
   }
 
