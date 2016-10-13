@@ -80,8 +80,6 @@ class DateLimitSearchRecordFilter(HaystackFilter):
         if to_year is None and from_year is None:
             return queryset
 
-        # FIXME: ugly hack to only include numbers, because publication_year is not an integer :-(
-        queryset = queryset.filter(publication_year__startswith='2')
         if to_year is not None:
             queryset = queryset.filter(publication_year__lte=to_year)
         if from_year is not None:
@@ -99,3 +97,16 @@ class DateLimitSearchRecordFilter(HaystackFilter):
 
     def get_fields(self, view):
         return [self.from_param, self.to_param]
+
+
+class IsLatestSearchRecordFilter(HaystackFilter):
+    param = 'is_latest'
+
+    def filter_queryset(self, request, queryset, view):
+        is_latest = request.query_params.get(self.param, None)
+        if is_latest in ['true', 'false']:
+            queryset = queryset.filter(is_latest=is_latest)
+        return queryset
+
+    def get_fields(self, view):
+        return [self.param]

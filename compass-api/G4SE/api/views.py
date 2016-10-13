@@ -13,7 +13,8 @@ from rest_framework import response, schemas
 from rest_framework.settings import api_settings
 from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
-from api.filters import LimitRecordFilter, DateLimitRecordFilter, DateLimitSearchRecordFilter
+from api.filters import LimitRecordFilter, DateLimitRecordFilter, DateLimitSearchRecordFilter, \
+    IsLatestSearchRecordFilter
 from api.helpers.helpers import is_internal
 from api.models import GeoServiceMetadata
 from api.search_indexes import GeoServiceMetadataIndex, EnglishGeoServiceMetadataIndex, GermanGeoServiceMetadataIndex, \
@@ -95,6 +96,7 @@ class GeoServiceMetadataSearchView(HaystackViewSet):
         HaystackFilter,
         HaystackHighlightFilter,
         DateLimitSearchRecordFilter,
+        IsLatestSearchRecordFilter,
     ]
     serializer_class = GeoServiceMetadataSearchSerializer
 

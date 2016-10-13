@@ -5,7 +5,7 @@
       <div class="input-group">
         <input name="searchTerm" [(ngModel)]="searchParams.search" class="form-control" />
         <span class="input-group-btn">
-            <button class="btn btn-secondary search-button" (click)="executeSearch()">Search</button>
+            <button class="btn btn-secondary search-button" (click)="executeSearch($event)">Search</button>
         </span>
       </div>
     </div>
@@ -18,16 +18,18 @@
       <div class="well well-sm">
         <div [collapse]="!isCollapsedSearchOptions">
           <label for="languageSelector">Search in language:</label>
-          <select [(ngModel)]="searchParams.language" (change)="languageChanged()" id="languageSelector" name="language">
+          <select [(ngModel)]="searchParams.language" (ngModelChange)="executeSearch($event)" id="languageSelector" name="language">
             <option value="en">English</option>
             <option value="de">Deutsch</option>
             <option value="fr">Français</option>
           </select>
           <div class="input-group">
             <label for="fromYearSelector">From Year:</label>
-            <input name="from-year" id="fromYearSelector" type="text" [(ngModel)]="searchParams.from_year" />
+            <input name="from-year" id="fromYearSelector" type="text" [(ngModel)]="searchParams.from_year" (ngModelChange)="executeSearch($event)" />
             <label for="toYearSelector">To Year:</label>
-            <input name="to-year" id="toYearSelector" type="text" [(ngModel)]="searchParams.to_year" />
+            <input name="to-year" id="toYearSelector" type="text" [(ngModel)]="searchParams.to_year" (ngModelChange)="executeSearch($event)" />
+            <label for="isLatest">Only Show latest:</label>
+            <input name="is-latest" id="isLatest" type="checkbox" [(ngModel)]="searchParams.is_latest" (ngModelChange)="executeSearch($event)" />
           </div>
           <!--<label for="orderingSelector">Ordering:</label>-->
           <!--<select [(ngModel)]="searchParams.ordering" id="orderingSelector" name="ordering" disabled="disabled" class="disabled">-->

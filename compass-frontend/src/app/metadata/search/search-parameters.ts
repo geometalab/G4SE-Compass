@@ -9,11 +9,12 @@ export class SearchParameters {
   page: number;
   from_year: number;
   to_year: number;
+  is_latest: boolean;
 
   loading: boolean = false; // to display spinner
 
   clear(): void {
-    this.search = this.language = this.ordering = this.limit = this.page_size = this.page = null;
+    this.search = this.language = this.ordering = this.limit = this.page_size = this.page = this.is_latest = null;
   }
 
   private exists(value) {
@@ -46,6 +47,9 @@ export class SearchParameters {
     }
     if(!this.exists(this.to_year)){
       options_list.push('to_year=' + this.to_year);
+    }
+    if(!this.exists(this.is_latest)){
+      options_list.push('is_latest=' + this.is_latest);
     }
     var query_string = options_list.join('&');
     return '?' + query_string;

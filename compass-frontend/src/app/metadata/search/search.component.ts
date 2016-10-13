@@ -13,8 +13,8 @@ import {SearchService} from "./search.service";
 export class SearchComponent implements OnInit {
   searchResultList: SearchResult[];
   error: any;
-  totalItems:number = 0;
-  currentPage:number = 1;
+  totalItems: number = 0;
+  currentPage: number = 1;
   isLoading: boolean = false;
   // pagination settings
   private itemsPerPage: number = 10;
@@ -31,16 +31,13 @@ export class SearchComponent implements OnInit {
     this.searchParams.language = 'de';
     this.searchParams.page = 1;
     this.searchParams.page_size = this.itemsPerPage;
-    this.executeSearch();
+    this.executeSearch(null);
   }
 
-  executeSearch(): void {
+  executeSearch(event:any): void {
     this.searchResultList = [];
     this.searchParams.page = 1;
-    this.getMetadataList();
-  }
-
-  languageChanged(): void {
+    console.log(this.searchParams);
     this.getMetadataList();
   }
 
