@@ -1,9 +1,9 @@
-FROM postgres:9.5
+FROM postgres:9.5.4
 MAINTAINER Geometalab <geometalab@hsr.ch>
 
 RUN apt-get update && apt-get install -y \
+    postgresql-9.5-postgis-2.2 \
     postgis \
     && rm -rf /var/lib/apt/lists/*
 
-ADD setup_database.sql /docker-entrypoint-initdb.d/000_setup_database.sql
-
+ADD db/000_create_extensions.sql /docker-entrypoint-initdb.d/000_create_extensions.sql

@@ -1,9 +1,7 @@
 db_setup = [
     """
     -- Setup extensions and triggers
-    CREATE EXTENSION IF NOT EXISTS postgis
-        SCHEMA public
-        VERSION "2.2.2";
+    CREATE EXTENSION IF NOT EXISTS postgis;
     """,
     """
     CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -211,7 +209,6 @@ db_setup = [
     $$ LANGUAGE plpgsql;
     """,
     """
-
     DROP TRIGGER IF EXISTS tsvectorupdate_fr ON records;
     """,
     """
