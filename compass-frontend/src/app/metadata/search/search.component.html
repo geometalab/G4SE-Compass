@@ -28,7 +28,7 @@
             <input name="from-year" id="fromYearSelector" type="text" [(ngModel)]="searchParams.from_year" (ngModelChange)="executeSearch($event)" />
             <label for="toYearSelector">To Year:</label>
             <input name="to-year" id="toYearSelector" type="text" [(ngModel)]="searchParams.to_year" (ngModelChange)="executeSearch($event)" />
-            <label for="isLatest">Only Show latest:</label>
+            <label for="isLatest">Show Latest First:</label>
             <input name="is-latest" id="isLatest" type="checkbox" [(ngModel)]="searchParams.is_latest" (ngModelChange)="executeSearch($event)" />
           </div>
           <!--<label for="orderingSelector">Ordering:</label>-->
@@ -46,13 +46,13 @@
 
 <!-- paginator -->
 <pre>
-  Results Total: <strong>{{totalItems}}</strong><span [hidden]="searchParams.search"> (showing all records)</span><span [hidden]="!searchParams.ordering"> | <strong>{{searchParams.ordering}}</strong></span>
+  Results Total: <strong>{{(searchStore.count | async)}}</strong><span [hidden]="searchParams.search"> (showing all records)</span><span [hidden]="!searchParams.ordering"> | <strong>{{searchParams.ordering}}</strong></span>
 </pre>
 
-<div [hidden]="totalItems == 0" class="row">
+<div [hidden]="(searchStore.count | async) == 0" class="row">
   <div class="col-sm-6">
     <pagination
-      [totalItems]="totalItems"
+      [totalItems]="(searchStore.count | async)"
       [(ngModel)]="searchParams.page"
       [maxSize]="maxSize"
       (pageChanged)="pageChanged($event)"
@@ -65,7 +65,7 @@
 <!-- Result List -->
 <my-spinner [isRunning]="searchParams.loading" [delay]="100"></my-spinner>
 
-<div *ngFor="let searchResult of searchResultList" class="panel panel-info">
+<div *ngFor="let searchResult of searchStore.searchResults | async" class="panel panel-info">
   <div [tooltipHtml]="searchResult.abstract | slice:0:100 | linky"
        class="panel-heading cursor-pointer" (click)="searchResult.showDetails = !searchResult.showDetails">
     <div class="row">
@@ -118,9 +118,9 @@
   </div>
 </div>
 
-<div [hidden]="totalItems == 0">
+<div [hidden]="(searchStore.count | async) == 0">
   <pagination
-    [totalItems]="totalItems"
+    [totalItems]="(searchStore.count | async)"
     [(ngModel)]="searchParams.page"
     [maxSize]="maxSize"
     (pageChanged)="pageChanged($event)"

@@ -14,6 +14,7 @@ import { MetadataDetailComponent } from './metadata/metadata-detail.component';
 import {SearchService} from "./metadata/search/search.service";
 import {SearchComponent} from "./metadata/search/search.component";
 import { SpinnerComponent } from './spinner/spinner.component';
+import {SearchStore} from "./metadata/search/search.store";
 
 
 @NgModule({
@@ -34,7 +35,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
     LinkyModule,
   ],
   providers: [
-    MetadataService, SearchService,
+    MetadataService, SearchService, SearchStore,
   ],
   bootstrap: [AppComponent]
 })
