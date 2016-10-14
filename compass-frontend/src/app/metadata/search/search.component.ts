@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {SearchResult} from "./search-result";
 import {Router} from "@angular/router";
 import {SearchParameters} from "./search-parameters";
-import {SearchService} from "./search.service";
 import {SearchStore} from "./search.store";
+import {Subject} from "rxjs";
 
 
 @Component({
@@ -18,6 +17,7 @@ export class SearchComponent implements OnInit {
   maxSize: number = 5; // maxNumberButtonsVisible
 
   private searchParams: SearchParameters = new SearchParameters();
+  private _searchParams: Subject<SearchParameters> = new Subject<SearchParameters>();
 
   constructor(
     private searchStore: SearchStore,
@@ -28,7 +28,21 @@ export class SearchComponent implements OnInit {
     this.searchParams.language = 'de';
     this.searchParams.page = 1;
     this.searchParams.page_size = this.itemsPerPage;
-    this.executeSearch(null);
+
+    this._searchParams
+      .debounceTime(300)        // wait for 300ms pause in events
+      .distinctUntilChanged()   // ignore if next search term is same as previous
+      .switchMap((v: any):any => {
+        console.log(v);
+        this.searchStore.search(this.searchParams);
+        return v;
+        // this.searchStore.search(searchParams);
+      })
+      .catch((error:any):any => {
+        // TODO: real error handling
+        console.log(error);
+      });
+    // this.executeSearch(null);
   }
 
   executeSearch(event:any): void {
@@ -42,8 +56,8 @@ export class SearchComponent implements OnInit {
   }
 
   private getMetadataList(): void {
+    this._searchParams.next(this.searchParams);
     this.searchStore.search(this.searchParams);
   }
-
 
 }
