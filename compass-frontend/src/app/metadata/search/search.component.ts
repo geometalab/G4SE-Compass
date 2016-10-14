@@ -3,7 +3,6 @@ import {Router} from "@angular/router";
 import {SearchParameters} from "./search-parameters";
 import {SearchStore} from "./search.store";
 import {Subject, Observable} from "rxjs";
-import {FormControl} from "@angular/forms";
 import {SearchResult} from "./search-result";
 
 
@@ -25,7 +24,7 @@ export class SearchComponent implements OnInit {
 
   constructor(
     private searchStore: SearchStore,
-    private router: Router
+    private router: Router,
   ) { }
 
   ngOnInit() {
