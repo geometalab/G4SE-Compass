@@ -1,13 +1,10 @@
 from django import forms
 from django.contrib import admin
 
-# Register your models here.
-from django.contrib.admin.utils import flatten_fieldsets
-
-from api.models import RecordTag, CombinedRecord, Record
+from api.models import TranslationTag, GeoServiceMetadata, GEO_SERVICE_METADATA_AGREED_FIELDS
 
 
-class EditableRecordForm(forms.ModelForm):
+class EditableGeoServiceMetadataForm(forms.ModelForm):
     def clean(self):
         cleaned_values = super().clean()
         for key, value in cleaned_values.items():
@@ -16,50 +13,47 @@ class EditableRecordForm(forms.ModelForm):
         return cleaned_values
 
     class Meta:
-        model = Record
-        exclude = ['search_vector_de', 'search_vector_fr', 'search_vector_en']
+        model = GeoServiceMetadata
+        fields = GEO_SERVICE_METADATA_AGREED_FIELDS[1:-1]
 
 
-class ReadOnlyAdmin(admin.ModelAdmin):
-    change_form_template = 'api/admin/change_form.html'
-    actions = None
-
-    def get_readonly_fields(self, request, obj=None):
-
-        if hasattr(self, 'declared_fieldsets') and self.declared_fieldsets:
-            return flatten_fieldsets(self.declared_fieldsets)
-        else:
-            return list(set(
-                [field.name for field in self.opts.local_fields] +
-                [field.name for field in self.opts.local_many_to_many]
-            ))
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    def has_add_permission(self, request, obj=None):
-        return False
+class TranslationTagAdmin(admin.ModelAdmin):
+    list_display = ['tag_de', 'tag_en', 'tag_fr', 'tag_alternatives_de', 'tag_alternatives_en', 'tag_alternatives_fr', ]
+    search_fields = ['tag_de', 'tag_en', 'tag_fr', 'tag_alternatives_de', 'tag_alternatives_en', 'tag_alternatives_fr', ]
+admin.site.register(TranslationTag, TranslationTagAdmin)
 
 
-class RecordAdminMixin(object):
+class GeoServiceMetadataAdmin(admin.ModelAdmin):
     readonly_fields = ['api_id', 'tag_list_display']
-    list_display = ['api_id', 'language', 'content', 'publication_year', 'abstract', 'tag_list_display']
-    exclude = ['search_vector_de', 'search_vector_fr', 'search_vector_en']
-    search_fields = ['search_vector_de', 'search_vector_fr', 'search_vector_en']
+    list_display = ['api_id', 'language', 'title', 'publication_year', 'abstract', 'tag_list_display', 'modified']
+    form = EditableGeoServiceMetadataForm
+    list_per_page = 10
+    list_filter = ['language', 'publication_year']
+    search_fields = GEO_SERVICE_METADATA_AGREED_FIELDS
+    ordering = ['-modified', ]
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(imported=False)
+admin.site.register(GeoServiceMetadata, GeoServiceMetadataAdmin)
 
 
-class RecordTagAdmin(admin.ModelAdmin):
-    exclude = ['tag_de_search_vector', 'tag_en_search_vector', 'tag_fr_search_vector']
-    list_display = ['tag_de', 'tag_en', 'tag_fr', ]
-    search_fields = ['tag_de_search_vector', 'tag_en_search_vector', 'tag_fr_search_vector']
-admin.site.register(RecordTag, RecordTagAdmin)
+class ReadOnlyGeoServiceMetadata(GeoServiceMetadata):
+    """
+    This has no restrictions when viewed through the admin, but shouldn't be edited.
+    """
+    class Meta:
+        proxy = True
 
 
-class RecordAdmin(RecordAdminMixin, admin.ModelAdmin):
-    form = EditableRecordForm
-admin.site.register(Record, RecordAdmin)
+class ReadOnlyGeoServiceMetadataAdmin(admin.ModelAdmin):
+    actions = None
+    change_form_template = 'api/admin/change_form.html'
 
-
-class CombinedRecordAdmin(RecordAdminMixin, ReadOnlyAdmin):
-    pass
-admin.site.register(CombinedRecord, CombinedRecordAdmin)
+    list_display = ['api_id', 'language', 'title', 'publication_year', 'abstract', 'tag_list_display', 'modified']
+    list_per_page = 10
+    list_filter = ['language', 'publication_year']
+    ordering = ['-modified', ]
+    search_fields = GEO_SERVICE_METADATA_AGREED_FIELDS
+    readonly_fields = GEO_SERVICE_METADATA_AGREED_FIELDS
+    fields = GEO_SERVICE_METADATA_AGREED_FIELDS
+admin.site.register(ReadOnlyGeoServiceMetadata, ReadOnlyGeoServiceMetadataAdmin)

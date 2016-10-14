@@ -5,8 +5,8 @@ from . import views
 
 router = DefaultRouter()
 router.register(r'metadata', views.MetaDataReadOnlyViewSet, base_name='metadata')
-router.register(r'admin', views.RecordsAdminViewSet, base_name='admin')
-router.register(r'search', views.CombinedRecordsSearchView, base_name="metadata-search")
+router.register(r'admin', views.GeoServiceMetadataAdminViewSet, base_name='admin')
+router.register(r'search', views.GeoServiceMetadataSearchView, base_name="metadata-search")
 urlpatterns = router.urls
 
 urlpatterns += [

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
+import {Observable} from "rxjs/Observable";
 
 import {SearchParameters} from "./search-parameters";
 import {SearchResult} from "./search-result";
@@ -12,20 +13,14 @@ export class SearchService {
 
   constructor(private http: Http) { }
 
-  getSearchResultList(params: SearchParameters=undefined): Promise<SearchResult[]> {
+  getSearchResultList(params: SearchParameters) {
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json; charset=utf-8');
+
     if (params == undefined) {
       params = new SearchParameters();
     }
     var urlParams = params.toUrlQuery();
-    return this.http
-      .get(this.metadataUrl + urlParams)
-      .toPromise()
-      .then(response => response.json() as any[])
-      .catch(this.handleError);
-  }
-
-  private handleError(error: any): Promise<SearchResult> {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+    return this.http.get(this.metadataUrl + urlParams, {headers});
   }
 }

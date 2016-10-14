@@ -248,9 +248,9 @@ HAYSTACK_CONNECTIONS = {
         'URL': HAYSTACK_CONNECTIONS_URL,
         'INDEX_NAME': 'haystack',
         'EXCLUDED_INDEXES': [
-            'api.search_indexes.EnglishCombinedRecordIndex',
-            'api.search_indexes.GermanCombinedRecordIndex',
-            'api.search_indexes.FrenchCombinedRecordIndex',
+            'api.search_indexes.EnglishGeoServiceMetadataIndex',
+            'api.search_indexes.GermanGeoServiceMetadataIndex',
+            'api.search_indexes.FrenchGeoServiceMetadataIndex',
         ],
     },
     'en': {
@@ -258,9 +258,9 @@ HAYSTACK_CONNECTIONS = {
         'URL': HAYSTACK_CONNECTIONS_URL,
         'INDEX_NAME': 'haystack_english',
         'EXCLUDED_INDEXES': [
-            'api.search_indexes.CombinedRecordIndex',
-            'api.search_indexes.GermanCombinedRecordIndex',
-            'api.search_indexes.FrenchCombinedRecordIndex',
+            'api.search_indexes.GeoServiceMetadataIndex',
+            'api.search_indexes.GermanGeoServiceMetadataIndex',
+            'api.search_indexes.FrenchGeoServiceMetadataIndex',
         ],
         "OPTIONS": {
             **ENGLISH_INDEX_SETTINGS,
@@ -271,9 +271,9 @@ HAYSTACK_CONNECTIONS = {
         'URL': HAYSTACK_CONNECTIONS_URL,
         'INDEX_NAME': 'haystack_german',
         'EXCLUDED_INDEXES': [
-            'api.search_indexes.CombinedRecordIndex',
-            'api.search_indexes.EnglishCombinedRecordIndex',
-            'api.search_indexes.FrenchCombinedRecordIndex',
+            'api.search_indexes.GeoServiceMetadataIndex',
+            'api.search_indexes.EnglishGeoServiceMetadataIndex',
+            'api.search_indexes.FrenchGeoServiceMetadataIndex',
         ],
         "OPTIONS": {
             **GERMAN_INDEX_SETTINGS,
@@ -284,9 +284,9 @@ HAYSTACK_CONNECTIONS = {
         'URL': HAYSTACK_CONNECTIONS_URL,
         'INDEX_NAME': 'haystack_french',
         'EXCLUDED_INDEXES': [
-            'api.search_indexes.CombinedRecordIndex',
-            'api.search_indexes.EnglishCombinedRecordIndex',
-            'api.search_indexes.GermanCombinedRecordIndex',
+            'api.search_indexes.GeoServiceMetadataIndex',
+            'api.search_indexes.EnglishGeoServiceMetadataIndex',
+            'api.search_indexes.GermanGeoServiceMetadataIndex',
         ],
         "OPTIONS": {
             **FRENCH_INDEX_SETTINGS,
@@ -294,4 +294,4 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 HAYSTACK_DOCUMENT_FIELD = 'text'
-HAYSTACK_SIGNAL_PROCESSOR = 'api.signals.CombinedRecordRealtimeSignalProcessor'
+HAYSTACK_SIGNAL_PROCESSOR = 'api.signals.GeoServiceMetadataRealtimeSignalProcessor'

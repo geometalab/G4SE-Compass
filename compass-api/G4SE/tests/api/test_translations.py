@@ -1,6 +1,6 @@
 import pytest
 
-from api.models import Record, RecordTag
+from api.models import GeoServiceMetadata, TranslationTag
 
 
 @pytest.fixture
@@ -22,9 +22,9 @@ def crs():
 def record_default_kwargs(placeholder_string, placeholder_url, crs):
     return dict(
         identifier=placeholder_string,
-        content=placeholder_string,
+        title=placeholder_string,
         abstract=placeholder_string,
-        publication_year=placeholder_string,
+        publication_year=2014,
         geography=placeholder_string,
         geodata_type=placeholder_string,
         source=placeholder_string,
@@ -32,84 +32,106 @@ def record_default_kwargs(placeholder_string, placeholder_url, crs):
         access_link=placeholder_url,
         crs=crs,
         term_link=placeholder_url,
-        visibility=Record.PUBLIC,
+        visibility=GeoServiceMetadata.VISIBILITY_PUBLIC,
     )
 
 
 @pytest.fixture
-def record_en(setup_database, record_default_kwargs):
+def record_en(db, record_default_kwargs):
     kwargs = record_default_kwargs.copy()
-    kwargs['content'] = 'Some generalized content'
-    kwargs['abstract'] = 'Some english abstract, about digital housing'
-    kwargs['language'] = Record.ENGLISH
-    record, _ = Record.objects.get_or_create(**kwargs)
-    return record
+    kwargs['title'] = 'Some generalized content'
+    kwargs['abstract'] = 'Some english abstract, about digital a house.'
+    kwargs['language'] = GeoServiceMetadata.ENGLISH
+    record, _ = GeoServiceMetadata.objects.get_or_create(**kwargs)
+    yield record
+    record.delete()
 
 
 @pytest.fixture
-def record_de(setup_database, record_default_kwargs):
+def record_de(db, record_default_kwargs):
     kwargs = record_default_kwargs.copy()
-    kwargs['content'] = 'Inhaltsbeschreibung'
+    kwargs['title'] = 'Inhaltsbeschreibung'
     kwargs['abstract'] = 'Ein währschafter Inhalt, so richtig digital deftig.'
-    kwargs['language'] = Record.GERMAN
-    record, _ = Record.objects.get_or_create(**kwargs)
-    return record
+    kwargs['language'] = GeoServiceMetadata.GERMAN
+    record, _ = GeoServiceMetadata.objects.get_or_create(**kwargs)
+    yield record
+    record.delete()
 
 
 @pytest.fixture
-def record_fr(setup_database, record_default_kwargs):
+def record_fr(db, record_default_kwargs):
     kwargs = record_default_kwargs.copy()
-    kwargs['content'] = 'Un example du contenue'
+    kwargs['title'] = 'Un example du contenue'
     kwargs['abstract'] = 'Ce abstract digital example maisons.'
-    kwargs['language'] = Record.FRENCH
-    record, _ = Record.objects.get_or_create(**kwargs)
-    return record
+    kwargs['language'] = GeoServiceMetadata.FRENCH
+    record, _ = GeoServiceMetadata.objects.get_or_create(**kwargs)
+    yield record
+    record.delete()
 
 
-def test_tagging_all(record_de, record_en, record_fr):
+@pytest.fixture
+def one_tag_for_them_all(db):
+    tag = TranslationTag.objects.create(
+        tag_de='inhalt', tag_en='house', tag_fr='maison'
+    )
+    yield tag
+    tag.delete()
+
+
+@pytest.fixture
+def tag_that_only_tags_german(db):
+    tag = TranslationTag.objects.create(
+        tag_de='inhalt', tag_en='other', tag_fr='autre'
+    )
+    yield tag
+    tag.delete()
+
+
+@pytest.fixture
+def tag_that_only_tags_french(db):
+    tag = TranslationTag.objects.create(
+            tag_de='achtung', tag_en='another', tag_fr='example'
+        )
+    yield tag
+    tag.delete()
+
+
+@pytest.fixture
+def tag_that_matches_all_languages(db):
+    tag = TranslationTag.objects.create(
+            tag_de='digital', tag_en='some', tag_fr='differente'
+        )
+    yield tag
+    tag.delete()
+
+
+def test_tagging_all(record_de, record_en, record_fr, one_tag_for_them_all):
     """
     A bit a long test, since it tests various interactions.
     """
-    assert list(record_de.tags) == list(record_en.tags) == list(record_fr.tags) == []
-    one_tag_for_them_all = RecordTag.objects.create(
-        tag_de='inhalt', tag_en='house', tag_fr='maison'
-    )
     assert record_de.tag_list_display() == record_en.tag_list_display()
     assert record_de.tag_list_display() == record_fr.tag_list_display()
-    assert one_tag_for_them_all.id == record_de.tags[0].record_tag.id
-
-    one_tag_for_them_all.delete()
-    assert list(record_de.tags) == list(record_en.tags) == list(record_fr.tags) == []
+    assert one_tag_for_them_all.id == record_de.tags.all()[0].id
 
 
-def test_tagging_one_language_only(record_de, record_en, record_fr):
-    tag_that_only_tags_german = RecordTag.objects.create(
-        tag_de='inhalt', tag_en='other', tag_fr='autre'
-    )
-    assert record_de.tags[0].record_tag.id == tag_that_only_tags_german.id
-    assert list(record_fr.tags) == []
-    assert list(record_en.tags) == []
-    tag_that_only_tags_german.delete()
-
-    tag_that_only_tags_french = RecordTag.objects.create(
-        tag_de='achtung', tag_en='other', tag_fr='example'
-    )
-    assert record_fr.tags[0].record_tag.id == tag_that_only_tags_french.id
-    assert list(record_de.tags) == []
-    assert list(record_en.tags) == []
-    tag_that_only_tags_french.delete()
+def test_tagging_german_language_only(record_de, record_en, record_fr, tag_that_only_tags_german):
+    assert record_de.tags.all()[0].id == tag_that_only_tags_german.id
+    assert list(record_fr.tags.all()) == []
+    assert list(record_en.tags.all()) == []
 
 
-def test_tagging_identical_key(record_de, record_en, record_fr):
+def test_tagging_french_language_only(record_de, record_en, record_fr, tag_that_only_tags_french):
+    assert record_fr.tags.all()[0].id == tag_that_only_tags_french.id
+    assert list(record_de.tags.all()) == []
+    assert list(record_en.tags.all()) == []
+
+
+def test_tagging_identical_key(record_de, record_en, record_fr, tag_that_matches_all_languages):
     """
     since "digital" is in every language, this will tag every
     language.
     """
-    tag_that_only_tags_french = RecordTag.objects.create(
-        tag_de='digital', tag_en='other', tag_fr='autre'
-    )
-    assert record_en.tags[0].record_tag.id == \
-           record_fr.tags[0].record_tag.id == \
-           record_de.tags[0].record_tag.id == \
-           tag_that_only_tags_french.id
-    tag_that_only_tags_french.delete()
+    assert record_en.tags.all()[0].id == \
+           record_fr.tags.all()[0].id == \
+           record_de.tags.all()[0].id == \
+           tag_that_matches_all_languages.id

@@ -1,30 +1,20 @@
 import datetime
 
-from django.contrib.auth.models import User
 from drf_haystack.serializers import HaystackSerializer
 from rest_framework import serializers
 from rest_framework.utils.field_mapping import get_field_kwargs
 
-from api.search_indexes import CombinedRecordIndex
-from .models import Record, CombinedRecord
+from api.search_indexes import GeoServiceMetadataIndex
+from .models import GeoServiceMetadata, GEO_SERVICE_METADATA_AGREED_FIELDS
 
 
-class BaseRecordSerializer(serializers.ModelSerializer):
-    title = serializers.CharField(max_length=200, source='content')
-    login_name = serializers.HiddenField(default=None)
-    search_vector_de = serializers.HiddenField(default=None)
-    search_vector_en = serializers.HiddenField(default=None)
-    search_vector_fr = serializers.HiddenField(default=None)
-    tag_list_display = serializers.CharField(read_only=True)
-
-
-class AllRecordsSerializer(BaseRecordSerializer):
+class GeoServiceMetadataSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CombinedRecord
-        exclude = ['content']
+        model = GeoServiceMetadata
+        fields = GEO_SERVICE_METADATA_AGREED_FIELDS
 
 
-class EditRecordSerializer(BaseRecordSerializer):
+class EditRecordSerializer(serializers.ModelSerializer):
     api_id = serializers.HyperlinkedIdentityField(
         view_name='admin-detail',
         lookup_field='api_id',
@@ -51,15 +41,8 @@ class EditRecordSerializer(BaseRecordSerializer):
         return value
 
     class Meta:
-        model = Record
-        fields = '__all__'
-
-
-class UserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = '__all__'
+        model = GeoServiceMetadata
+        fields = GEO_SERVICE_METADATA_AGREED_FIELDS
 
 
 def get_all_field_names(model):
@@ -73,7 +56,7 @@ def get_all_field_names(model):
     )))
 
 
-class CombinedRecordsSearchSerializer(HaystackSerializer):
+class GeoServiceMetadataSearchSerializer(HaystackSerializer):
     @staticmethod
     def _get_default_field_kwargs(model, field):
         """
@@ -104,7 +87,7 @@ class CombinedRecordsSearchSerializer(HaystackSerializer):
     class Meta:
         # The `index_classes` attribute is a list of which search indexes
         # we want to include in the search.
-        index_classes = [CombinedRecordIndex]
+        index_classes = [GeoServiceMetadataIndex]
 
         # The `fields` contains all the fields we want to include.
         # NOTE: Make sure you don't confuse these with model attributes. These
