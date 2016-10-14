@@ -14,4 +14,5 @@ export class SearchResult {
   visibility:  string; // URL
   modified:  string; // URL
   highlighted: string; // HTML
+  autocomplete: string; // search suggestions
 }

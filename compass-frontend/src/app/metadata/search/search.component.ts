@@ -20,6 +20,7 @@ export class SearchComponent implements OnInit {
   private searchParams: SearchParameters = new SearchParameters();
   private searchTerms = new Subject<string>();
   private searchResults = new Observable<SearchResult[]>();
+  private autocompleteSearchResults = new Observable<SearchResult[]>();
   private searchCount = new Observable<number>();
 
   constructor(
@@ -35,16 +36,18 @@ export class SearchComponent implements OnInit {
       .debounceTime(300)        // wait for 300ms pause in events
       .distinctUntilChanged()   // ignore if next search term is same as previous
       .subscribe(term => {
-          this.searchParams.search = term;
           this.searchStore.search(this.searchParams);
         return null;
         }
         );
     this.searchCount = this.searchStore.count;
     this.searchResults = this.searchStore.searchResults;
+    this.autocompleteSearchResults = this.searchStore.autocompleteSearchResults;
   }
 
   search(term: string): void {
+    this.searchParams.search = term;
+    this.searchStore.autocomplete(this.searchParams);
     this.searchTerms.next(term);
   }
 

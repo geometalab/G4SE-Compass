@@ -3,7 +3,11 @@
   <form class="search" #searchBox>
     <div class="col-sm-12 last">
       <div class="input-group">
-        <input #searchBox name="searchTerm" (keyup)="search(searchBox.value)" class="form-control" />
+        <input #searchBox name="searchTerm" (keyup)="search(searchBox.value)" (select)="search(searchBox.value)" class="form-control" />
+        <!--<input #searchBox name="searchTerm" list="autocomplete-suggestions" (keyup)="search(searchBox.value)" (select)="search(searchBox.value)" class="form-control" />-->
+        <!--<datalist id="autocomplete-suggestions">-->
+          <!--<option *ngFor="let searchResult of autocompleteSearchResults | async" value='"{{searchResult.autocomplete}}"' (select)="search(searchBox.value)">-->
+        <!--</datalist>-->
         <span class="input-group-btn">
             <button class="btn btn-secondary search-button" (click)="executeSearch($event)">Search</button>
         </span>

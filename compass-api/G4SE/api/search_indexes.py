@@ -31,21 +31,10 @@ class GeoServiceMetadataIndex(indexes.BasicSearchIndex, indexes.Indexable):
 
     @staticmethod
     def prepare_autocomplete(obj):
-        autocomplete_string = " ".join((
-            obj.title, obj.abstract, obj.geography
-        ))
-        if obj.collection is not None:
-            autocomplete_string += " ".join((obj.collection,))
-        if obj.dataset is not None:
-            autocomplete_string += " ".join((obj.dataset,))
-        if obj.dataset is not None:
-            autocomplete_string += " ".join((obj.visibility,))
-        if obj.tags_en is not None:
-            autocomplete_string += " ".join(obj.tags_en)
-        if obj.tags_de is not None:
-            autocomplete_string += " ".join(obj.tags_de)
-        if obj.tags_fr is not None:
-            autocomplete_string += " ".join(obj.tags_fr)
+        autocomplete_string = obj.title
+        # tags = getattr(obj, 'tags_{}'.format(obj.language))
+        # if tags is not None:
+        #     autocomplete_string += " ".join(tags)
         return autocomplete_string
 
     def get_model(self):
