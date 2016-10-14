@@ -51,7 +51,7 @@ class ReadOnlyGeoServiceMetadataAdmin(admin.ModelAdmin):
 
     list_display = ['api_id', 'language', 'title', 'publication_year', 'abstract', 'tag_list_display', 'modified']
     list_per_page = 10
-    list_filter = ['language', 'publication_year']
+    list_filter = ['language', 'publication_year', 'imported']
     ordering = ['-modified', ]
     search_fields = GEO_SERVICE_METADATA_AGREED_FIELDS
     readonly_fields = GEO_SERVICE_METADATA_AGREED_FIELDS
