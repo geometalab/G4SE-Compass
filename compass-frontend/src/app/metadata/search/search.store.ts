@@ -12,6 +12,7 @@ import {SearchService} from "./search.service";
 @Injectable()
 export class SearchStore {
   private _searchResults: BehaviorSubject<SearchResult[]> = new BehaviorSubject([]);
+  private _autocompleteSearchResults: BehaviorSubject<SearchResult[]> = new BehaviorSubject([]);
   private _count: BehaviorSubject<number> = new BehaviorSubject(0);
   private _next: BehaviorSubject<URL> = new BehaviorSubject(null);
   private _previous: BehaviorSubject<URL> = new BehaviorSubject(null);
@@ -22,6 +23,10 @@ export class SearchStore {
 
   get searchResults() {
     return this._searchResults.asObservable();
+  }
+
+  get autocompleteSearchResults() {
+    return this._autocompleteSearchResults.asObservable();
   }
 
   get count() {
@@ -35,6 +40,21 @@ export class SearchStore {
   get previous() {
     return this._previous.asObservable();
   }
+
+  autocomplete(params: SearchParameters) {
+    let obs = this.searchService.getSearchResultList(params);
+    obs.subscribe(
+      res => {
+        let results = res.json();
+        let searchResults = <SearchResult[]>results["results"];
+        if (searchResults.length > 0) {
+          this._autocompleteSearchResults.next(searchResults);
+        }
+      },
+      err => console.log("Error retrieving...")
+    );
+  }
+
 
   search(params: SearchParameters) {
     let obs = this.searchService.getSearchResultList(params);
@@ -51,7 +71,7 @@ export class SearchStore {
           this._next.next(next);
           this._previous.next(previous);
         },
-        err => console.log("Error retrieving Todos")
+        err => console.log("Error retrieving...")
     );
   }
 }

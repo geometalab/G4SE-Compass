@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {SearchResult} from "./search-result";
 import {Router} from "@angular/router";
 import {SearchParameters} from "./search-parameters";
-import {SearchService} from "./search.service";
 import {SearchStore} from "./search.store";
+import {Subject, Observable} from "rxjs";
+import {SearchResult} from "./search-result";
 
 
 @Component({
@@ -18,17 +18,37 @@ export class SearchComponent implements OnInit {
   maxSize: number = 5; // maxNumberButtonsVisible
 
   private searchParams: SearchParameters = new SearchParameters();
+  private searchTerms = new Subject<string>();
+  private searchResults = new Observable<SearchResult[]>();
+  private autocompleteSearchResults = new Observable<SearchResult[]>();
+  private searchCount = new Observable<number>();
 
   constructor(
     private searchStore: SearchStore,
-    private router: Router
+    private router: Router,
   ) { }
 
   ngOnInit() {
     this.searchParams.language = 'de';
     this.searchParams.page = 1;
     this.searchParams.page_size = this.itemsPerPage;
-    this.executeSearch(null);
+    this.searchTerms
+      .debounceTime(300)        // wait for 300ms pause in events
+      .distinctUntilChanged()   // ignore if next search term is same as previous
+      .subscribe(term => {
+          this.searchStore.search(this.searchParams);
+        return null;
+        }
+        );
+    this.searchCount = this.searchStore.count;
+    this.searchResults = this.searchStore.searchResults;
+    this.autocompleteSearchResults = this.searchStore.autocompleteSearchResults;
+  }
+
+  search(term: string): void {
+    this.searchParams.search = term;
+    this.searchStore.autocomplete(this.searchParams);
+    this.searchTerms.next(term);
   }
 
   executeSearch(event:any): void {
@@ -44,6 +64,5 @@ export class SearchComponent implements OnInit {
   private getMetadataList(): void {
     this.searchStore.search(this.searchParams);
   }
-
 
 }

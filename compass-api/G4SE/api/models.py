@@ -89,7 +89,7 @@ class GeoServiceMetadata(models.Model):
     title = models.CharField(_('title'), max_length=255)
     abstract = models.TextField(_('abstract'))
     publication_year = models.IntegerField(_('publication year'))
-    publication_lineage = models.CharField(_('history'), max_length=255, blank=True, null=True)
+    publication_lineage = models.TextField(_('history'), blank=True, null=True)
     is_latest = models.BooleanField(_('latest of series'), max_length=255, default=False)
     geography = models.CharField(_('geography'), max_length=255, default='Schweiz')
     extent = models.CharField(

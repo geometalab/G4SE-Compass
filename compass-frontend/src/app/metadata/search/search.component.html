@@ -3,7 +3,11 @@
   <form class="search" #searchBox>
     <div class="col-sm-12 last">
       <div class="input-group">
-        <input name="searchTerm" [(ngModel)]="searchParams.search" class="form-control" />
+        <input #searchBox name="searchTerm" (keyup)="search(searchBox.value)" (select)="search(searchBox.value)" class="form-control" />
+        <!--<input #searchBox name="searchTerm" list="autocomplete-suggestions" (keyup)="search(searchBox.value)" (select)="search(searchBox.value)" class="form-control" />-->
+        <!--<datalist id="autocomplete-suggestions">-->
+          <!--<option *ngFor="let searchResult of autocompleteSearchResults | async" value='"{{searchResult.autocomplete}}"' (select)="search(searchBox.value)">-->
+        <!--</datalist>-->
         <span class="input-group-btn">
             <button class="btn btn-secondary search-button" (click)="executeSearch($event)">Search</button>
         </span>
@@ -46,13 +50,13 @@
 
 <!-- paginator -->
 <pre>
-  Results Total: <strong>{{(searchStore.count | async)}}</strong><span [hidden]="searchParams.search"> (showing all records)</span><span [hidden]="!searchParams.ordering"> | <strong>{{searchParams.ordering}}</strong></span>
+  Results Total: <strong>{{(searchCount | async)}}</strong><span [hidden]="searchParams.search"> (showing all records)</span><span [hidden]="!searchParams.ordering"> | <strong>{{searchParams.ordering}}</strong></span>
 </pre>
 
-<div [hidden]="(searchStore.count | async) == 0" class="row">
+<div [hidden]="(searchCount | async) == 0" class="row">
   <div class="col-sm-6">
     <pagination
-      [totalItems]="(searchStore.count | async)"
+      [totalItems]="(searchCount | async)"
       [(ngModel)]="searchParams.page"
       [maxSize]="maxSize"
       (pageChanged)="pageChanged($event)"
@@ -65,7 +69,7 @@
 <!-- Result List -->
 <my-spinner [isRunning]="searchParams.loading" [delay]="100"></my-spinner>
 
-<div *ngFor="let searchResult of searchStore.searchResults | async" class="panel panel-info">
+<div *ngFor="let searchResult of searchResults | async" class="panel panel-info">
   <div [tooltipHtml]="searchResult.abstract | slice:0:100 | linky"
        class="panel-heading cursor-pointer" (click)="searchResult.showDetails = !searchResult.showDetails">
     <div class="row">
@@ -118,9 +122,9 @@
   </div>
 </div>
 
-<div [hidden]="(searchStore.count | async) == 0">
+<div [hidden]="(searchCount | async) == 0">
   <pagination
-    [totalItems]="(searchStore.count | async)"
+    [totalItems]="(searchCount | async)"
     [(ngModel)]="searchParams.page"
     [maxSize]="maxSize"
     (pageChanged)="pageChanged($event)"
