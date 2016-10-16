@@ -4,6 +4,7 @@
 #
 #    pip-compile --output-file dev-requirements.txt dev-requirements.in
 #
+beautifulsoup4==4.5.1
 brotlipy==0.5.1
 cffi==1.8.2               # via brotlipy
 coreapi==1.32.3           # via django-rest-swagger, openapi-codec
