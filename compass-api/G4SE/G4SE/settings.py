@@ -165,20 +165,32 @@ REST_FRAMEWORK = {
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 # HAYSTACK CONFIGURATION
-DEFAULT_INDEX_SETUP = {
+ELASTIC_SEARCH_INDEX_SETUP = {
     "settings": {
         "index": {
             "analysis": {
                 "analyzer": {
                     "ngram_analyzer": {
                         "type": "custom",
-                        "tokenizer": "standard",
+                        "tokenizer": "haystack_ngram_tokenizer",
                         "filter": ["haystack_ngram", "lowercase"]
                     },
                     "edgengram_analyzer": {
                         "type": "custom",
-                        "tokenizer": "standard",
+                        "tokenizer": "haystack_edgengram_tokenizer",
                         "filter": ["haystack_edgengram", "lowercase"]
+                    },
+                    "german_stemmer": {
+                        "tokenizer": "standard",
+                        "filter": ["standard", "lowercase", "german_stemmer"],
+                    },
+                    "english_stemmer": {
+                        "tokenizer": "standard",
+                        "filter": ["standard", "lowercase", "english_stemmer"],
+                    },
+                    "french_stemmer": {
+                        "tokenizer": "standard",
+                        "filter": ["standard", "lowercase", "french_stemmer"],
                     },
                 },
                 "tokenizer": {
@@ -205,38 +217,22 @@ DEFAULT_INDEX_SETUP = {
                         "min_gram": 2,
                         "max_gram": 15
                     },
+                    "german_stemmer": {
+                        "type": "stemmer",
+                        "name": "light_german",
+                    },
+                    "english_stemmer": {
+                        "type": "stemmer",
+                        "name": "english",
+                    },
+                    "french_stemmer": {
+                        "type": "stemmer",
+                        "name": "light_french",
+                    },
                 }
             }
         },
     },
-}
-
-GERMAN_INDEX_SETTINGS = DEFAULT_INDEX_SETUP.copy()
-GERMAN_INDEX_SETTINGS["settings"]["index"]["analysis"]["analyzer"]["german_stemmer"] = {
-    "tokenizer": "standard",
-    "filter": ["standard", "lowercase", "german_stemmer"],
-}
-GERMAN_INDEX_SETTINGS["settings"]["index"]["analysis"]["filter"]["german_stemmer"] = {
-    "type": "stemmer",
-    "name": "german",
-}
-ENGLISH_INDEX_SETTINGS = DEFAULT_INDEX_SETUP.copy()
-ENGLISH_INDEX_SETTINGS["settings"]["index"]["analysis"]["analyzer"]["english_stemmer"] = {
-    "tokenizer": "standard",
-    "filter": ["standard", "lowercase", "english_stemmer"],
-}
-ENGLISH_INDEX_SETTINGS["settings"]["index"]["analysis"]["filter"]["english_stemmer"] = {
-    "type": "stemmer",
-    "name": "english",
-}
-FRENCH_INDEX_SETTINGS = DEFAULT_INDEX_SETUP.copy()
-FRENCH_INDEX_SETTINGS["settings"]["index"]["analysis"]["analyzer"]["french_stemmer"] = {
-    "tokenizer": "standard",
-    "filter": ["standard", "lowercase", "french_stemmer"],
-}
-FRENCH_INDEX_SETTINGS["settings"]["index"]["analysis"]["filter"]["french_stemmer"] = {
-    "type": "stemmer",
-    "name": "english",
 }
 
 HAYSTACK_CONNECTIONS_URL = os.environ.get('ELASTIC_SEARCH_URL', 'http://localhost:9200/')
@@ -252,6 +248,9 @@ HAYSTACK_CONNECTIONS = {
             'api.search_indexes.GermanGeoServiceMetadataIndex',
             'api.search_indexes.FrenchGeoServiceMetadataIndex',
         ],
+        "OPTIONS": {
+            **ELASTIC_SEARCH_INDEX_SETUP,
+        },
     },
     'en': {
         'ENGINE': 'configurable_elastic_search_backend.backends.EnglishConfigurableElasticEngine',
@@ -263,7 +262,7 @@ HAYSTACK_CONNECTIONS = {
             'api.search_indexes.FrenchGeoServiceMetadataIndex',
         ],
         "OPTIONS": {
-            **ENGLISH_INDEX_SETTINGS,
+            **ELASTIC_SEARCH_INDEX_SETUP,
         },
     },
     'de': {
@@ -276,7 +275,7 @@ HAYSTACK_CONNECTIONS = {
             'api.search_indexes.FrenchGeoServiceMetadataIndex',
         ],
         "OPTIONS": {
-            **GERMAN_INDEX_SETTINGS,
+            **ELASTIC_SEARCH_INDEX_SETUP,
         },
     },
     'fr': {
@@ -289,7 +288,7 @@ HAYSTACK_CONNECTIONS = {
             'api.search_indexes.GermanGeoServiceMetadataIndex',
         ],
         "OPTIONS": {
-            **FRENCH_INDEX_SETTINGS,
+            **ELASTIC_SEARCH_INDEX_SETUP,
         },
     },
 }
