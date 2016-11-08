@@ -13,3 +13,4 @@ drf-haystack
 elasticsearch<2.0.0
 schedule
 beautifulsoup4
+pysolr

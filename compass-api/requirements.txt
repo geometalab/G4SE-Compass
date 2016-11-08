@@ -23,8 +23,9 @@ netaddr==0.7.18
 openapi-codec==1.0.0      # via django-rest-swagger
 psycopg2==2.6.2
 pycparser==2.14           # via cffi
+pysolr==3.6.0
 python-dateutil==2.5.3    # via drf-haystack
-requests==2.11.1          # via coreapi
+requests==2.11.1          # via coreapi, pysolr
 schedule==0.3.2
 simplejson==3.8.2         # via django-rest-swagger
 six==1.10.0               # via django-environ, python-dateutil

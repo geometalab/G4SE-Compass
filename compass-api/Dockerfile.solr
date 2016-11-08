@@ -1,0 +1,6 @@
+FROM solr:6-alpine
+
+MAINTAINER Geometalab <geometalab@hsr.ch>
+RUN mkdir -p /opt/solr/server/solr/mytest
+ADD solr_schema.xml /opt/solr/server/solr/mytest/solr_schema.xml
+

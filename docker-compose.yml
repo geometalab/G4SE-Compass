@@ -4,6 +4,19 @@ services:
     image: elasticsearch:1
     ports:
       - "9200:9200"
+  solr:
+    build:
+      context: ./compass-api
+      dockerfile: Dockerfile.solr
+    image: solr:6-alpine
+    volumes:
+      - data:/opt/solr/server/solr/mycores
+    ports:
+      - "8983:8983"
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - mytest
   api:
     extends:
       file: common.yml
@@ -61,3 +74,4 @@ services:
       - VIRTUAL_HOST=localhost,127.0.0.1
 volumes:
   api-static: {}
+  data: {}

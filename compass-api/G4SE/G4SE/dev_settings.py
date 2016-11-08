@@ -29,3 +29,53 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
         'SHOW_TOOLBAR_CALLBACK': lambda x: True
     }
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://localhost:8983/solr/default',
+        'TIMEOUT': 60 * 5,
+        'INCLUDE_SPELLING': True,
+        'BATCH_SIZE': 10,
+        'EXCLUDED_INDEXES': [
+            'api.search_indexes.EnglishGeoServiceMetadataIndex',
+            'api.search_indexes.GermanGeoServiceMetadataIndex',
+            'api.search_indexes.FrenchGeoServiceMetadataIndex',
+        ],
+    },
+    'en': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://localhost:8983/solr/en',
+        'TIMEOUT': 60 * 5,
+        'INCLUDE_SPELLING': True,
+        'BATCH_SIZE': 10,
+        'EXCLUDED_INDEXES': [
+            'api.search_indexes.GeoServiceMetadataIndex',
+            'api.search_indexes.GermanGeoServiceMetadataIndex',
+            'api.search_indexes.FrenchGeoServiceMetadataIndex',
+        ],
+    },
+    'de': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://localhost:8983/solr/de',
+        'TIMEOUT': 60 * 5,
+        'INCLUDE_SPELLING': True,
+        'BATCH_SIZE': 10,
+        'EXCLUDED_INDEXES': [
+            'api.search_indexes.GeoServiceMetadataIndex',
+            'api.search_indexes.EnglishGeoServiceMetadataIndex',
+            'api.search_indexes.FrenchGeoServiceMetadataIndex',
+        ],
+    },
+    'fr': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://localhost:8983/solr/fr',
+        'TIMEOUT': 60 * 5,
+        'INCLUDE_SPELLING': True,
+        'BATCH_SIZE': 10,
+        'EXCLUDED_INDEXES': [
+            'api.search_indexes.GeoServiceMetadataIndex',
+            'api.search_indexes.EnglishGeoServiceMetadataIndex',
+            'api.search_indexes.GermanGeoServiceMetadataIndex',
+        ],
+    },
+}
