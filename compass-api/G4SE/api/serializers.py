@@ -96,5 +96,6 @@ class GeoServiceMetadataSearchSerializer(HaystackSerializer):
             "text", "title", "abstract", "geography", "collection", "dataset",
             "autocomplete", "api_id", "visibility", "publication_year",
             "service_type", "source", "highlighted",
+            "keywords_en", "keywords_de", "keywords_fr",
         ]
 

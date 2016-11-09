@@ -2,6 +2,7 @@ import logging
 
 from drf_haystack.filters import HaystackHighlightFilter, HaystackFilter
 from drf_haystack.viewsets import HaystackViewSet
+from haystack.backends import SQ
 from haystack.inputs import Raw, Clean
 from haystack.query import SearchQuerySet
 from rest_framework import filters
@@ -111,6 +112,16 @@ class GeoServiceMetadataSearchView(HaystackViewSet):
         query_string = self.request.GET.get('search', None)
         if query_string is None or query_string == '':
             return queryset
-        cleaned_query_string = Clean(query_string)
-        sqs_raw = queryset.filter(text=Raw(cleaned_query_string.query_string))
+        cleaned_query_string = Raw(Clean(query_string).query_string)
+        keyword_search = {'keywords_{}'.format(using): cleaned_query_string}
+
+        sqs_raw = queryset.filter(
+            SQ(text=cleaned_query_string) |
+            SQ(abstract=cleaned_query_string) |
+            SQ(title=cleaned_query_string) |
+            SQ(**keyword_search) |
+            SQ(geography=cleaned_query_string) |
+            SQ(collection=cleaned_query_string) |
+            SQ(dataset=cleaned_query_string)
+        )
         return sqs_raw
