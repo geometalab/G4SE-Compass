@@ -16,7 +16,7 @@ class GeoServiceMetadataIndex(indexes.BasicSearchIndex, indexes.Indexable):
     collection = fields.CharField(model_attr="collection", null=True)
     dataset = fields.CharField(model_attr="dataset", null=True, analyzer=STEMMER)
     publication_year = IntegerField(model_attr="publication_year")
-    is_latest = BooleanField(model_attr="is_latest")
+    is_latest = BooleanField(model_attr="is_latest", null=True)
     service_type = fields.CharField(model_attr="service_type", null=True)
     source = fields.CharField(model_attr="source", null=True)
     visibility = fields.CharField(model_attr="visibility")
