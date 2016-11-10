@@ -8,8 +8,6 @@ services:
     extends:
       file: common.yml
       service: backend
-    ports:
-      - "8000:8000"
     environment:
       - ALLOWED_HOSTS=['*']
 #      You probably want to set these on the live-server
