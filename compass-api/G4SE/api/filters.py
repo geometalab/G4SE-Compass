@@ -1,6 +1,7 @@
 from django.db.models import IntegerField
 from django.db.models.functions import Cast
 from drf_haystack.filters import HaystackFilter
+from haystack.inputs import Raw
 from rest_framework import filters
 
 
@@ -105,7 +106,7 @@ class IsLatestSearchRecordFilter(HaystackFilter):
     def filter_queryset(self, request, queryset, view):
         is_latest = request.query_params.get(self.param, None)
         if is_latest is not None:
-            queryset = queryset.order_by('-is_latest')
+            queryset = queryset.exclude(is_latest='false')  # is equal to is_latest__exact='0'
         return queryset
 
     def get_fields(self, view):
