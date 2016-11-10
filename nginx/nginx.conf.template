@@ -70,13 +70,13 @@ server {
     location = /favicon.ico { access_log off; log_not_found off; }
 
     location /api {
-        proxy_pass http://api;
-        proxy_pass_request_headers on;
+        include uwsgi_params;
+        uwsgi_pass api;
     }
 
     location /admin {
-        proxy_pass http://api;
-        proxy_pass_request_headers on;
+        include uwsgi_params;
+        uwsgi_pass api;
     }
 
     location / {
