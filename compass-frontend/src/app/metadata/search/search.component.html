@@ -14,13 +14,8 @@
       </div>
     </div>
     <div class="col-sm-12">
-        <span class="small pull-right cursor-pointer" (click)="isCollapsedSearchOptions = !isCollapsedSearchOptions">
-          <span [hidden]="!isCollapsedSearchOptions">Hide</span>
-          <span [hidden]="isCollapsedSearchOptions">Show</span>
-          search options
-        </span>
       <div class="well well-sm">
-        <div [collapse]="!isCollapsedSearchOptions">
+        <div>
           <label for="languageSelector">Search in language:</label>
           <select [(ngModel)]="searchParams.language" (ngModelChange)="executeSearch($event)" id="languageSelector" name="language">
             <option value="en">English</option>
@@ -32,7 +27,7 @@
             <input name="from-year" id="fromYearSelector" type="text" [(ngModel)]="searchParams.from_year" (ngModelChange)="executeSearch($event)" />
             <label for="toYearSelector">To Year:</label>
             <input name="to-year" id="toYearSelector" type="text" [(ngModel)]="searchParams.to_year" (ngModelChange)="executeSearch($event)" />
-            <label for="isLatest">Show Latest First:</label>
+            <label for="isLatest">Exclude not latest entries (where available):</label>
             <input name="is-latest" id="isLatest" type="checkbox" [(ngModel)]="searchParams.is_latest" (ngModelChange)="executeSearch($event)" />
           </div>
           <!--<label for="orderingSelector">Ordering:</label>-->
