@@ -12,6 +12,9 @@ services:
       - "8000:8000"
     environment:
       - ALLOWED_HOSTS=['*']
+#      You probably want to set these on the live-server
+#      - SENTRY_DSN=the dsn of sentry
+#      - SENTRY_RELEASE=staging/production or whatever
     links:
       - db:database
       - elasticsearch:elasticsearch

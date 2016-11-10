@@ -294,3 +294,55 @@ HAYSTACK_CONNECTIONS = {
 }
 HAYSTACK_DOCUMENT_FIELD = 'text'
 HAYSTACK_SIGNAL_PROCESSOR = 'api.signals.GeoServiceMetadataRealtimeSignalProcessor'
+
+# ERROR Logging
+SENTRY_DSN = env.str('SENTRY_DSN', default=False)
+if SENTRY_DSN:
+    INSTALLED_APPS.append('raven.contrib.django.raven_compat')
+    RAVEN_CONFIG = {
+        'dsn': SENTRY_DSN,
+        'release': env.str('SENTRY_RELEASE', default='unknown')
+    }
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': True,
+        'formatters': {
+            'verbose': {
+                'format': '%(levelname)s %(asctime)s %(module)s '
+                          '%(process)d %(thread)d %(message)s'
+            },
+        },
+        'handlers': {
+            'sentry': {
+                'level': 'ERROR',  # To capture more than ERROR, change to WARNING, INFO, etc.
+                'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+                'tags': {'custom-tag': 'x'},
+            },
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'verbose'
+            }
+        },
+        'loggers': {
+            'root': {
+                'level': 'WARNING',
+                'handlers': ['sentry'],
+            },
+            'django.db.backends': {
+                'level': 'ERROR',
+                'handlers': ['console'],
+                'propagate': False,
+            },
+            'raven': {
+                'level': 'DEBUG',
+                'handlers': ['console'],
+                'propagate': False,
+            },
+            'sentry.errors': {
+                'level': 'DEBUG',
+                'handlers': ['console'],
+                'propagate': False,
+            },
+        },
+    }
