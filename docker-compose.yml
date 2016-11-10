@@ -15,6 +15,7 @@ services:
 #      You probably want to set these on the live-server
 #      - SENTRY_DSN=the dsn of sentry
 #      - SENTRY_RELEASE=staging/production or whatever
+#      - WORKER_COUNT=2 # a practice value, which is rough but not too way off: number of cores/cpus * 2 + 1
     links:
       - db:database
       - elasticsearch:elasticsearch
