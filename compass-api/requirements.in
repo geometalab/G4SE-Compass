@@ -9,7 +9,7 @@ django-cors-middleware
 whitenoise
 brotlipy
 grako
-drf-haystack
+drf-haystack==v1.6.0rc3
 elasticsearch<2.0.0
 schedule
 beautifulsoup4
