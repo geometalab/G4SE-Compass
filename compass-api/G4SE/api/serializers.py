@@ -45,17 +45,6 @@ class EditRecordSerializer(serializers.ModelSerializer):
         fields = GEO_SERVICE_METADATA_AGREED_FIELDS
 
 
-def get_all_field_names(model):
-    from itertools import chain
-    return list(set(chain.from_iterable(
-        (field.name, field.attname) if hasattr(field, 'attname') else (field.name,)
-        for field in model._meta.get_fields()
-        # For complete backwards compatibility, you may want to exclude
-        # GenericForeignKey from the results.
-        if not (field.many_to_one and field.related_model is None)
-    )))
-
-
 class GeoServiceMetadataSearchSerializer(HaystackSerializer):
     class Meta:
         # The `index_classes` attribute is a list of which search indexes
