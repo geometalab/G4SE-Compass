@@ -1,25 +1,24 @@
 import logging
+from collections import OrderedDict
 
-from drf_haystack.filters import HaystackHighlightFilter, HaystackFilter
+from drf_haystack.filters import HaystackHighlightFilter
 from drf_haystack.viewsets import HaystackViewSet
-from haystack.backends import SQ
-from haystack.inputs import Raw, Clean, AutoQuery
 from haystack.query import SearchQuerySet
 from rest_framework import filters
 from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.decorators import api_view, renderer_classes, list_route
 from rest_framework import response, schemas
+from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
 from api.filters import LimitRecordFilter, DateLimitRecordFilter, DateLimitSearchRecordFilter, \
     IsLatestSearchRecordFilter, MetadataSearchFilter
 from api.helpers.helpers import is_internal
+from api.helpers.input import ElasticSearchExtendedAutoQuery
 from api.models import GeoServiceMetadata
-from api.search_indexes import GeoServiceMetadataIndex, EnglishGeoServiceMetadataIndex, GermanGeoServiceMetadataIndex, \
-    FrenchGeoServiceMetadataIndex
 from api.serializers import EditRecordSerializer, GeoServiceMetadataSearchSerializer, \
     GeoServiceMetadataSerializer
 
@@ -107,3 +106,17 @@ class GeoServiceMetadataSearchView(HaystackViewSet):
         if not internal:
             qs = qs.filter(visibility=GeoServiceMetadata.VISIBILITY_PUBLIC)
         return qs
+
+    @list_route()
+    def actual(self, request):
+        query_string = request.GET.get('search', '')
+        if query_string != '':
+            using = request.GET.get('language', self.FALLBACK_LANGUAGE)
+            cleaned_query_string = ElasticSearchExtendedAutoQuery(query_string)
+            searched_for = cleaned_query_string.prepare(SearchQuerySet().using(using).query)
+        else:
+            searched_for = ''
+        return Response(OrderedDict([
+            ('search', query_string),
+            ('actual_search', searched_for),
+        ]))
