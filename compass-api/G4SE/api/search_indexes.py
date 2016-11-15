@@ -6,7 +6,7 @@ from configurable_elastic_search_backend import fields
 from api.models import GeoServiceMetadata
 
 
-class GeoServiceMetadataIndex(indexes.BasicSearchIndex, indexes.Indexable):
+class GeoServiceMetadataIndex(indexes.SearchIndex, indexes.Indexable):
     STEMMER = 'german_stemmer'
     text = fields.CharField(document=True, use_template=True, analyzer=STEMMER)
     api_id = fields.CharField(model_attr="api_id", boost=0.1)

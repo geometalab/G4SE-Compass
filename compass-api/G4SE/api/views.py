@@ -1,25 +1,24 @@
 import logging
+from collections import OrderedDict
 
-from drf_haystack.filters import HaystackHighlightFilter, HaystackFilter
+from drf_haystack.filters import HaystackHighlightFilter
 from drf_haystack.viewsets import HaystackViewSet
-from haystack.backends import SQ
-from haystack.inputs import Raw, Clean
 from haystack.query import SearchQuerySet
 from rest_framework import filters
 from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.decorators import api_view, renderer_classes, list_route
 from rest_framework import response, schemas
+from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
 from api.filters import LimitRecordFilter, DateLimitRecordFilter, DateLimitSearchRecordFilter, \
-    IsLatestSearchRecordFilter
+    IsLatestSearchRecordFilter, MetadataSearchFilter
 from api.helpers.helpers import is_internal
+from api.helpers.input import ElasticSearchExtendedAutoQuery
 from api.models import GeoServiceMetadata
-from api.search_indexes import GeoServiceMetadataIndex, EnglishGeoServiceMetadataIndex, GermanGeoServiceMetadataIndex, \
-    FrenchGeoServiceMetadataIndex
 from api.serializers import EditRecordSerializer, GeoServiceMetadataSearchSerializer, \
     GeoServiceMetadataSerializer
 
@@ -87,41 +86,37 @@ class GeoServiceMetadataSearchView(HaystackViewSet):
     FALLBACK_LANGUAGE = GeoServiceMetadata.ENGLISH
     pagination_class = StandardResultsSetPagination
     index_models = [
-        GeoServiceMetadataIndex,
-        EnglishGeoServiceMetadataIndex,
-        GermanGeoServiceMetadataIndex,
-        FrenchGeoServiceMetadataIndex,
+        GeoServiceMetadata,
     ]
     document_uid_field = "api_id"
     filter_backends = [
-        HaystackFilter,
         HaystackHighlightFilter,
         DateLimitSearchRecordFilter,
         IsLatestSearchRecordFilter,
+        MetadataSearchFilter,
     ]
     serializer_class = GeoServiceMetadataSearchSerializer
 
-    def get_queryset(self):
+    def get_queryset(self, index_models=[]):
         using = self.request.GET.get('language', self.FALLBACK_LANGUAGE)
-        queryset = SearchQuerySet().using(using)
+        qs = super().get_queryset(index_models).using(using)
+
         internal = self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR'])
         # TODO: make this into an optional list of publicity
         if not internal:
-            queryset = queryset.filter(visibility=GeoServiceMetadata.VISIBILITY_PUBLIC)
+            qs = qs.filter(visibility=GeoServiceMetadata.VISIBILITY_PUBLIC)
+        return qs
 
-        query_string = self.request.GET.get('search', None)
-        if query_string is None or query_string == '':
-            return queryset
-        cleaned_query_string = Raw(Clean(query_string).query_string)
-        keyword_search = {'keywords_{}'.format(using): cleaned_query_string}
-
-        sqs_raw = queryset.filter(
-            SQ(text=cleaned_query_string) |
-            SQ(abstract=cleaned_query_string) |
-            SQ(title=cleaned_query_string) |
-            SQ(**keyword_search) |
-            SQ(geography=cleaned_query_string) |
-            SQ(collection=cleaned_query_string) |
-            SQ(dataset=cleaned_query_string)
-        )
-        return sqs_raw
+    @list_route()
+    def actual(self, request):
+        query_string = request.GET.get('search', '')
+        if query_string != '':
+            using = request.GET.get('language', self.FALLBACK_LANGUAGE)
+            cleaned_query_string = ElasticSearchExtendedAutoQuery(query_string)
+            searched_for = cleaned_query_string.prepare(SearchQuerySet().using(using).query)
+        else:
+            searched_for = ''
+        return Response(OrderedDict([
+            ('search', query_string),
+            ('actual_search', searched_for),
+        ]))

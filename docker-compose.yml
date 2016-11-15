@@ -2,6 +2,8 @@ version: '2'
 services:
   elasticsearch:
     image: elasticsearch:1
+#    environment:
+#      - es.logger.level=TRACE
     ports:
       - "9200:9200"
   api:

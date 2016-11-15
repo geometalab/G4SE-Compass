@@ -1,8 +1,10 @@
 from django.db.models import IntegerField
 from django.db.models.functions import Cast
 from drf_haystack.filters import HaystackFilter
-from haystack.inputs import Raw
+from haystack.backends import SQ
 from rest_framework import filters
+
+from api.helpers.input import ElasticSearchExtendedAutoQuery
 
 
 class DateLimitRecordFilter(filters.BaseFilterBackend):
@@ -107,6 +109,33 @@ class IsLatestSearchRecordFilter(HaystackFilter):
         is_latest = request.query_params.get(self.param, None)
         if is_latest is not None:
             queryset = queryset.exclude(is_latest='false')  # is equal to is_latest__exact='0'
+        return queryset
+
+    def get_fields(self, view):
+        return [self.param]
+
+
+class MetadataSearchFilter(HaystackFilter):
+    FALLBACK_LANGUAGE = 'en'
+    param = 'search'
+
+    def filter_queryset(self, request, queryset, view):
+        query_string = request.query_params.get(self.param, None)
+        language = request.query_params.get('language', self.FALLBACK_LANGUAGE)
+
+        if query_string is not None and query_string != '':
+            cleaned_query_string = ElasticSearchExtendedAutoQuery(query_string)
+            keyword_search = {'keywords_{}'.format(language): cleaned_query_string}
+            queryset = queryset.filter(
+                SQ(content=cleaned_query_string) |
+                SQ(text=cleaned_query_string) |
+                SQ(abstract=cleaned_query_string) |
+                SQ(title=cleaned_query_string) |
+                SQ(**keyword_search) |
+                SQ(geography=cleaned_query_string) |
+                SQ(collection=cleaned_query_string) |
+                SQ(dataset=cleaned_query_string)
+            )
         return queryset
 
     def get_fields(self, view):
