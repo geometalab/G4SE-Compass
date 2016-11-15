@@ -8,7 +8,7 @@ class ConfigurableElasticBackend(ElasticsearchSearchBackend):
     RESERVED_CHARACTERS = [
         char for char in ElasticsearchSearchBackend.RESERVED_CHARACTERS
         if char not in [
-            '"', '~', '*', '?', '(', ')',
+            '"', '~', '*', '?', '(', ')', '^',
         ]
     ]
 
