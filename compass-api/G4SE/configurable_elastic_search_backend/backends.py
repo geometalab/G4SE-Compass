@@ -4,6 +4,14 @@ from haystack.backends.elasticsearch_backend import ElasticsearchSearchBackend, 
 class ConfigurableElasticBackend(ElasticsearchSearchBackend):
     DEFAULT_ANALYZER = "snowball"
 
+    # removed all allowed characters which a user should be allowed to define
+    RESERVED_CHARACTERS = [
+        char for char in ElasticsearchSearchBackend.RESERVED_CHARACTERS
+        if char not in [
+            '"', '~', '*', '?', '(', ')', '^',
+        ]
+    ]
+
     def __init__(self, connection_alias, **connection_options):
         super().__init__(connection_alias, **connection_options)
 

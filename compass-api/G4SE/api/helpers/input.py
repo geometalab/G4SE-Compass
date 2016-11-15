@@ -1,5 +1,8 @@
 import re
-from haystack.inputs import Exact, Not, Clean, BaseInput
+
+from haystack.inputs import Exact, Clean, BaseInput
+
+from api.helpers.parse_helper import has_balanced_parentheses, matched_parens
 
 
 class ElasticSearchExtendedAutoQuery(BaseInput):
@@ -17,13 +20,16 @@ class ElasticSearchExtendedAutoQuery(BaseInput):
         'OR',
         'AND',
         'NOT',
+        'TO',
     ]
 
-    to_be_removed_special_chars = r'[()]'  # regex expression
+    to_be_removed_special_chars_translation_table = {ord(c): None for c in matched_parens}
 
     def prepare(self, query_obj):
         query_string = super(ElasticSearchExtendedAutoQuery, self).prepare(query_obj)
-        query_string = re.sub(self.to_be_removed_special_chars, '', query_string)
+        # Remove parens if they are not balanced
+        if not has_balanced_parentheses(query_string):
+            query_string = query_string.translate(self.to_be_removed_special_chars_translation_table)
         exacts = self.exact_match_re.findall(query_string)
         tokens = []
         query_bits = []
