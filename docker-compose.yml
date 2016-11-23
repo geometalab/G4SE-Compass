@@ -20,16 +20,6 @@ services:
     links:
       - db:database
       - elasticsearch:elasticsearch
-  harvester:
-    image: geometalab/g4se-api-harvester
-    extends:
-      file: common.yml
-      service: backend
-    command: python3 scheduled_import_geovite.py
-    entrypoint: wait_only_docker-entrypoint.sh
-    links:
-      - db:database
-      - elasticsearch:elasticsearch
   db:
     image: geometalab/g4se-api-db
     build:
