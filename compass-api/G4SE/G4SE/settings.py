@@ -181,14 +181,17 @@ ELASTIC_SEARCH_INDEX_SETUP = {
                         "filter": ["haystack_edgengram", "lowercase"]
                     },
                     "german_stemmer": {
+                        "type": "german",
                         "tokenizer": "standard",
                         "filter": ["standard", "lowercase", "german_stemmer"],
                     },
                     "english_stemmer": {
+                        "type": "english",
                         "tokenizer": "standard",
                         "filter": ["standard", "lowercase", "english_stemmer"],
                     },
                     "french_stemmer": {
+                        "type": "french",
                         "tokenizer": "standard",
                         "filter": ["standard", "lowercase", "french_stemmer"],
                     },
