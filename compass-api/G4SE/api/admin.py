@@ -48,6 +48,7 @@ class ReadOnlyGeoServiceMetadata(GeoServiceMetadata):
 class ReadOnlyGeoServiceMetadataAdmin(admin.ModelAdmin):
     actions = None
     change_form_template = 'api/admin/change_form.html'
+    change_list_template = 'api/admin/change_list.html'
 
     list_display = ['api_id', 'language', 'title', 'publication_year', 'abstract', 'tag_list_display', 'modified']
     list_per_page = 10
