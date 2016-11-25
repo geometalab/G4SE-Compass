@@ -13,6 +13,7 @@ services:
       service: backend
     environment:
       - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+    entrypoint: /bin/wait_only_docker-entrypoint.sh
     command: uwsgi /uwsgi.ini --processes 2 --threads 1 --py-autoreload=3
     links:
       - db:database
@@ -22,6 +23,19 @@ services:
       - api-data:/var/data
       # remove the following line in production!
       - ./compass-api/G4SE:/G4SE
+  api-setup:
+    extends:
+      file: common.yml
+      service: backend
+    environment:
+      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+    command: echo true
+    links:
+      - db:database
+      - elasticsearch:elasticsearch
+      - redis:redis
+    volumes_from:
+      - api
   rq-worker:
     extends:
       file: common.yml
