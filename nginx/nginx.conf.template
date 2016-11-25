@@ -70,12 +70,10 @@ server {
     location = /favicon.ico { access_log off; log_not_found off; }
 
     location /api/static/ {
-        autoindex on;
         alias /var/www/g4se-api/static/;
     }
 
     location /api/media/ {
-        autoindex on;
         alias /var/www/g4se-api/media/;
     }
 
