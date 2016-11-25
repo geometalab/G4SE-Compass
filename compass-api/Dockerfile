@@ -5,13 +5,15 @@ RUN apt-get update && apt-get install -y python3-psycopg2 libev-dev
 ENV USER py
 
 ADD ./wait-for-it/wait-for-it.sh /bin/wait-for-it.sh
-ADD ./dev-requirements.txt /var/data/G4SE/dev-requirements.txt
-RUN pip3 install -r /var/data/G4SE/dev-requirements.txt
+ADD ./dev-requirements.txt /dev-requirements.txt
+RUN pip3 install -r /dev-requirements.txt
 
 ADD ./G4SE /G4SE
 COPY ./docker-entrypoint.sh /bin/docker-entrypoint.sh
 COPY ./wait_only_docker-entrypoint.sh /bin/wait_only_docker-entrypoint.sh
 COPY ./uwsgi_docker.ini /uwsgi.ini
+
+VOLUME /var/data
 
 ENTRYPOINT ["/bin/docker-entrypoint.sh"]
 
