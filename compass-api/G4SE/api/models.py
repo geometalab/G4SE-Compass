@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+
 import uuid
 
 from django.contrib.postgres.fields import ArrayField
@@ -151,6 +152,18 @@ class GeoServiceMetadata(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class GeoVITeImportData(models.Model):
+    xml_zip = models.FileField(_('zipped GeoVite XML files'), help_text=_('not existing files will be deleted'))
+    modified = models.DateTimeField(_('last modification'), auto_now=True, blank=True, null=True)
+    created = models.DateTimeField(_('created on'), auto_now_add=True)
+    is_imported = models.BooleanField(
+        _('imported'), help_text=_('has this data been imported'), default=False
+    )
+
+    def __str__(self):
+        return 'from {}'.format(self.created)
 
 
 GEO_SERVICE_METADATA_AGREED_FIELDS = [
