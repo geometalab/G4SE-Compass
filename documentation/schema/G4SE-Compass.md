@@ -1,62 +1,23 @@
-# G4SE Schema
- 
-| display name (de)             | display name (en)           | attribute name        | data type | mand. | default  | dublin core |OAI| enumeration values                        | documentation                                                                                                                    |                                            | 
-|-------------------------------|-----------------------------|-----------------------|-----------|-------|----------|-------------|---|-------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|
-| Identifikator                 | Id                          | identifier            | string    | yes   |          | identifier  | x |                                           | Identifier unique within G4SE                                                                                                    |  tbd. can be e.g. PREFIX+data_provider_id" | 
-| Metadaten-Sprache             | Metadata language           | language              | string    | yes   |          | language    | x |                                           | Language of metadata record                                                                                                      |                                            |
-| Titel                         | Title                       | title                 | string    | yes   |          | title       | x |                                           | Metadata Record title (SK: Why not attr.name 'title'?)                                                                           |                                            | 
-| Beschreibung                  | Abstract                    | abstract              | string    | yes   |          | description | x |                                           | Multi line record abstract                                                                                                       |                                            | 
-| Zeit                          | Publication year            | publication_year      | int       | yes   |          | date        | x |                                           | Year of initial publication                                                                                                      |                                            | 
-| History                       | Publication lineage         | publication_lineage   | string    | no    |          |             | x |                                           | Comma separated publication   year lineage (passed publications), ascending                                                      |                                            | 
-| Letzte Aktualisierung         | Is latest publication       | is_latest             | boolean   | no    | null     |             |   |                                           | Comma separated publication   year lineage (passed publications), ascending                                                      |                                            | 
-| Geogr. Bezugsname             | Geographical coverage       | geography             | string    | yes   | (Schweiz)| coverage    | x |                                           | Official BFS (Swiss Federal Statistical Office) geographical description. Use largest covered unit (Municipality < Canton < CH). |                                            | 
-| Geogr. Ausdehnung             | Geographical extent         | extent                | string    | no    |          |             | x |                                           | Box WKT (2D). Must be WSG84.                                                                                                     |                                            | 
-| Geodatentyp                   | Geodata type                | geodata_type          | string    | yes   |          |             | x | raster,vector,other                       | Geodatatype of original data                                                                                                     |                                            | 
-| Bezugsquelle                  | Source of original data     | source                | string    | yes   |          | creator     | x |                                           | Contract partner for original data e.g. swisstopo, Canton xy... (ev. canton dept.?)                                              |                                            | 
-| Metadaten                     | Additional metadata         | metadata_link         | URL       | yes   |          | relation    | x |                                           | URI to pdf or fileshare with several pdfs containing aditional Metadata                                                          |                                            | 
-| Zugang                        | Access to data              | access_link           | URL       | yes   |          |             | x |                                           | URI to the detailed view of the record in GeoVITe or Portal (Zugang)                                                             |                                            | 
-| Basis URL                     | Entry point                 | base_link             | string    | no    |          |             | x |                                           | Entry point ???                                                                                                                  |                                            | 
-| Gruppen-Name                  | Group                       | collection            | string    | no    |          |             |   |                                           | Group name or feature dataset ???                                                                                                |                                            | 
-| Datensatz-Name                | Dataset name                | dataset               | string    | no    |          |             |   |                                           | Dataset (in future ev. file name)                                                                                                |                                            | 
-| ArcGIS layer link             | ArcGIS layer link           | arcgis_layer_link     | URL       | no    |          |             |   |                                           | Weblink to a file (.pitem), opens a layer in ArcGIS, hosted on a G4SE share close to metadata                                    |                                            | 
-| QGIS layer link               | QGIS layer link             | qgis_layer_link       | URL       | no    |          |             |   |                                           | Weblink to a file (.pitem), opens a layer in QGIS, hosted on a G4SE share close to metadata                                      |                                            | 
-| ArcGIS symbology link         | ArcGIS symbology link       | arcgis_symbology_link | URL       | no    |          |             |   |                                           | Weblink to a ArcGIS symbology file (.lyr) hosted on a G4SE share close to metadata                                               |                                            | 
-| QGIS symbology link           | QGIS symbology link         | qgis_symbology_link   | URL       | no    |          |             |   |                                           | Weblink to a QGIS symbology file (.sld) hosted on a G4SE share close to metadata                                                 |                                            | 
-| Service-Art                   | Service type                | service_type          | string    | no    |          | format      | x | FeatureService,ImageService,MapService,DownloadService,WMS,WFS | Service type (KES: more ArcGIS Services missing?)                                                                                |                                            | 
-| Koordinatensystem             | Coordinate reference system | crs                   | string    | yes   |          |             | x | EPSG:21781,EPSG:2056,EPSG:4326,other      | CRS of original data (EPSG)                                                                                            |                                            | 
-| Nutzungsbedingungen           | Terms of use                | term_link             | URL       | yes   |          | rights      | x |                                           | URI to PDF with information about the terms of use                                                                               |                                            | 
-| Letzte Aktualitätsprüfung     | Proving date                | proved                | date      | no    |          |             | x |                                           | Most recent proving (XML Date, ISO 8601) date                                                                                    |                                            | 
-| Zugriffseinschränkungen       | Access restriction          | visibility            | string    | yes   | public   |             | x | public,test,hsr-internal                  | Metadata visibility in front end                                                                                                 |                                            | 
-| Letzte Bearbeitung            | Last modification           | modified              | datetime  | yes   | (system) |             | - |                                           | Most recent modification time                                                                                                    |                                            | 
-| Loginname Bearbeiter          | Login name                  | login_name            | string    | yes   | (system) | contributor | - |                                           | Metadata Author name                                                                                                             |                                            | 
-
-DB-internal attributes:
-* UUID
-* tsv_de
-* tsv_en
-* tsv_fr
-
-
 # Data access
 Currently dataset and collection define data access/source (accompanied with mandatory service_type). This is still unclear...!
 
 # Data sources
 ## GeoVITe - Webapp:
 * Weblink
- 
+
 ## ArcGIS REST API FeatureService:
 * ArcGIS (mit Direct Access Link)
 * ArcGIS (mit Entry Point)
 * QGIS Connector v0.x (mit Direct Access Link)
 * QGIS Connector v1.x geplant (mit Entry Point)
- 
+
 ## ArcGIS REST API MapService (new):
 * QGIS QuickMapService Plugin (mit gdal_ags.xml)
- 
-## WMS (nice-to-have): 
-* QGIS Core (mit Entry point URL) 
+
+## WMS (nice-to-have):
+* QGIS Core (mit Entry point URL)
 * QGIS QuickMapService Plugin (mit Entry point)
- 
+
 ## Examples
 ### GeoVITe:
 * Metadata language         : de
@@ -82,7 +43,7 @@ Currently dataset and collection define data access/source (accompanied with man
 * Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
 * Proving date              : 2016-01-02
 * Access restriction        : public
- 
+
 ### ArcGIS REST API FeatureService:
 * Metadata language         : de
 * Title                     : Topologisches Landschaftsmodell TLM, Fliessgewässer
@@ -107,7 +68,7 @@ Currently dataset and collection define data access/source (accompanied with man
 * Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
 * Proving date              : 2015-03-04
 * Access restriction        : public
-        
+
 ### ArcGIS REST API MapService:
 * Metadata language         : de
 * Title                     : Topologisches Landschaftsmodell TLM, Bodenbedeckung
@@ -125,14 +86,14 @@ Currently dataset and collection define data access/source (accompanied with man
 * Dataset name              : TLM_BODENBEDECKUNG
 * ArcGIS layer link         : https://geodata4edu.hsr.ch/share/TLM_BODENBEDECKUNG.pitem
 * QGIS layer link           : https://geodata4edu.hsr.ch/share/TLM_BODENBEDECKUNG.xml
-* ArcGIS symbology link     : - 
+* ArcGIS symbology link     : -
 * QGIS symbology link       : -
 * Service type              : MapService
 * CRS                       : EPSG:21781
 * Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
 * Proving date              : 2015-03-04
 * Access restriction        : public
- 
+
 ### WMS KtZH:
 * Metadata language         : de
 * Title                     : Baustellen Kantonsstrassen
