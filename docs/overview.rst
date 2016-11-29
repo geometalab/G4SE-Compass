@@ -1,12 +1,21 @@
 Overview
 --------
 
+..
+    Server (what version, RAM, etc)
+    Architektur
+    Deployment diagram
+    Scaling possibilities
+    XML-GeoVite
+    import zip -> admin
+
 Architecture
 ~~~~~~~~~~~~
 
-.. figure:: images/architecture/deployment.png
-    :width: 50%
-    :alt: map to buried treasure
+TODO: Add image for architecture (component diagram, with django, elasticsearch, postgres, redis,
+api etc and its dependencies)
+
+TODO: Add image for data processing and return while searching (U-Diagram)
 
 
 Deployment
@@ -25,7 +34,7 @@ All services run on the same hardware, as shown below.
 
 .. figure:: images/architecture/deployment.png
     :width: 50%
-    :alt: map to buried treasure
+    :alt: Deployment Diagram on the SwitchEngine
 
     Deployment Diagram as currently in use (Switch Cloud Infrastructure)
 
@@ -90,4 +99,19 @@ Using a Hetzner Server, specifically the https://www.hetzner.de/de/hosting/produ
 with 2X500GB Harddisk, 64GB RAM and 4 Cores/8 Threads without much tweaking a load up to
 600 to 700 Request per second was possible. This is more than 20 fold of what is possible
 with the server above - this method might be the most cost effective way.
+
+Data Input
+~~~~~~~~~~
+
+There are two ways for data to be entered into the system.
+
+Zipped-XML-Import
+`````````````````
+Using the Admin-Interface of Django, a zip-file containing XML-Files can be imported.
+This deletes all the previously imported data (not the ones entered manually, though).
+
+Manually added and maintained Metadata
+``````````````````````````````````````
+Using the Admin-Interface one can add, delete and change the Metadata that has not been
+imported automatically.
 
