@@ -1,6 +1,14 @@
 Overview
 --------
 
+Architecture
+~~~~~~~~~~~~
+
+.. figure:: images/architecture/deployment.png
+    :width: 50%
+    :alt: map to buried treasure
+
+
 Deployment
 ~~~~~~~~~~
 
@@ -15,7 +23,7 @@ It is powered by `Debian Jessie (Linux)`.
 
 All services run on the same hardware, as shown below.
 
-.. figure:: images/deployment/deployment.png
+.. figure:: images/architecture/deployment.png
     :width: 50%
     :alt: map to buried treasure
 
@@ -73,8 +81,8 @@ writes go only to master, and reads only to slave.
 
 The application/api should of course also be run separately for maximum benefit.
 
-Switching to a more powerfull server
-````````````````````````````````````
+Switching to a more powerful server
+```````````````````````````````````
 
 This is the same as more CPU, RAM, just that I use have a real world example.
 
