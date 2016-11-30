@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib import admin
 
-from api.models import TranslationTag, GeoServiceMetadata, GEO_SERVICE_METADATA_AGREED_FIELDS
+from api.forms import GeoVITeImportDataAdminForm
+from api.models import TranslationTag, GeoServiceMetadata, GEO_SERVICE_METADATA_AGREED_FIELDS, GeoVITeImportData
 
 
 class EditableGeoServiceMetadataForm(forms.ModelForm):
@@ -48,6 +49,7 @@ class ReadOnlyGeoServiceMetadata(GeoServiceMetadata):
 class ReadOnlyGeoServiceMetadataAdmin(admin.ModelAdmin):
     actions = None
     change_form_template = 'api/admin/change_form.html'
+    change_list_template = 'api/admin/change_list.html'
 
     list_display = ['api_id', 'language', 'title', 'publication_year', 'abstract', 'tag_list_display', 'modified']
     list_per_page = 10
@@ -57,3 +59,9 @@ class ReadOnlyGeoServiceMetadataAdmin(admin.ModelAdmin):
     readonly_fields = GEO_SERVICE_METADATA_AGREED_FIELDS
     fields = GEO_SERVICE_METADATA_AGREED_FIELDS
 admin.site.register(ReadOnlyGeoServiceMetadata, ReadOnlyGeoServiceMetadataAdmin)
+
+
+class GeoVITeImportDataAdmin(admin.ModelAdmin):
+    form = GeoVITeImportDataAdminForm
+    list_display = ['created', 'xml_zip', 'is_imported']
+admin.site.register(GeoVITeImportData, GeoVITeImportDataAdmin)

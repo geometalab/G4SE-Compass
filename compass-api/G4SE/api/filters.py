@@ -140,3 +140,17 @@ class MetadataSearchFilter(HaystackFilter):
 
     def get_fields(self, view):
         return [self.param]
+
+
+class MetadataSearchOrderingFilter(HaystackFilter):
+    param = 'ordering'
+
+    def filter_queryset(self, request, queryset, view):
+        ordering = request.query_params.get(self.param, None)
+
+        if ordering is not None and ordering != '':
+            queryset = queryset.order_by(ordering)
+        return queryset
+
+    def get_fields(self, view):
+        return [self.param]

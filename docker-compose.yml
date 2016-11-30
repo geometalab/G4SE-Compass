@@ -1,45 +1,5 @@
 version: '2'
 services:
-  elasticsearch:
-    image: elasticsearch:1
-#    environment:
-#      - es.logger.level=TRACE
-    ports:
-      - "9200:9200"
-  api:
-    extends:
-      file: common.yml
-      service: backend
-    environment:
-      - ALLOWED_HOSTS=['*']
-#      You probably want to set these on the live-server
-#      - SENTRY_DSN=the dsn of sentry
-#      - SENTRY_RELEASE=staging/production or whatever
-      - NUM_PROCESSES=4  # uwsgi settings
-      - NUM_THREADS=2  # uwsgi settings
-    links:
-      - db:database
-      - elasticsearch:elasticsearch
-  harvester:
-    image: geometalab/g4se-api-harvester
-    extends:
-      file: common.yml
-      service: backend
-    command: python3 scheduled_import_geovite.py
-    entrypoint: wait_only_docker-entrypoint.sh
-    links:
-      - db:database
-      - elasticsearch:elasticsearch
-  db:
-    image: geometalab/g4se-api-db
-    build:
-      context: ./compass-api
-      dockerfile: Dockerfile.database
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=G4SE
   frontend:
     image: geometalab/g4se-frontend
     build:
@@ -47,6 +7,49 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:80"
+  api:
+    extends:
+      file: common.yml
+      service: backend
+    environment:
+      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+    entrypoint: /bin/wait_only_docker-entrypoint.sh
+    command: uwsgi /uwsgi.ini --processes 2 --threads 1 --py-autoreload=3
+    links:
+      - db:database
+      - elasticsearch:elasticsearch
+      - redis:redis
+    volumes:
+      - api-data:/var/data
+      # remove the following line in production!
+      - ./compass-api/G4SE:/G4SE
+  api-setup:
+    extends:
+      file: common.yml
+      service: backend
+    environment:
+      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+    command: echo true
+    links:
+      - db:database
+      - elasticsearch:elasticsearch
+      - redis:redis
+    volumes_from:
+      - api
+  rq-worker:
+    extends:
+      file: common.yml
+      service: backend
+    environment:
+      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+    links:
+      - db:database
+      - elasticsearch:elasticsearch
+      - redis:redis
+    volumes_from:
+      - api
+    entrypoint: /bin/wait_only_docker-entrypoint.sh
+    command: python3 /G4SE/manage.py rqworker default
   nginx:
     image: geometalab/g4se-nginx
     ports:
@@ -61,8 +64,28 @@ services:
       - api
       - frontend
     volumes:
-      - api-static:/var/www/g4se-api/static
+      - api-data:/var/www/g4se-api
     environment:
       - VIRTUAL_HOST=localhost,127.0.0.1
+  db:
+    image: geometalab/g4se-api-db
+    build:
+      context: ./compass-api
+      dockerfile: Dockerfile.database
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=G4SE
+  elasticsearch:
+    image: elasticsearch:1
+#    environment:
+#      - es.logger.level=TRACE
+    ports:
+      - "9200:9200"
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
 volumes:
-  api-static: {}
+  api-data: {}

@@ -22,6 +22,7 @@ from api import views
 
 urlpatterns = [
     url(r'^api/', include('api.urls')),
+    url(r'^admin/django-rq/', include('django_rq.urls')),
     url(r'^admin/', admin.site.urls),
     # User management
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),

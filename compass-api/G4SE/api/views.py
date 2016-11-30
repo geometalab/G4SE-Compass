@@ -15,7 +15,7 @@ from rest_framework.settings import api_settings
 from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
 from api.filters import LimitRecordFilter, DateLimitRecordFilter, DateLimitSearchRecordFilter, \
-    IsLatestSearchRecordFilter, MetadataSearchFilter
+    IsLatestSearchRecordFilter, MetadataSearchFilter, MetadataSearchOrderingFilter
 from api.helpers.helpers import is_internal
 from api.helpers.input import ElasticSearchExtendedAutoQuery
 from api.models import GeoServiceMetadata
@@ -94,6 +94,7 @@ class GeoServiceMetadataSearchView(HaystackViewSet):
         DateLimitSearchRecordFilter,
         IsLatestSearchRecordFilter,
         MetadataSearchFilter,
+        MetadataSearchOrderingFilter,
     ]
     serializer_class = GeoServiceMetadataSearchSerializer
 
