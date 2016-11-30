@@ -18,6 +18,7 @@ class GeoServiceMetadataIndex(indexes.SearchIndex, indexes.Indexable):
     publication_year = IntegerField(model_attr="publication_year")
     is_latest = BooleanField(model_attr="is_latest", null=True)
     service_type = fields.CharField(model_attr="service_type", null=True)
+    geodata_type = fields.CharField(model_attr="geodata_type", null=True)
     source = fields.CharField(model_attr="source", null=True)
     visibility = fields.CharField(model_attr="visibility")
     crs = fields.CharField(model_attr="crs")
