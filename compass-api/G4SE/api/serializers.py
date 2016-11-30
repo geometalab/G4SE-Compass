@@ -61,7 +61,7 @@ class GeoServiceMetadataSearchSerializer(HaystackSerializer):
         # fields belong to the search index!
         fields = [
             "text", "title", "abstract", "geography", "collection", "dataset",
-            "autocomplete", "api_id", "visibility", "publication_year",
+            "autocomplete", "api_id", "visibility", "publication_year", "crs",
             "service_type", "source", "highlighted",
             "keywords_en", "keywords_de", "keywords_fr",
         ]
