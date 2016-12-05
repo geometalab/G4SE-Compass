@@ -1,5 +1,6 @@
 Django>=1.10.2
 djangorestframework
+django-filter
 gunicorn
 psycopg2
 django-environ

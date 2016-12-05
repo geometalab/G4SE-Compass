@@ -1,6 +1,7 @@
 import logging
 from collections import OrderedDict
 
+import django_filters
 from drf_haystack.filters import HaystackHighlightFilter
 from drf_haystack.viewsets import HaystackViewSet
 from haystack.query import SearchQuerySet
@@ -68,6 +69,7 @@ class MetaDataReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
         filters.OrderingFilter,
         LimitRecordFilter,
         DateLimitRecordFilter,
+        django_filters.rest_framework.DjangoFilterBackend,
     )
 
 
@@ -93,6 +95,7 @@ class GeoServiceMetadataSearchView(HaystackViewSet):
         HaystackHighlightFilter,
         DateLimitSearchRecordFilter,
         IsLatestSearchRecordFilter,
+        django_filters.rest_framework.DjangoFilterBackend,
         MetadataSearchFilter,
         MetadataSearchOrderingFilter,
     ]
