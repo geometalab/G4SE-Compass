@@ -95,9 +95,9 @@ class GeoServiceMetadataSearchView(HaystackViewSet):
         HaystackHighlightFilter,
         DateLimitSearchRecordFilter,
         IsLatestSearchRecordFilter,
+        django_filters.rest_framework.DjangoFilterBackend,
         MetadataSearchFilter,
         MetadataSearchOrderingFilter,
-        django_filters.rest_framework.DjangoFilterBackend,
     ]
     serializer_class = GeoServiceMetadataSearchSerializer
 
