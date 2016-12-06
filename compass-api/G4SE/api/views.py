@@ -97,6 +97,8 @@ class GeoServiceMetadataSearchView(HaystackViewSet):
 
     def get_queryset(self, index_models=[]):
         using = self.request.GET.get('language', self.FALLBACK_LANGUAGE)
+        if using not in ['de', 'fr', 'it']:
+            using = self.FALLBACK_LANGUAGE
         qs = super().get_queryset(index_models).using(using)
 
         internal = self.request.user.is_authenticated or is_internal(self.request.META['REMOTE_ADDR'])
