@@ -16,4 +16,3 @@ class VectorFieldSearchRank(Func):
             function=function, template=template, **extra_context
         )
         return sql, extra_params + params
-
