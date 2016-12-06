@@ -8,7 +8,6 @@ from haystack.query import SearchQuerySet
 from rest_framework import filters
 from rest_framework import permissions
 from rest_framework import viewsets
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view, renderer_classes, list_route
 from rest_framework import response, schemas
 from rest_framework.response import Response
@@ -20,6 +19,7 @@ from api.filters import LimitRecordFilter, DateLimitRecordFilter, DateLimitSearc
 from api.helpers.helpers import is_internal
 from api.helpers.input import ElasticSearchExtendedAutoQuery
 from api.models import GeoServiceMetadata
+from api.paginators import MetadataResultsSetPagination, StandardResultsSetPagination
 from api.serializers import EditRecordSerializer, GeoServiceMetadataSearchSerializer, \
     GeoServiceMetadataSerializer
 
@@ -33,18 +33,12 @@ def schema_view(request):
     return response.Response(generator.get_schema(request=request))
 
 
-class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 20
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
-
-
 class MetaDataReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Returns all metadata records visible to the client.
     """
     serializer_class = GeoServiceMetadataSerializer
-    pagination_class = StandardResultsSetPagination
+    pagination_class = MetadataResultsSetPagination
     queryset = GeoServiceMetadata.objects.all()
     ordering_parameter = api_settings.ORDERING_PARAM
     ordering = '-modified'
@@ -80,7 +74,7 @@ class GeoServiceMetadataSearchView(HaystackViewSet):
     # a way to filter out those of no interest for this particular view.
     # (Translates to `SearchQuerySet().models(*index_models)` behind the scenes.
     FALLBACK_LANGUAGE = GeoServiceMetadata.ENGLISH
-    pagination_class = StandardResultsSetPagination
+    pagination_class = MetadataResultsSetPagination
     index_models = [
         GeoServiceMetadata,
     ]

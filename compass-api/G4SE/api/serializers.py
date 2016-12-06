@@ -64,4 +64,5 @@ class GeoServiceMetadataSearchSerializer(HaystackSerializer):
             "autocomplete", "api_id", "visibility", "publication_year", "crs",
             "geodata_type", "service_type", "source", "highlighted",
             "keywords_en", "keywords_de", "keywords_fr",
+            "modified",
         ]

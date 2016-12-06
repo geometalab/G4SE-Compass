@@ -7,11 +7,10 @@ from api.models import GeoServiceMetadata
 
 
 class GeoServiceMetadataIndex(indexes.SearchIndex, indexes.Indexable):
-    STEMMER = 'german_stemmer'
-    text = fields.CharField(document=True, use_template=True, analyzer=STEMMER)
+    text = fields.CharField(document=True, use_template=True, analyzer='english_stemmer')
     api_id = fields.CharField(model_attr="api_id", boost=0.1)
-    title = fields.CharField(model_attr="title", analyzer=STEMMER)
-    abstract = fields.CharField(model_attr="abstract", analyzer=STEMMER)
+    title = fields.CharField(model_attr="title")
+    abstract = fields.CharField(model_attr="abstract")
     geography = fields.CharField(model_attr="geography")
     collection = fields.CharField(model_attr="collection", null=True)
     dataset = fields.CharField(model_attr="dataset", null=True)
@@ -52,24 +51,12 @@ class GeoServiceMetadataIndex(indexes.SearchIndex, indexes.Indexable):
 
 
 class EnglishGeoServiceMetadataIndex(GeoServiceMetadataIndex):
-    STEMMER = 'english_stemmer'
-    text = fields.CharField(document=True, use_template=True, analyzer=STEMMER)
-    title = fields.CharField(model_attr="title", analyzer=STEMMER)
-    abstract = fields.CharField(model_attr="abstract", analyzer=STEMMER)
-    dataset = fields.CharField(model_attr="dataset", null=True, analyzer=STEMMER)
+    text = fields.CharField(document=True, use_template=True, analyzer='english_stemmer')
 
 
 class GermanGeoServiceMetadataIndex(GeoServiceMetadataIndex):
-    STEMMER = 'german_stemmer'
-    text = fields.CharField(document=True, use_template=True, analyzer=STEMMER)
-    title = fields.CharField(model_attr="title", analyzer=STEMMER)
-    abstract = fields.CharField(model_attr="abstract", analyzer=STEMMER)
-    dataset = fields.CharField(model_attr="dataset", null=True, analyzer=STEMMER)
+    text = fields.CharField(document=True, use_template=True, analyzer='german_stemmer')
 
 
 class FrenchGeoServiceMetadataIndex(GeoServiceMetadataIndex):
-    STEMMER = 'french_stemmer'
-    text = fields.CharField(document=True, use_template=True, analyzer=STEMMER)
-    title = fields.CharField(model_attr="title", analyzer=STEMMER)
-    abstract = fields.CharField(model_attr="abstract", analyzer=STEMMER)
-    dataset = fields.CharField(model_attr="dataset", null=True, analyzer=STEMMER)
+    text = fields.CharField(document=True, use_template=True, analyzer='french_stemmer')
