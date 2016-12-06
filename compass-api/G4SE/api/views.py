@@ -39,12 +39,6 @@ class StandardResultsSetPagination(PageNumberPagination):
     max_page_size = 1000
 
 
-class SmallResultsSetPagination(PageNumberPagination):
-    page_size = 10
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
-
-
 class MetaDataReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Returns all metadata records visible to the client.
@@ -77,7 +71,7 @@ class GeoServiceMetadataAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAdminUser,)
     queryset = GeoServiceMetadata.objects.filter(imported=False)
     serializer_class = EditRecordSerializer
-    pagination_class = SmallResultsSetPagination
+    pagination_class = StandardResultsSetPagination
 
 
 class GeoServiceMetadataSearchView(HaystackViewSet):
