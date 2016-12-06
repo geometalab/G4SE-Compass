@@ -1,4 +1,3 @@
-import elasticsearch
 from drf_haystack.filters import HaystackFilter
 from haystack.backends import SQ
 from rest_framework import filters
