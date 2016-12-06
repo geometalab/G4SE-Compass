@@ -62,7 +62,10 @@ def test_record_list(client, precreated_geo_service_metadata):
 def test_external_access(client, precreated_geo_service_metadata):
     record_list = client.get('/api/metadata/?page_size=200', REMOTE_ADDR='123.1.1.1')
     assert int(record_list.data['count']) == 5
-    all_record_list = client.get('/api/metadata/?visibility={},{}'.format(GeoServiceMetadata.VISIBILITY_HSR_INTERNAL, GeoServiceMetadata.VISIBILITY_PUBLIC))
+    all_record_list = client.get('/api/metadata/?visibility={},{}'.format(
+            GeoServiceMetadata.VISIBILITY_HSR_INTERNAL, GeoServiceMetadata.VISIBILITY_PUBLIC
+        )
+    )
     assert int(all_record_list.data['count']) == 6
 
 

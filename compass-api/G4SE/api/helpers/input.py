@@ -37,7 +37,7 @@ class ElasticSearchExtendedAutoQuery(BaseInput):
         for rough_token in self.exact_match_re.split(query_string):
             if not rough_token:
                 continue
-            elif not rough_token in exacts:
+            elif rough_token not in exacts:
                 # We have something that's not an exact match but may have more
                 # than on word in it.
                 tokens.extend(rough_token.split(' '))

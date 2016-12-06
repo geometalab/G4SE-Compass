@@ -1,5 +1,3 @@
-from django.db.models import IntegerField
-from django.db.models.functions import Cast
 from drf_haystack.filters import HaystackFilter
 from haystack.backends import SQ
 from rest_framework import filters
@@ -8,6 +6,9 @@ from api.helpers.input import ElasticSearchExtendedAutoQuery
 
 
 class DateRangeFilterMixin:
+    from_param = 'from'
+    to_param = 'to'
+
     def _get_year_range(self, request, queryset):
         from_year = self._to_int_or_None(request.query_params.get(self.from_param, ''))
         to_year = self._to_int_or_None(request.query_params.get(self.to_param, ''))
@@ -35,8 +36,7 @@ class DateRangeFilterMixin:
 
 
 class DateLimitRecordFilter(DateRangeFilterMixin, filters.BaseFilterBackend):
-    from_param = 'from'
-    to_param = 'to'
+    pass
 
 
 class LimitRecordFilter(filters.BaseFilterBackend):

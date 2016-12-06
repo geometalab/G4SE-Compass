@@ -19,8 +19,12 @@ class EditableGeoServiceMetadataForm(forms.ModelForm):
 
 
 class TranslationTagAdmin(admin.ModelAdmin):
-    list_display = ['tag_de', 'tag_en', 'tag_fr', 'tag_alternatives_de', 'tag_alternatives_en', 'tag_alternatives_fr', ]
-    search_fields = ['tag_de', 'tag_en', 'tag_fr', 'tag_alternatives_de', 'tag_alternatives_en', 'tag_alternatives_fr', ]
+    list_display = [
+        'tag_de', 'tag_en', 'tag_fr', 'tag_alternatives_de', 'tag_alternatives_en', 'tag_alternatives_fr',
+    ]
+    search_fields = [
+        'tag_de', 'tag_en', 'tag_fr', 'tag_alternatives_de', 'tag_alternatives_en', 'tag_alternatives_fr',
+    ]
 admin.site.register(TranslationTag, TranslationTagAdmin)
 
 

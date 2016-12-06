@@ -131,7 +131,5 @@ def test_tagging_identical_key(record_de, record_en, record_fr, tag_that_matches
     since "digital" is in every language, this will tag every
     language.
     """
-    assert record_en.tags.all()[0].id == \
-           record_fr.tags.all()[0].id == \
-           record_de.tags.all()[0].id == \
-           tag_that_matches_all_languages.id
+    assert record_en.tags.all()[0].id == record_fr.tags.all()[0].id == record_de.tags.all()[0].id == \
+        tag_that_matches_all_languages.id

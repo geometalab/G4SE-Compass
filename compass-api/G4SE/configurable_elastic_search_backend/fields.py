@@ -1,4 +1,4 @@
-from haystack.fields import CharField as BaseCharField, DateTimeField as HaystackDateTimeField
+from haystack.fields import CharField as BaseCharField
 
 
 class ConfigurableFieldMixin(object):

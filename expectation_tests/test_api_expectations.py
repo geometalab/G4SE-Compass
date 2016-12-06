@@ -29,8 +29,10 @@ search_params_expectation = [
     dict(search_request='?language=en&search="Pfäffikon%20ZH"', expected_count=0, comparison='equal'),
 
     # equal, but different ordering: 9, 10
-    dict(search_request='?language=en&search=tree&ordering=-modified', expected_count=4, comparison='gte'),
-    dict(search_request='?language=en&search=tree&ordering=title', expected_count=4, comparison='gte'),
+    dict(search_request='?language=en&page_size=100&search=digital&ordering=-modified', expected_count=30,
+         comparison='gte'),
+    dict(search_request='?language=en&page_size=100&search=digital&ordering=title', expected_count=30,
+         comparison='gte'),
 
     # another filtering and sorting example: 11, 12
     dict(search_request='?language=en&search=Switzerland&service_type=MapService', expected_count=30, comparison='gte'),
@@ -45,14 +47,23 @@ search_params_expectation = [
 
     # years example, all equal: 16, 17, 18
     dict(search_request='?language=en&search=Switzerland&publication_year=2015', expected_count=8, comparison='gte'),
-    dict(search_request='?language=en&search=Switzerland&to_year=2015&from_year=2015', expected_count=8, comparison='gte'),
-    dict(search_request='?language=en&search=Switzerland&to_year=2015&from_year=2015&publication_year=2015', expected_count=8, comparison='gte'),
+    dict(search_request='?language=en&search=Switzerland&to_year=2015&from_year=2015', expected_count=8,
+         comparison='gte'),
+    dict(search_request='?language=en&search=Switzerland&to_year=2015&from_year=2015&publication_year=2015',
+         expected_count=8, comparison='gte'),
 
     # years example, "drilldown": 19, 20, 21
     dict(search_request='?language=en&search=Switzerland&publication_year=2016', expected_count=50, comparison='gte'),
-    dict(search_request='?language=en&search=Switzerland&publication_year=2016&service_type=MapService', expected_count=30, comparison='gte'),
-    dict(search_request='?language=en&search=Switzerland&publication_year=2016&service_type=MapService&dataset=TLM_SCHUTZGEBIET', expected_count=1, comparison='gte'),
+    dict(search_request='?language=en&search=Switzerland&publication_year=2016&service_type=MapService',
+         expected_count=30, comparison='gte'),
+    dict(search_request='?language=en&search=Switzerland&publication_year=2016&service_type=MapService&dataset=TLM_SCHUTZGEBIET',
+         expected_count=1, comparison='gte'),
 
+    # equal, but different ordering: 22, 23
+    dict(search_request='?language=en&page_size=100&search=digital&ordering=-title', expected_count=30,
+         comparison='gte'),
+    dict(search_request='?language=en&page_size=100&search=digital&ordering=title', expected_count=30,
+         comparison='gte'),
 ]
 
 API_SEARCH_ENDPOINT = '/api/search/'
@@ -161,3 +172,12 @@ def test_search_variants(host):
     _, _, _, count2, result2 = api_call(search_params2, host)
     _, _, _, count3, result3 = api_call(search_params3, host)
     assert count1 > count2 > count3
+
+    search_params1 = search_params_expectation[22]
+    search_params2 = search_params_expectation[23]
+    search_params1 = search_params1['search_request'], search_params1['expected_count'], search_params1['comparison']
+    search_params2 = search_params2['search_request'], search_params2['expected_count'], search_params2['comparison']
+    _, _, _, count1, result1 = api_call(search_params1, host)
+    _, _, _, count2, result2 = api_call(search_params2, host)
+    assert count1 == count2
+    assert result1 != result2

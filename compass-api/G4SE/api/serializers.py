@@ -3,8 +3,12 @@ import datetime
 from drf_haystack.serializers import HaystackSerializer
 from rest_framework import serializers
 
-from api.search_indexes import GeoServiceMetadataIndex, EnglishGeoServiceMetadataIndex, GermanGeoServiceMetadataIndex, \
-    FrenchGeoServiceMetadataIndex
+from api.search_indexes import (
+    GeoServiceMetadataIndex,
+    EnglishGeoServiceMetadataIndex,
+    GermanGeoServiceMetadataIndex,
+    FrenchGeoServiceMetadataIndex,
+)
 from .models import GeoServiceMetadata, GEO_SERVICE_METADATA_AGREED_FIELDS
 
 
@@ -64,4 +68,5 @@ class GeoServiceMetadataSearchSerializer(HaystackSerializer):
             "autocomplete", "api_id", "visibility", "publication_year", "crs",
             "geodata_type", "service_type", "source", "highlighted",
             "keywords_en", "keywords_de", "keywords_fr",
+            "modified",
         ]

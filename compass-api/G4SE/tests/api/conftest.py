@@ -61,4 +61,3 @@ def editable_geo_service_metadata(db):
     entry = create_entry(**dict(imported=False))
     yield entry
     entry.delete()
-
