@@ -7,13 +7,14 @@ from api.models import GeoServiceMetadata
 
 
 class GeoServiceMetadataIndex(indexes.SearchIndex, indexes.Indexable):
-    text = fields.CharField(document=True, use_template=True, analyzer='english_stemmer')
+    STEMMER = 'english_stemmer'
+    text = fields.CharField(document=True, use_template=True, analyzer=STEMMER)
     api_id = fields.CharField(model_attr="api_id", boost=0.1)
-    title = fields.CharField(model_attr="title")
-    abstract = fields.CharField(model_attr="abstract")
+    title = fields.CharField(model_attr="title", analyzer=STEMMER)
+    abstract = fields.CharField(model_attr="abstract", analyzer=STEMMER)
     geography = fields.CharField(model_attr="geography")
     collection = fields.CharField(model_attr="collection", null=True)
-    dataset = fields.CharField(model_attr="dataset", null=True)
+    dataset = fields.CharField(model_attr="dataset", null=True, analyzer=STEMMER)
     publication_year = IntegerField(model_attr="publication_year")
     is_latest = BooleanField(model_attr="is_latest", null=True)
     service_type = fields.CharField(model_attr="service_type", null=True)
@@ -28,6 +29,21 @@ class GeoServiceMetadataIndex(indexes.SearchIndex, indexes.Indexable):
     keywords_fr = fields.CharField(model_attr="tags_fr", analyzer='french_stemmer')
 
     autocomplete = indexes.EdgeNgramField()
+
+    # fields for sorting
+    title_raw = fields.CharField(model_attr="title", analyzer='case_insensitive_sort')
+    abstract_raw = fields.CharField(model_attr="abstract", analyzer='case_insensitive_sort')
+    geography_raw = fields.CharField(model_attr="geography", analyzer='case_insensitive_sort')
+    collection_raw = fields.CharField(model_attr="collection", null=True, analyzer='case_insensitive_sort')
+    dataset_raw = fields.CharField(model_attr="dataset", null=True, analyzer='case_insensitive_sort')
+    publication_year_raw = IntegerField(model_attr="publication_year")
+    is_latest_raw = BooleanField(model_attr="is_latest", null=True)
+    service_type_raw = fields.CharField(model_attr="service_type", null=True, analyzer='case_insensitive_sort')
+    geodata_type_raw = fields.CharField(model_attr="geodata_type", null=True, analyzer='case_insensitive_sort')
+    source_raw = fields.CharField(model_attr="source", null=True, analyzer='case_insensitive_sort')
+    visibility_raw = fields.CharField(model_attr="visibility", analyzer='case_insensitive_sort')
+    crs_raw = fields.CharField(model_attr="crs", analyzer='case_insensitive_sort')
+    modified_raw = DateTimeField(model_attr="modified", null=True)
 
     @staticmethod
     def prepare_autocomplete(obj):
@@ -51,12 +67,24 @@ class GeoServiceMetadataIndex(indexes.SearchIndex, indexes.Indexable):
 
 
 class EnglishGeoServiceMetadataIndex(GeoServiceMetadataIndex):
-    text = fields.CharField(document=True, use_template=True, analyzer='english_stemmer')
+    STEMMER = 'english_stemmer'
+    text = fields.CharField(document=True, use_template=True, analyzer=STEMMER)
+    title = fields.CharField(model_attr="title", analyzer=STEMMER)
+    abstract = fields.CharField(model_attr="abstract", analyzer=STEMMER)
+    dataset = fields.CharField(model_attr="dataset", null=True, analyzer=STEMMER)
 
 
 class GermanGeoServiceMetadataIndex(GeoServiceMetadataIndex):
-    text = fields.CharField(document=True, use_template=True, analyzer='german_stemmer')
+    STEMMER = 'german_stemmer'
+    text = fields.CharField(document=True, use_template=True, analyzer=STEMMER)
+    title = fields.CharField(model_attr="title", analyzer=STEMMER)
+    abstract = fields.CharField(model_attr="abstract", analyzer=STEMMER)
+    dataset = fields.CharField(model_attr="dataset", null=True, analyzer=STEMMER)
 
 
 class FrenchGeoServiceMetadataIndex(GeoServiceMetadataIndex):
-    text = fields.CharField(document=True, use_template=True, analyzer='french_stemmer')
+    STEMMER = 'french_stemmer'
+    text = fields.CharField(document=True, use_template=True, analyzer=STEMMER)
+    title = fields.CharField(model_attr="title", analyzer=STEMMER)
+    abstract = fields.CharField(model_attr="abstract", analyzer=STEMMER)
+    dataset = fields.CharField(model_attr="dataset", null=True, analyzer=STEMMER)

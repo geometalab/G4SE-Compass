@@ -199,6 +199,10 @@ ELASTIC_SEARCH_INDEX_SETUP = {
                         "tokenizer": "standard",
                         "filter": ["standard", "lowercase", "french_stemmer"],
                     },
+                    "case_insensitive_sort": {
+                      "tokenizer": "keyword",
+                      "filter":  ["lowercase"],
+                    },
                 },
                 "tokenizer": {
                     "haystack_ngram_tokenizer": {

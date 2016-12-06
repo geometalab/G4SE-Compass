@@ -1,3 +1,4 @@
+import elasticsearch
 from drf_haystack.filters import HaystackFilter
 from haystack.backends import SQ
 from rest_framework import filters
@@ -104,7 +105,7 @@ class MetadataSearchOrderingFilter(HaystackFilter):
         ordering = request.query_params.get(self.param, None)
 
         if ordering is not None and ordering != '':
-            queryset = queryset.order_by(ordering)
+            queryset = queryset.order_by(ordering + '_raw')
         return queryset
 
     def get_fields(self, view):
