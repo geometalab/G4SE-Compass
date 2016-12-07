@@ -1,12 +1,12 @@
 Django>=1.10.2
 djangorestframework
+django-filter
 gunicorn
 psycopg2
 django-environ
 netaddr
 django-rest-swagger
 django-cors-middleware
-whitenoise
 brotlipy
 grako
 drf-haystack==v1.6.0rc3
@@ -15,3 +15,4 @@ schedule
 beautifulsoup4
 raven
 uwsgi
+django-rq

@@ -68,11 +68,11 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'api',
+    'django_rq',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -84,8 +84,6 @@ MIDDLEWARE = [
 
 # Static Assets
 # ------------------------
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'G4SE.urls'
@@ -155,6 +153,9 @@ USE_TZ = True
 STATIC_ROOT = env.str('STATIC_ROOT', default=os.path.abspath(os.path.join(BASE_DIR, '..', 'static')))
 STATIC_URL = env.str('STATIC_URL', '/api/static/')
 
+MEDIA_ROOT = env.str('MEDIA_ROOT', default=os.path.abspath(os.path.join(BASE_DIR, '..', 'media')))
+MEDIA_URL = env.str('MEDIA_URL', '/api/media/')
+
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
@@ -194,6 +195,10 @@ ELASTIC_SEARCH_INDEX_SETUP = {
                         "type": "french",
                         "tokenizer": "standard",
                         "filter": ["standard", "lowercase", "french_stemmer"],
+                    },
+                    "case_insensitive_sort": {
+                      "tokenizer": "keyword",
+                      "filter":  ["lowercase"],
                     },
                 },
                 "tokenizer": {
@@ -314,6 +319,10 @@ if SENTRY_DSN:
                 'format': '%(levelname)s %(asctime)s %(module)s '
                           '%(process)d %(thread)d %(message)s'
             },
+            "rq_console": {
+                "format": "%(asctime)s %(message)s",
+                "datefmt": "%H:%M:%S",
+            },
         },
         'handlers': {
             'sentry': {
@@ -325,7 +334,13 @@ if SENTRY_DSN:
                 'level': 'DEBUG',
                 'class': 'logging.StreamHandler',
                 'formatter': 'verbose'
-            }
+            },
+            "rq_console": {
+                "level": "DEBUG",
+                "class": "rq.utils.ColorizingStreamHandler",
+                "formatter": "rq_console",
+                "exclude": ["%(asctime)s"],
+            },
         },
         'loggers': {
             'root': {
@@ -347,5 +362,16 @@ if SENTRY_DSN:
                 'handlers': ['console'],
                 'propagate': False,
             },
+            "rq.worker": {
+                "handlers": ["rq_console", "sentry"],
+                "level": "DEBUG"
+            },
         },
     }
+
+RQ_QUEUES = {
+    'default': {
+        'URL': os.getenv('REDIS_URL', 'redis://localhost:6379/0'),
+        'DEFAULT_TIMEOUT': 3600,
+    },
+}

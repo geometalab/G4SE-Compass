@@ -45,7 +45,8 @@ def _search_query_string(tag):
 
 
 def _search_query(language, search_query):
-    result_queryset = SearchQuerySet().using(language).filter(text=Raw(search_query[language])).models(GeoServiceMetadata)
+    result_queryset = SearchQuerySet().using(language)\
+        .filter(text=Raw(search_query[language])).models(GeoServiceMetadata)
     return result_queryset
 
 

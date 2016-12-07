@@ -5,13 +5,19 @@ services:
       context: ./compass-api
       dockerfile: Dockerfile
     image: geometalab/g4se-api
-    volumes:
-      - api-static:/var/www/g4se-api/static
     environment:
-      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+      - NUM_PROCESSES=4  # uwsgi settings
+      - NUM_THREADS=2  # uwsgi settings
+      - ALLOWED_HOSTS=*
+#      You probably want to set these on the live-server
+#      - SENTRY_DSN=the dsn of sentry
+#      - SENTRY_RELEASE=staging/production or whatever
       - DATABASE_URL=postgres://postgres:postgres@database:5432/G4SE
       - ELASTIC_SEARCH_URL=http://elasticsearch:9200/
       - SECRET_KEY=secret_key
       - DEBUG=True
-      - STATIC_ROOT=/var/www/g4se-api/static/
       - STATIC_URL=/api/static/
+      - STATIC_ROOT=/var/data/static
+      - MEDIA_URL=/api/media/
+      - MEDIA_ROOT=/var/data/media
+      - REDIS_URL=redis://redis:6379/0

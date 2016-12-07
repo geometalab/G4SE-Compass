@@ -6,37 +6,41 @@
 #
 beautifulsoup4==4.5.1
 brotlipy==0.6.0
-cffi==1.8.3               # via brotlipy
+cffi==1.9.1               # via brotlipy
+click==6.6                # via rq
 contextlib2==0.5.4        # via raven
-coreapi==2.0.9            # via django-rest-swagger, openapi-codec
+coreapi==2.1.1            # via django-rest-swagger, openapi-codec
 django-cors-middleware==1.3.1
 django-debug-toolbar==1.6
-django-environ==0.4.0
-django-extensions==1.7.4
+django-environ==0.4.1
+django-extensions==1.7.5
+django-filter==1.0.1
 django-haystack==2.5.1    # via drf-haystack
 django-rest-swagger==2.1.0
-django==1.10.3
+django-rq==0.9.4
+django==1.10.4
 djangorestframework==3.5.3
 drf-haystack==v1.6.0rc3
 elasticsearch==1.9.0
-grako==3.16.5
+grako==3.17.0
 gunicorn==19.6.0
 itypes==1.1.0             # via coreapi
 netaddr==0.7.18
-openapi-codec==1.1.7      # via django-rest-swagger
+openapi-codec==1.2.1      # via django-rest-swagger
 psycopg2==2.6.2
 py==1.4.31                # via pytest
 pycparser==2.17           # via cffi
-pytest-django==3.0.0
-pytest==3.0.3             # via pytest-django
+pytest-django==3.1.2
+pytest==3.0.4             # via pytest-django
 python-dateutil==2.6.0    # via drf-haystack
-raven==5.31.0
-requests==2.11.1          # via coreapi
-schedule==0.3.2
+raven==5.32.0
+redis==2.10.5             # via rq
+requests==2.12.3          # via coreapi
+rq==0.7.0                 # via django-rq
+schedule==0.4.2
 simplejson==3.10.0        # via django-rest-swagger
 six==1.10.0               # via django-environ, django-extensions, python-dateutil
 sqlparse==0.2.2           # via django-debug-toolbar
 uritemplate==3.0.0        # via coreapi
-urllib3==1.19             # via elasticsearch
+urllib3==1.19.1           # via elasticsearch
 uwsgi==2.0.14
-whitenoise==3.2.2
