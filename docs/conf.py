@@ -253,7 +253,10 @@ latex_elements = {
 
      # Additional stuff for the LaTeX preamble.
      #
-     # 'preamble': '',
+     'preamble': '''
+        \\pagestyle{plain}
+        \\pagenumbering{arabic}
+    ''',
 
      # Latex figure (float) alignment
      #

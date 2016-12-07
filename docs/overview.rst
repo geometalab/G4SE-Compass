@@ -1,15 +1,15 @@
-Overview
---------
-
 This Document provides an more technical overview of this project.
 
 It lays out some of the (future) ideas and the current deployment and architecture.
 
+More information can be found on the github repository of this project:
+https://github.com/geometalab/G4SE-Compass
+
 Architecture
-~~~~~~~~~~~~
+------------
 
 Interactions
-````````````
+~~~~~~~~~~~~
 
 The interactions inside the different components can be seen in :numref:`figinterfaces`.
 
@@ -31,7 +31,7 @@ of which the metadata is then transformed (stemmed, lexed, tokenized) and import
     Components interaction inside the G4SE-system.
 
 data processing and search request handling
-```````````````````````````````````````````
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The data-preprocessing and a search request process can be found in :numref:`figsearchrequest`.
 
@@ -63,7 +63,7 @@ Haystack and then transformed to JSON and passed back to the user.
 
 
 Deployment
-~~~~~~~~~~
+----------
 
 The Service runs on the switch cloud infrastructure (SwitchEngines). It is a
 virtual server with:
@@ -85,7 +85,7 @@ All services run on the same hardware, as shown in :numref:`figdeploymentdiagram
     Deployment Diagram as currently in use (Switch Cloud Infrastructure)
 
 Scaling Options
-~~~~~~~~~~~~~~~
+---------------
 
 .. sidebar::
     Note: Whenever increasing the CPU-Count, also increase RAM
@@ -95,7 +95,7 @@ Scaling Options
 There are multiple scaling options, some of which require more work than others.
 
 More CPUs, RAM
-``````````````
+~~~~~~~~~~~~~~
 
 Assuming running with uwsgi, we need to harness the power, and because we have
 elasticsearch and postgres running on the same machine, we have to take not
@@ -120,7 +120,7 @@ Examples:
 
 
 Adding additional Servers
-`````````````````````````
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Putting every service on it's own server has the big advantage that
 scaling is possible much more easily.
@@ -137,7 +137,7 @@ writes go only to master, and reads only to slave.
 The application/api should of course also be run separately for maximum benefit.
 
 Switching to a more powerful server
-```````````````````````````````````
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is the same as more CPU, RAM, just that I use have a real world example.
 
@@ -147,25 +147,28 @@ with 2X500GB Harddisk, 64GB RAM and 4 Cores/8 Threads without much tweaking a lo
 with the server above - this method might be the most cost effective way.
 
 Data Input
-~~~~~~~~~~
+----------
 
 There are two ways for MetaData-data to be entered into the system.
 
 Zipped-XML-Import
-`````````````````
+~~~~~~~~~~~~~~~~~
+
 Using the Admin-Interface of Django, a zip-file containing XML-Files can be imported.
 This deletes all the previously imported data (not the ones entered manually, though).
 
 Manually added and maintained Metadata
-``````````````````````````````````````
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Using the Admin-Interface one can add, delete and change the Metadata that has not been
 imported automatically.
 
 Miscellaneous
-~~~~~~~~~~~~~
+-------------
 
 Security
-````````
+~~~~~~~~
+
 Every part of the service is encapsulated:
 With the client-facing server (nginx) only what is needed is exposed,
 the rest of the services run on the internal network.
@@ -175,7 +178,7 @@ which are considered state of the art.
 
 
 Backup
-``````
+~~~~~~
 
 Currently, the postgres database is the only thing being backuped, since almost everything
 can be reconstructed out of there. The only thing missing is the user-uploaded files,
@@ -183,4 +186,3 @@ which have been uploaded using the zipped XML import.
 
 A better solution to backup data would be to backup the database
 and the files, which are being store inside the docker volume.
-
