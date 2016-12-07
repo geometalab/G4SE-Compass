@@ -1,21 +1,65 @@
 Overview
 --------
 
-..
-    Server (what version, RAM, etc)
-    Architektur
-    Deployment diagram
-    Scaling possibilities
-    XML-GeoVite
-    import zip -> admin
+This Document provides an more technical overview of this project.
+
+It lays out some of the (future) ideas and the current deployment and architecture.
 
 Architecture
 ~~~~~~~~~~~~
 
-TODO: Add image for architecture (component diagram, with django, elasticsearch, postgres, redis,
-api etc and its dependencies)
+Interactions
+````````````
 
-TODO: Add image for data processing and return while searching (U-Diagram)
+The interactions inside the different components can be seen in :numref:`figinterfaces`.
+
+**Django** is the web-framework used, written in Python. It provides the basis to have the interaction
+with the other components.
+**Haystack** is a python-package, which provides (ElasticSearch) integration for Django.
+**RQ** is Python package which provides a worker-queue (using **redis**, a key-value
+store). This worker-queue is used to offload processing of the imports of the XML-data.
+**Postgres** is being used as the storage database for the metadata, login and all other data,
+of which the metadata is then transformed (stemmed, lexed, tokenized) and imported into
+**ElasticSearch** where it then can be searched using the api (through haystack).
+
+.. _figinterfaces:
+
+.. figure:: images/architecture/interfaces.png
+    :width: 70%
+    :alt: Most important Interfaces (Internal and External)
+
+    Components interaction inside the G4SE-system.
+
+data processing and search request handling
+```````````````````````````````````````````
+
+The data-preprocessing and a search request process can be found in :numref:`figsearchrequest`.
+
+Shown in *grey* arrows the **data preparation**:
+The metadata-entries from the postgres database are being passed through Haystack to ElasticSearch
+where they are being tokenized, stemmed with language specific operations, lexed (according
+to the rules defined through Haystack).
+
+This indexed data serves as basis to do internal searches with the user controlled vocabulary:
+for every entry in this list, the data is being searched and if found, this is being added to
+the metadata-entry (both in postgres as well as the search-index).
+
+In *black* the actual request when a search-query is being sent:
+The user is presented with a user interface in his browser, which makes
+direct calls to the provided (REST) API. The search-query is being passed
+via Haystack to ElasticSearch, where it is being processed according
+to language and similar, then the search is being executed. All matches
+(this includes no matches at all) are being passed to Django via
+Haystack and then transformed to JSON and passed back to the user.
+
+
+.. _figsearchrequest:
+
+.. figure:: images/architecture/search_request.png
+    :width: 70%
+    :alt: Search request and data preparation.
+
+    Data preparation und search request.
 
 
 Deployment
@@ -30,7 +74,9 @@ virtual server with:
 
 It is powered by `Debian Jessie (Linux)`.
 
-All services run on the same hardware, as shown below.
+All services run on the same hardware, as shown in :numref:`figdeploymentdiagram`.
+
+.. _figdeploymentdiagram:
 
 .. figure:: images/architecture/deployment.png
     :width: 50%
@@ -103,7 +149,7 @@ with the server above - this method might be the most cost effective way.
 Data Input
 ~~~~~~~~~~
 
-There are two ways for data to be entered into the system.
+There are two ways for MetaData-data to be entered into the system.
 
 Zipped-XML-Import
 `````````````````
@@ -114,4 +160,27 @@ Manually added and maintained Metadata
 ``````````````````````````````````````
 Using the Admin-Interface one can add, delete and change the Metadata that has not been
 imported automatically.
+
+Miscellaneous
+~~~~~~~~~~~~~
+
+Security
+````````
+Every part of the service is encapsulated:
+With the client-facing server (nginx) only what is needed is exposed,
+the rest of the services run on the internal network.
+
+For authentication the standard mechanisms from the Django framework are being used,
+which are considered state of the art.
+
+
+Backup
+``````
+
+Currently, the postgres database is the only thing being backuped, since almost everything
+can be reconstructed out of there. The only thing missing is the user-uploaded files,
+which have been uploaded using the zipped XML import.
+
+A better solution to backup data would be to backup the database
+and the files, which are being store inside the docker volume.
 
