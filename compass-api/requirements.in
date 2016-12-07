@@ -7,7 +7,6 @@ django-environ
 netaddr
 django-rest-swagger
 django-cors-middleware
-whitenoise
 brotlipy
 grako
 drf-haystack==v1.6.0rc3
