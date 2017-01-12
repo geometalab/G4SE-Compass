@@ -1,11 +1,13 @@
 services:
-  - postgres:latest
+  - geometalab/g4se-api-db:latest
+  - elasticsearch:1
 
 variables:
   POSTGRES_DB: G4SE
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
-  DATABASE_URL: postgres://postgres:postgres@postgres:5432/G4SE
+  DATABASE_URL: postgres://postgres:postgres@geometalab__g4se-api-db:5432/G4SE
+  ELASTIC_SEARCH_URL: http://elasticsearch:9200/
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/pip-cache"
 
 cache:
