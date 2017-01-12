@@ -1,0 +1,22 @@
+services:
+  - postgres:latest
+
+variables:
+  POSTGRES_DB: G4SE
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  DATABASE_URL: postgres://postgres:postgres@postgres:5432/G4SE
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/pip-cache"
+
+cache:
+  paths:
+    - "$CI_PROJECT_DIR/pip-cache"
+  key: "$CI_PROJECT_ID"
+
+test:
+  image: python:latest
+  script:
+  - pip install -U pip setuptools
+  - pip install -r compass-api/dev-requirements.txt
+  - cd compass-api/G4SE/
+  - py.test
