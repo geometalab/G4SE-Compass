@@ -15,10 +15,34 @@ cache:
     - "$CI_PROJECT_DIR/pip-cache"
   key: "$CI_PROJECT_ID"
 
-test:
+stages:
+#- unit tests
+#-integration tests
+- integration and unit tests
+- build
+#- deploy to staging
+#-
+
+integration and unit tests:
   image: python:latest
   script:
   - pip install -U pip setuptools
   - pip install -r compass-api/dev-requirements.txt
   - cd compass-api/G4SE/
   - py.test
+
+build:
+  image: node:7.4
+  services:
+  - docker:dind
+  stage: build
+  script:
+  - apt-get update && apt-get install -y python python-pip wget
+  - npm rebuild node-sass
+  - npm install -g angular-cli node-gyp
+  - cd compass-frontend
+  - npm install
+  - rm -rf dist && ng build -prod
+  - cd ..
+  - pip install docker-compose
+  - docker-compose build
