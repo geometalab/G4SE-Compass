@@ -34,8 +34,6 @@ integration and unit tests:
 
 build:
   image: node:7.4
-  services:
-  - docker:dind
   stage: build
   script:
   - apt-get update && apt-get install -y python python-dev python-pip wget
