@@ -24,6 +24,7 @@ stages:
 #-
 
 integration and unit tests:
+  stage: integration and unit tests
   image: python:latest
   script:
   - pip install -U pip setuptools
