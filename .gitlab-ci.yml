@@ -38,7 +38,7 @@ build:
   - docker:dind
   stage: build
   script:
-  - apt-get update && apt-get install -y python python-pip wget
+  - apt-get update && apt-get install -y python python-dev python-pip wget
   - npm rebuild node-sass
   - npm install -g angular-cli node-gyp
   - cd compass-frontend
