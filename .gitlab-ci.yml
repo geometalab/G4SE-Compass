@@ -19,7 +19,8 @@ stages:
 #- unit tests
 #- integration tests
 - integration and unit tests
-- build
+- build application
+- build docker images
 #- deploy to staging
 #-
 
@@ -34,7 +35,7 @@ integration and unit tests:
 
 build:frontend:
   image: node:7.4
-  stage: build
+  stage: build application
   script:
   - apt-get update && apt-get install -y python python-dev python-pip wget
   - npm rebuild node-sass
@@ -42,17 +43,20 @@ build:frontend:
   - cd compass-frontend
   - npm install
   - rm -rf dist && ng build -prod
+  - mv dist ../
   artifacts:
     expire_in: '1h0min'
     paths:
-    - compass-frontend/dist/
+    - dist/
 
 build:docker:
-  image: docker
-  stage: build
+  image: docker:latest
+  stage: build docker images
+  script:
   - apk --update add python python-dev python-pip
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
   - pip install docker-compose
+  - mv dist/ compass-frontend/
   - docker-compose build
   - docker-compose push
   dependencies:
