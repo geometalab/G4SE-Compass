@@ -43,5 +43,7 @@ build:
   - npm install
   - rm -rf dist && ng build -prod
   - cd ..
+  - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
   - pip install docker-compose
   - docker-compose build
+  - docker-compose push
