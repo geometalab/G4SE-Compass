@@ -53,9 +53,9 @@ build:docker:
   image: docker:latest
   stage: build docker images
   script:
-  - apk --update add python python-dev python-pip
-  - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
+  - apk --update add python python-dev py-pip
   - pip install docker-compose
+  - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
   - mv dist/ compass-frontend/
   - docker-compose build
   - docker-compose push
