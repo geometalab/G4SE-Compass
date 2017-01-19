@@ -57,7 +57,8 @@ build:docker:
   - apk --update add python python-dev py-pip
   - pip install docker-compose
   - mv dist/ compass-frontend/
-  - docker-compose build
+  - cd compass-frontend/
+  - docker build -t geometalab/g4se-frontend .
   - docker-compose push
   dependencies:
     - build:frontend

@@ -1,0 +1,100 @@
+version: '2'
+# Usage: docker-compose -f docker-live_example.yml up -d
+services:
+  elasticsearch:
+    image: elasticsearch:1
+    networks:
+      - default
+    restart: always
+  api:
+    image: geometalab/g4se-api
+    env_file: .env-api-live_example
+    volumes:
+      - api-data:/var/data
+    networks:
+      - default
+    entrypoint: /bin/wait_only_docker-entrypoint.sh
+    command: uwsgi /uwsgi.ini --processes 5 --threads 1
+    expose:
+      - "8000"
+    links:
+      - db:database
+      - elasticsearch:elasticsearch
+      - redis:redis
+    restart: always
+  api-setup:
+    image: geometalab/g4se-api
+    env_file: .env-api-live_example
+    command: echo true
+    links:
+      - db:database
+      - elasticsearch:elasticsearch
+      - redis:redis
+  rq-worker:
+    image: geometalab/g4se-api
+    env_file: .env-api-live_example
+    entrypoint: /bin/wait_only_docker-entrypoint.sh
+    command: python3 /G4SE/manage.py rqworker default
+    links:
+      - db:database
+      - elasticsearch:elasticsearch
+      - redis:redis
+    restart: always
+  pg-backup:
+    image: njordan/pg-backup
+    links:
+      - db:db
+    volumes:
+      # map to your directory that is being backuped
+      - ./backup:/backup
+    environment:
+      - BACKUP_DIR=/backup/
+      - POSTGRES_HOST=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres_password
+      # backup every day at the specified time, 24h format, hh:mm, SERVER TIME (usually UTC)
+      - EVERY_DAY_AT=03:02
+    restart: always
+  frontend:
+    image: geometalab/g4se-frontend
+    restart: always
+  db:
+    image: geometalab/g4se-api-db
+    environment:
+      - POSTGRES_PASSWORD=postgres_password
+      - POSTGRES_DB=database_name
+    networks:
+      - proxy-tier
+      - default
+    restart: always
+  redis:
+    image: redis
+    networks:
+      - default
+    restart: always
+  nginx:
+    image: geometalab/g4se-nginx
+    depends_on:
+      - api
+      - frontend
+    links:
+      - api
+      - frontend
+    volumes:
+      - api-data:/var/www/g4se-api
+    environment:
+      - VIRTUAL_HOST=my.domain.com
+      # when using jrcs/letsencrypt-nginx-proxy
+      - LETSENCRYPT_HOST=my.domain.com
+      - LETSENCRYPT_EMAIL=email@my.domain.com
+    networks:
+      - proxy-tier
+      - default
+    restart: always
+volumes:
+  api-data: {}
+
+networks:
+  proxy-tier:
+    external:
+      name: nginx-proxy

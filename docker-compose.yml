@@ -2,17 +2,11 @@ version: '2'
 services:
   frontend:
     image: geometalab/g4se-frontend
-    build:
-      context: ./compass-frontend/
-      dockerfile: Dockerfile
     ports:
       - "3000:80"
   api:
-    extends:
-      file: common.yml
-      service: backend
-    environment:
-      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+    image: geometalab/g4se-api
+    env_file: .env-api
     entrypoint: /bin/wait_only_docker-entrypoint.sh
     command: uwsgi /uwsgi.ini --processes 2 --threads 1 --py-autoreload=3
     links:
@@ -24,11 +18,8 @@ services:
       # remove the following line in production!
       - ./compass-api/G4SE:/G4SE
   api-setup:
-    extends:
-      file: common.yml
-      service: backend
-    environment:
-      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+    image: geometalab/g4se-api
+    env_file: .env-api
     command: echo true
     links:
       - db:database
@@ -37,11 +28,8 @@ services:
     volumes_from:
       - api
   rq-worker:
-    extends:
-      file: common.yml
-      service: backend
-    environment:
-      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+    image: geometalab/g4se-api
+    env_file: .env-api
     links:
       - db:database
       - elasticsearch:elasticsearch
