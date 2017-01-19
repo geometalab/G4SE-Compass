@@ -1,7 +1,3 @@
-services:
-  - geometalab/g4se-api-db:latest
-  - elasticsearch:1
-
 variables:
   POSTGRES_DB: G4SE
   POSTGRES_USER: postgres
@@ -19,8 +15,7 @@ stages:
 #- unit tests
 #- integration tests
 - integration and unit tests
-- build application
-- build docker images
+- build
 #- deploy to staging
 #-
 
@@ -32,33 +27,18 @@ integration and unit tests:
   - pip install -r compass-api/dev-requirements.txt
   - cd compass-api/G4SE/
   - py.test
+  services:
+  - geometalab/g4se-api-db:latest
+  - elasticsearch:1
 
-build:frontend:
-  image: node:7.4
-  stage: build application
+build docker images:
+  image: geometalab/docker-builder
+  stage: build
   script:
-  - apt-get update && apt-get install -y python python-dev python-pip wget
-  - npm rebuild node-sass
-  - npm install -g angular-cli node-gyp
+#  - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
   - cd compass-frontend
   - npm install
   - rm -rf dist && ng build -prod
-  - mv dist ../
-  artifacts:
-    expire_in: '1h0min'
-    paths:
-    - dist/
-
-build:docker:
-  image: docker:latest
-  stage: build docker images
-  script:
-  - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
-  - apk --update add python python-dev py-pip
-  - pip install docker-compose
-  - mv dist/ compass-frontend/
-  - cd compass-frontend/
-  - docker build -t geometalab/g4se-frontend .
-  - docker-compose push
-  dependencies:
-    - build:frontend
+  - cd ..
+  - docker-compose build
+#  - docker-compose push
