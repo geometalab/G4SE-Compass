@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 # Usage: docker-compose -f docker-live_example.yml up -d
 services:
   elasticsearch:
