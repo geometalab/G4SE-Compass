@@ -35,10 +35,10 @@ build docker images:
   image: geometalab/docker-builder
   stage: build
   script:
-#  - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
   - cd compass-frontend
   - npm install
   - rm -rf dist && ng build -prod
   - cd ..
   - docker-compose build
-#  - docker-compose push
+  - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
+  - docker-compose push
