@@ -44,7 +44,7 @@ build:frontend:
   - rm -rf dist
   - ng build -prod
   - mv dist ../
-  artefacts:
+  artifacts:
     expire_in: '1h0min'
     paths:
     - dist/
