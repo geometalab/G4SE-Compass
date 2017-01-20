@@ -59,8 +59,10 @@ deploy to staging:
   - chmod -R 0600 ~/.ssh
   - >
     ssh root@search.g4se.hixi.ch /bin/bash << EOF
-      touch blah
+      cd g4se
+      docker-compose pull && docker-compose up -d
     EOF
+  - sleep 120 # wait two minutes before testing
 
 #expectation tests:
 #  stage: expectation tests
