@@ -1,5 +1,17 @@
 version: '2.1'
 services:
+  build-frontend:
+    image: node:7.4
+    entrypoint: >
+      bash -c
+      'cd /opt/build/compass-frontend/ &&
+      npm install -g angular-cli node-gyp &&
+      npm install &&
+      rm -rf dist &&
+      ng build -prod &&
+      chmod -R 0777 dist'
+    volumes:
+      - ./compass-frontend/:/opt/build/compass-frontend/
   frontend:
     image: "geometalab/g4se-frontend:${BUILD_VERSION:-latest}"
     build:

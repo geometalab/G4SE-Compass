@@ -1,9 +1,18 @@
 version: '2.1'
 services:
-  frontend:
+  frontend:  # use this in production!
     image: geometalab/g4se-frontend
     ports:
       - "3000:80"
+  frontend-development: # do never use this in production!
+    image: node:7.4
+    ports:
+      - "4200:4200"
+    command: bash -c 'cd /opt/compass-frontend && npm start'
+    volumes:
+      - ./compass-frontend:/opt/compass-frontend
+    links:
+      - "nginx:nginx"
   api:
     image: geometalab/g4se-api
     env_file: .env-api
