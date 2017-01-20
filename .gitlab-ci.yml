@@ -37,12 +37,9 @@ build staging images:
   image: geometalab/docker-builder
   stage: build staging images
   script:
-  - cd compass-frontend
-  - npm install
-  - rm -rf dist && ng build -prod
-  - cd ..
   - export BUILD_VERSION=${CI_BUILD_REF_NAME:-staging}
-  - docker-compose build
+  - docker-compose -f docker-build.yml run build-frontend
+  - docker-compose -f docker-build.yml build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
   - docker-compose push
 
