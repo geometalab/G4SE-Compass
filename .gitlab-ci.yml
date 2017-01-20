@@ -38,7 +38,7 @@ build staging images:
   stage: build staging images
   script:
   - export BUILD_VERSION=${CI_BUILD_REF_NAME:-staging}
-  - docker-compose -f docker-build.yml run build-frontend
+  - docker-compose -f docker-build.yml run --rm build-frontend
   - docker-compose -f docker-build.yml build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
   - docker-compose push
