@@ -14,37 +14,37 @@ cache:
 stages:
 #- unit tests
 #- integration tests
-#- integration and unit tests
-#- build staging images
+- integration and unit tests
+- build staging images
 - deploy to staging
-#- expectation tests
-#- build production images
+- expectation tests
+- build production images
 #- deploy to production
 
-#integration and unit tests:
-#  stage: integration and unit tests
-#  image: python:latest
-#  script:
-#  - pip install -U pip setuptools
-#  - pip install -r compass-api/dev-requirements.txt
-#  - cd compass-api/G4SE/
-#  - py.test
-#  services:
-#  - geometalab/g4se-api-db:latest
-#  - elasticsearch:1
-#
-#build staging images:
-#  image: geometalab/docker-builder
-#  stage: build staging images
-#  script:
-#  - cd compass-frontend
-#  - npm install
-#  - rm -rf dist && ng build -prod
-#  - cd ..
-#  - export BUILD_VERSION=${CI_BUILD_REF_NAME:-staging}
-#  - docker-compose build
-#  - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
-#  - docker-compose push
+integration and unit tests:
+  stage: integration and unit tests
+  image: python:latest
+  script:
+  - pip install -U pip setuptools
+  - pip install -r compass-api/dev-requirements.txt
+  - cd compass-api/G4SE/
+  - py.test
+  services:
+  - geometalab/g4se-api-db:latest
+  - elasticsearch:1
+
+build staging images:
+  image: geometalab/docker-builder
+  stage: build staging images
+  script:
+  - cd compass-frontend
+  - npm install
+  - rm -rf dist && ng build -prod
+  - cd ..
+  - export BUILD_VERSION=${CI_BUILD_REF_NAME:-staging}
+  - docker-compose build
+  - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
+  - docker-compose push
 
 deploy to staging:
   image: geometalab/docker-builder
@@ -59,29 +59,32 @@ deploy to staging:
   - chmod -R 0600 ~/.ssh
   - >
     ssh root@search.g4se.hixi.ch /bin/bash << EOF
+      set -e
       cd g4se
-      docker-compose pull && docker-compose up -d
+      docker-compose pull
+      docker-compose up -d
+      docker-compose ps
     EOF
   - sleep 120 # wait two minutes before testing
 
-#expectation tests:
-#  stage: expectation tests
-#  image: python:latest
-#  script:
-#  - pip install -U pip setuptools
-#  - cd expectation_tests
-#  - pip install -r requirements.txt
-#  - py.test --host https://search.g4se.hixi.ch
-#
-#build production images:
-#  image: geometalab/docker-builder
-#  stage: build production images
-#  script:
-#  - cd compass-frontend
-#  - npm install
-#  - rm -rf dist && ng build -prod
-#  - cd ..
-#  - export BUILD_VERSION=latest
-#  - docker-compose build
-#  - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
-#  - docker-compose push
+expectation tests:
+  stage: expectation tests
+  image: python:latest
+  script:
+  - pip install -U pip setuptools
+  - cd expectation_tests
+  - pip install -r requirements.txt
+  - py.test --host https://search.g4se.hixi.ch
+
+build production images:
+  image: geometalab/docker-builder
+  stage: build production images
+  script:
+  - cd compass-frontend
+  - npm install
+  - rm -rf dist && ng build -prod
+  - cd ..
+  - export BUILD_VERSION=latest
+  - docker-compose build
+  - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
+  - docker-compose push
