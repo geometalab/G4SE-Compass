@@ -15,6 +15,7 @@ stages:
 #- unit tests
 #- integration tests
 - integration and unit tests
+- build frontend
 - build staging images
 - deploy to staging
 - expectation tests
@@ -33,15 +34,32 @@ integration and unit tests:
   - geometalab/g4se-api-db:latest
   - elasticsearch:1
 
+build:frontend:
+  stage: build frontend
+  image: node:7.4
+  script:
+  - cd compass-frontend
+  - npm install -g angular-cli node-gyp
+  - npm install
+  - rm -rf dist
+  - ng build -prod
+  - mv dist ../
+  artefacts:
+    expire_in: '1h0min'
+    paths:
+    - dist/
+
 build staging images:
   image: geometalab/docker-builder
   stage: build staging images
   script:
+  - mv dist/ compass-frontend/
   - export BUILD_VERSION=${CI_BUILD_REF_NAME:-staging}
-  - docker-compose -f docker-build.yml run --rm build-frontend
   - docker-compose -f docker-build.yml build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
   - docker-compose push
+  dependencies:
+    - build:frontend
 
 deploy to staging:
   image: geometalab/docker-builder
