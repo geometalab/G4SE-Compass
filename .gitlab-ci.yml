@@ -55,9 +55,9 @@ build staging images:
   script:
   - mv dist/ compass-frontend/
   - export BUILD_VERSION=staging
-  - BUILD_VERSION=staging docker-compose -f docker-build.yml build
+  - docker-compose -f docker-build.yml build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
-  - BUILD_VERSION=staging docker-compose push
+  - docker-compose -f docker-build.yml push
   dependencies:
     - build:frontend
 
@@ -67,7 +67,6 @@ deploy to staging:
   script:
   - apk --update add openssh-client
   - mkdir -p ~/.ssh
-  - export BUILD_VERSION=staging
   - echo "$RSA_PRIVATE_KEY" > ~/.ssh/id_rsa
   - echo "$RSA_PUBLIC_KEY" > ~/.ssh/id_rsa.pub
   - echo "|1|DJCgAXtzfQpfUhjy+Optt2J/wtw=|yQeNwTEMsKXrGfFidvIns6eNk3E= ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5CaKZ1+td2vzzVnJqx8xCJYnAPjkndSFXHjR3sMSsWvZm+Ufh2j03NXHX6vR0VGk2cszJkNk7Fz156qrheOBH7NjUhSF5AkZo+eI0wQnVc5IkNvpA68awDU/MuUl8jJ/cZVTzgMMy2riGz/le1/ExMNtp86tchb8w4MbDqvE0esye0QONmzfFPjpDxMzS1FltB8lxjbXamxla4eTy4fBxoMgAukyf4hvpnAks7LJeFW63ioZtw8xLPjAIYOG2q87zY97T9GAytn0mvg7eEDJxP6PjiSe6r13Men9YFh3biml6LUvKn80ZqOEr+8uwQx+M0Fw4QtxWkG3K0pMnIuSz" > ~/.ssh/known_hosts
@@ -101,6 +100,6 @@ build production images:
   - rm -rf dist && ng build -prod
   - cd ..
   - export BUILD_VERSION=latest
-  - docker-compose build
+  - docker-compose -f docker-build.yml build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
-  - docker-compose push
+  - docker-compose -f docker-build.yml push
