@@ -75,6 +75,7 @@ deploy to staging:
   - >
     ssh root@search.g4se.hixi.ch /bin/bash << EOF
       set -e
+      export BUILD_VERSION=staging
       cd g4se
       docker-compose pull
       docker-compose up -d
