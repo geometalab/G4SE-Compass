@@ -65,7 +65,7 @@
 <my-spinner [isRunning]="searchParams.loading" [delay]="100"></my-spinner>
 
 <div *ngFor="let searchResult of searchResults | async" class="panel panel-info">
-  <div [tooltipHtml]="searchResult.abstract | slice:0:100 | linky"
+  <div [tooltip]="searchResult.abstract | slice:0:100 | linky"
        class="panel-heading cursor-pointer" (click)="searchResult.showDetails = !searchResult.showDetails">
     <div class="row">
       <!-- Short list -->

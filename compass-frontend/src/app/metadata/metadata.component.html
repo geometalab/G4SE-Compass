@@ -65,7 +65,7 @@
 
 <!-- Result List -->
 <div *ngFor="let metadataItem of metadataList" class="panel panel-info">
-  <div [tooltipHtml]="metadataItem.abstract | linky" class="panel-heading cursor-pointer" (click)="metadataItem.showDetails = !metadataItem.showDetails">
+  <div [tooltip]="metadataItem.abstract | linky" class="panel-heading cursor-pointer" (click)="metadataItem.showDetails = !metadataItem.showDetails">
     <div class="row">
       <!-- Short list -->
       <div class="col-sm-4">
