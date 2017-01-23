@@ -55,9 +55,9 @@ build staging images:
   script:
   - mv dist/ compass-frontend/
   - export BUILD_VERSION=staging
-  - docker-compose -f docker-build.yml build
+  - BUILD_VERSION=staging docker-compose -f docker-build.yml build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
-  - docker-compose push
+  - BUILD_VERSION=staging docker-compose push
   dependencies:
     - build:frontend
 
