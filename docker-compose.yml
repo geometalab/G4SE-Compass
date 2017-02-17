@@ -1,12 +1,18 @@
-version: '2'
+version: '2.1'
 services:
   frontend:
     image: geometalab/g4se-frontend
     build:
-      context: ./compass-frontend/
+      context: ./frontend/
       dockerfile: Dockerfile
+  frontend-dev:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/usr/src/app
     ports:
-      - "3000:80"
+      - "3000:8080"
   api:
     extends:
       file: common.yml
@@ -53,7 +59,7 @@ services:
   nginx:
     image: geometalab/g4se-nginx
     ports:
-      - "8080:80"
+      - "8081:80"
     build:
       context: ./nginx/
       dockerfile: Dockerfile
@@ -65,6 +71,20 @@ services:
       - frontend
     volumes:
       - api-data:/var/www/g4se-api
+    environment:
+      - VIRTUAL_HOST=localhost,127.0.0.1
+  nginx-dev:
+    ports:
+      - "8080:80"
+    build:
+      context: ./nginx/
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - api
+      - frontend-dev
+    links:
+      - api
+      - frontend-dev
     environment:
       - VIRTUAL_HOST=localhost,127.0.0.1
   db:

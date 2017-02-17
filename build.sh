@@ -1,5 +1,5 @@
 #!/bin/bash
-cd compass-frontend
+cd frontend
 rm -rf dist
-ng build -prod
+npm run build -p
 docker-compose build
