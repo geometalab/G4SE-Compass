@@ -86,7 +86,7 @@ services:
       - api
       - frontend-dev
     environment:
-      - VIRTUAL_HOST=localhost,127.0.0.1
+      - VIRTUAL_HOST=localhost,127.0.0.1,152.96.214.200
   db:
     image: geometalab/g4se-api-db
     build:

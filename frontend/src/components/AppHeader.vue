@@ -1,16 +1,10 @@
 <template>
-    <div id="app-header" class="container-fluid">
-        <img src="../assets/logo.png">
-        <div>{{msg}}</div>
-    </div>
+  <div id="app-header" class="container-fluid">
+    <img width="200px" src="../assets/logo.jpg">
+  </div>
 </template>
 <script>
-    export default{
-        name: 'app-header',
-        data(){
-            return{
-                msg:'header vue'
-            }
-        }
-    }
+  export default{
+    name: 'app-header',
+  };
 </script>
