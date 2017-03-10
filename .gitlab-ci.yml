@@ -1,0 +1,105 @@
+variables:
+  POSTGRES_DB: G4SE
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  DATABASE_URL: postgres://postgres:postgres@geometalab__g4se-api-db:5432/G4SE
+  ELASTIC_SEARCH_URL: http://elasticsearch:9200/
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/pip-cache"
+
+cache:
+  paths:
+    - "$CI_PROJECT_DIR/pip-cache"
+  key: "$CI_PROJECT_ID"
+
+stages:
+#- unit tests
+#- integration tests
+- integration and unit tests
+- build frontend
+- build staging images
+- deploy to staging
+- expectation tests
+- build production images
+#- deploy to production
+
+integration and unit tests:
+  stage: integration and unit tests
+  image: python:latest
+  script:
+  - pip install -U pip setuptools
+  - pip install -r compass-api/dev-requirements.txt
+  - cd compass-api/G4SE/
+  - py.test
+  services:
+  - geometalab/g4se-api-db:latest
+  - elasticsearch:1
+
+build:frontend:
+  stage: build frontend
+  image: node:7.4
+  script:
+  - cd compass-frontend
+  - npm install -g angular-cli node-gyp
+  - npm install
+  - rm -rf dist
+  - ng build -prod
+  - mv dist ../
+  artifacts:
+    expire_in: '1h0min'
+    paths:
+    - dist/
+
+build staging images:
+  image: geometalab/docker-builder
+  stage: build staging images
+  script:
+  - mv dist/ compass-frontend/
+  - export BUILD_VERSION=staging
+  - docker-compose -f docker-build.yml build
+  - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
+  - docker-compose -f docker-build.yml push
+  dependencies:
+    - build:frontend
+
+deploy to staging:
+  image: geometalab/docker-builder
+  stage: deploy to staging
+  script:
+  - apk --update add openssh-client
+  - mkdir -p ~/.ssh
+  - echo "$RSA_PRIVATE_KEY" > ~/.ssh/id_rsa
+  - echo "$RSA_PUBLIC_KEY" > ~/.ssh/id_rsa.pub
+  - echo "|1|DJCgAXtzfQpfUhjy+Optt2J/wtw=|yQeNwTEMsKXrGfFidvIns6eNk3E= ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5CaKZ1+td2vzzVnJqx8xCJYnAPjkndSFXHjR3sMSsWvZm+Ufh2j03NXHX6vR0VGk2cszJkNk7Fz156qrheOBH7NjUhSF5AkZo+eI0wQnVc5IkNvpA68awDU/MuUl8jJ/cZVTzgMMy2riGz/le1/ExMNtp86tchb8w4MbDqvE0esye0QONmzfFPjpDxMzS1FltB8lxjbXamxla4eTy4fBxoMgAukyf4hvpnAks7LJeFW63ioZtw8xLPjAIYOG2q87zY97T9GAytn0mvg7eEDJxP6PjiSe6r13Men9YFh3biml6LUvKn80ZqOEr+8uwQx+M0Fw4QtxWkG3K0pMnIuSz" > ~/.ssh/known_hosts
+  - chmod -R 0600 ~/.ssh
+  - >
+    ssh root@search.g4se.hixi.ch /bin/bash << EOF
+      set -e
+      export BUILD_VERSION=staging
+      cd g4se
+      docker-compose pull
+      docker-compose up -d
+      docker-compose ps
+    EOF
+  - sleep 120 # wait two minutes before testing
+
+expectation tests:
+  stage: expectation tests
+  image: python:latest
+  script:
+  - pip install -U pip setuptools
+  - cd expectation_tests
+  - pip install -r requirements.txt
+  - py.test --host https://search.g4se.hixi.ch
+
+build production images:
+  image: geometalab/docker-builder
+  stage: build production images
+  script:
+  - cd compass-frontend
+  - npm install
+  - rm -rf dist && ng build -prod
+  - cd ..
+  - export BUILD_VERSION=latest
+  - docker-compose -f docker-build.yml build
+  - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
+  - docker-compose -f docker-build.yml push
