@@ -12,7 +12,7 @@ class GeoServiceMetadataIndex(indexes.SearchIndex, indexes.Indexable):
     api_id = fields.CharField(model_attr="api_id", boost=0.1)
     title = fields.CharField(model_attr="title", analyzer=STEMMER)
     abstract = fields.CharField(model_attr="abstract", analyzer=STEMMER)
-    geography = fields.CharField(model_attr="geography")
+    geography = fields.CharField(model_attr="geography", boost=1.1)
     collection = fields.CharField(model_attr="collection", null=True)
     dataset = fields.CharField(model_attr="dataset", null=True, analyzer=STEMMER)
     publication_year = IntegerField(model_attr="publication_year")
