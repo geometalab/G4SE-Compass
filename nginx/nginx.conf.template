@@ -90,7 +90,7 @@ server {
     }
 
     location / {
-        proxy_pass http://frontend;
-        proxy_pass_request_headers on;
+        root /var/www/frontend/html;
+        error_page 404 =200 /index.html;
     }
 }

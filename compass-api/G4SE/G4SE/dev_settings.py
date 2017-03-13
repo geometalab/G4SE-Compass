@@ -20,12 +20,12 @@ if os.environ.get('ELASTIC_SEARCH_URL', None) is None:
 from .settings import *  # noqa
 DEBUG = True
 INTERNAL_IP_RANGES = ["127.0.0.1", '172.0.0.0/8']
-INSTALLED_APPS.append('django_extensions')
+INSTALLED_APPS.append('django_extensions')  # noqa: may be undefined, or defined from star imports: .settings
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 if DEBUG:
-    INSTALLED_APPS.append('debug_toolbar')
-    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+    INSTALLED_APPS.append('debug_toolbar')  # noqa: may be undefined, or defined from star imports: .settings
+    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')  # noqa: may be undefined, or defined from star imports: .settings
     DEBUG_TOOLBAR_CONFIG = {
         'SHOW_TOOLBAR_CALLBACK': lambda x: True
     }

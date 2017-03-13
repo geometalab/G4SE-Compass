@@ -15,7 +15,6 @@ stages:
 #- unit tests
 #- integration tests
 - integration and unit tests
-- build frontend
 - build staging images
 - deploy to staging
 - expectation tests
@@ -24,40 +23,21 @@ stages:
 
 integration and unit tests:
   stage: integration and unit tests
-  image: python:latest
+  image: docker:latest
   script:
-  - pip install -U pip setuptools
-  - pip install -r compass-api/dev-requirements.txt
-  - cd compass-api/G4SE/
-  - py.test
+  - make tests
   services:
-  - geometalab/g4se-api-db:latest
-  - elasticsearch:1
+  - docker:dind
 
-build:frontend:
-  stage: build frontend
-  image: node:7.4
-  script:
-  - cd frontend
-  - npm install -g angular-cli node-gyp
-  - npm install
-  - rm -rf dist
-  - ng build -prod
-  - mv dist ../
-  artifacts:
-    expire_in: '1h0min'
-    paths:
-    - dist/
 
 build staging images:
   image: geometalab/docker-builder
   stage: build staging images
   script:
-  - mv dist/ frontend/
   - export BUILD_VERSION=staging
-  - docker-compose -f docker-build.yml build
+  - make build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
-  - docker-compose -f docker-build.yml push
+  - docker-compose push
   dependencies:
     - build:frontend
 
@@ -84,22 +64,17 @@ deploy to staging:
 
 expectation tests:
   stage: expectation tests
-  image: python:latest
+  image: docker:latest
   script:
-  - pip install -U pip setuptools
-  - cd expectation_tests
-  - pip install -r requirements.txt
-  - py.test --host https://search.g4se.hixi.ch
+  - make expectation-tests
+  services:
+  - docker:dind
 
 build production images:
   image: geometalab/docker-builder
   stage: build production images
   script:
-  - cd frontend
-  - npm install
-  - rm -rf dist && ng build -prod
-  - cd ..
   - export BUILD_VERSION=latest
-  - docker-compose -f docker-build.yml build
+  - docker-compose build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
-  - docker-compose -f docker-build.yml push
+  - docker-compose push

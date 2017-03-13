@@ -1,20 +1,13 @@
 version: '2.1'
 services:
-  frontend:  # use this in production!
-    image: geometalab/g4se-frontend
+  frontend:
     build:
       context: ./frontend/
       dockerfile: Dockerfile
-  frontend-dev:
-    build:
-      context: ./frontend/
-      dockerfile: Dockerfile.dev
     volumes:
       - ./frontend:/usr/src/app
-    ports:
-      - "3000:8080"
   api:
-    image: geometalab/g4se-api
+    image: "geometalab/g4se-api:${BUILD_VERSION:-latest}"
     build:
       context: ./compass-api/
       dockerfile: Dockerfile
@@ -28,10 +21,11 @@ services:
       - redis:redis
     volumes:
       - api-data:/var/data
-      # remove the following line in production!
+      # remove the following lines in production!
       - ./compass-api/G4SE:/G4SE
+      - ./expectation_tests:/expectation_tests
   api-setup:
-    image: geometalab/g4se-api
+    image: "geometalab/g4se-api:${BUILD_VERSION:-latest}"
     build:
       context: ./compass-api/
       dockerfile: Dockerfile
@@ -45,7 +39,7 @@ services:
     volumes_from:
       - api
   rq-worker:
-    image: geometalab/g4se-api
+    image: "geometalab/g4se-api:${BUILD_VERSION:-latest}"
     build:
       context: ./compass-api/
       dockerfile: Dockerfile
@@ -60,40 +54,38 @@ services:
     entrypoint: /bin/wait_only_docker-entrypoint.sh
     command: python3 /G4SE/manage.py rqworker default
   nginx:
-    image: geometalab/g4se-nginx
+    image: "geometalab/g4se-nginx:${BUILD_VERSION:-latest}"
     build:
-      context: ./nginx/
+      context: .
       dockerfile: Dockerfile
     ports:
       - "8081:80"
     depends_on:
       - api
-      - frontend
     links:
       - api
-      - frontend
     volumes:
       - api-data:/var/www/g4se-api
     environment:
       - VIRTUAL_HOST=localhost,127.0.0.1
   nginx-dev:
     build:
-      context: ./nginx/
+      context: .
       dockerfile: Dockerfile.dev
     ports:
       - "8080:80"
     depends_on:
       - api
-      - frontend-dev
+      - frontend
     links:
       - api
-      - frontend-dev
+      - frontend
     volumes:
       - api-data:/var/www/g4se-api
     environment:
       - VIRTUAL_HOST=localhost,127.0.0.1,152.96.214.200
   db:
-    image: geometalab/g4se-api-db
+    image: "geometalab/g4se-api-db:${BUILD_VERSION:-latest}"
     build:
       context: ./compass-api
       dockerfile: Dockerfile.database

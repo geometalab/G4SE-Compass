@@ -197,8 +197,8 @@ ELASTIC_SEARCH_INDEX_SETUP = {
                         "filter": ["standard", "lowercase", "french_stemmer"],
                     },
                     "case_insensitive_sort": {
-                      "tokenizer": "keyword",
-                      "filter":  ["lowercase"],
+                        "tokenizer": "keyword",
+                        "filter": ["lowercase"],
                     },
                 },
                 "tokenizer": {

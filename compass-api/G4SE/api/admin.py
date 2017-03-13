@@ -25,7 +25,7 @@ class TranslationTagAdmin(admin.ModelAdmin):
     search_fields = [
         'tag_de', 'tag_en', 'tag_fr', 'tag_alternatives_de', 'tag_alternatives_en', 'tag_alternatives_fr',
     ]
-admin.site.register(TranslationTag, TranslationTagAdmin)
+admin.site.register(TranslationTag, TranslationTagAdmin)  # noqa: E305 expected 2 blank lines after class
 
 
 class GeoServiceMetadataAdmin(admin.ModelAdmin):
@@ -39,7 +39,7 @@ class GeoServiceMetadataAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return super().get_queryset(request).filter(imported=False)
-admin.site.register(GeoServiceMetadata, GeoServiceMetadataAdmin)
+admin.site.register(GeoServiceMetadata, GeoServiceMetadataAdmin)  # noqa: E305 expected 2 blank lines after class
 
 
 class ReadOnlyGeoServiceMetadata(GeoServiceMetadata):
@@ -62,10 +62,10 @@ class ReadOnlyGeoServiceMetadataAdmin(admin.ModelAdmin):
     search_fields = GEO_SERVICE_METADATA_AGREED_FIELDS
     readonly_fields = GEO_SERVICE_METADATA_AGREED_FIELDS
     fields = GEO_SERVICE_METADATA_AGREED_FIELDS
-admin.site.register(ReadOnlyGeoServiceMetadata, ReadOnlyGeoServiceMetadataAdmin)
+admin.site.register(ReadOnlyGeoServiceMetadata, ReadOnlyGeoServiceMetadataAdmin)  # noqa: E305 expected 2 blank lines
 
 
 class GeoVITeImportDataAdmin(admin.ModelAdmin):
     form = GeoVITeImportDataAdminForm
     list_display = ['created', 'xml_zip', 'is_imported']
-admin.site.register(GeoVITeImportData, GeoVITeImportDataAdmin)
+admin.site.register(GeoVITeImportData, GeoVITeImportDataAdmin)  # noqa: E305 expected 2 blank lines after class

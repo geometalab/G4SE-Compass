@@ -1,5 +1,7 @@
-FROM  nginx:alpine
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
-# Copy built app to wwwroot
-COPY index.html /usr/share/nginx/html/index.html
-COPY dist /usr/share/nginx/html/dist
+FROM node:7
+WORKDIR /usr/src/app/
+COPY package.json /usr/src/app/
+RUN npm install && npm cache clean
+COPY . /usr/src/app
+EXPOSE 8080
+CMD [ "npm", "run", "dev" ]
