@@ -1,0 +1,32 @@
+version: '2.1'
+services:
+  api:
+    image: "geometalab/g4se-api:${BUILD_VERSION:-latest}"
+    build:
+      context: ./compass-api/
+      dockerfile: Dockerfile
+    env_file:
+      - .env-api
+    entrypoint: /bin/wait_only_docker-entrypoint.sh
+    links:
+      - db:database
+    volumes:
+      - api-data:/var/data
+  nginx:
+    image: "geometalab/g4se-nginx:${BUILD_VERSION:-latest}"
+    build:
+      context: .
+      dockerfile: Dockerfile
+  db:
+    image: "geometalab/g4se-api-db:${BUILD_VERSION:-latest}"
+    build:
+      context: ./compass-api
+      dockerfile: Dockerfile.database
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=G4SE
+volumes:
+  api-data: {}
+  frontend_dist: {}

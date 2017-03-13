@@ -1,6 +1,8 @@
 .PHONY: all
 all: help
 
+COMPOSE_FILE ?= docker-compose.yml
+
 .PHONY: help
 help:
 	@echo frequently used:
@@ -25,19 +27,20 @@ _list_targets_on_separate_lines:
 
 .PHONY: build-frontend
 build-frontend:
-	docker-compose build frontend && \
-	docker-compose run --rm frontend bash -c "rm -rf ./dist && npm run build -p && find ./dist -type d -exec chmod 777 {} \; && find ./dist -type f -exec chmod 666 {} \;"
+	docker-compose -f $(COMPOSE_FILE) build frontend && \
+	docker-compose -f $(COMPOSE_FILE) run --rm frontend bash -c "npm run build -p && find ./dist -type d -exec chmod 777 {} \; && find ./dist -type f -exec chmod 666 {} \;"
 
 .PHONY: build-backend
 build-backend:
-	docker-compose build api
+	docker-compose -f $(COMPOSE_FILE) build api
 
 .PHONY: build-nginx
 build-nginx: build-frontend
-	docker-compose build nginx nginx-dev
+	docker-compose -f $(COMPOSE_FILE) build nginx
 
 .PHONY: build
 build: build-frontend build-backend build-nginx
+	docker-compose -f $(COMPOSE_FILE) build
 
 .PHONY: requirements-upgrade
 requirements-upgrade:
@@ -45,7 +48,7 @@ requirements-upgrade:
 
 .PHONY: tests
 tests: build-backend
-	docker-compose run --rm api bash -c "pytest -q --flake8 && pytest"
+	docker-compose -f $(COMPOSE_FILE) run --rm api bash -c "pytest -q --flake8 && pytest"
 
 .PHONY: expectation-tests
 expectation-tests:

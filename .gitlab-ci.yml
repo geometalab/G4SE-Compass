@@ -25,12 +25,19 @@ integration and unit tests:
   stage: integration and unit tests
   image: geometalab/docker-builder
   script:
+  - export COMPOSE_FILE=docker-compose_gitlab-ci.yml
   - make tests
 
 build staging images:
   image: geometalab/docker-builder
   stage: build staging images
   script:
+  - export COMPOSE_FILE=docker-compose_gitlab-ci.yml
+  - cd frontend
+  - npm install
+  - rm -rf dist
+  - npm run build -p
+  - cd ..
   - export BUILD_VERSION=staging
   - make build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
