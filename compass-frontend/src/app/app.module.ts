@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { Ng2BootstrapModule, PaginationModule  } from 'ng2-bootstrap/ng2-bootstrap';
+import { Ng2BootstrapModule, PaginationModule  } from 'ng2-bootstrap';
 import { LinkyModule } from 'angular2-linky';
 
 import { AppComponent } from './app.component';
@@ -30,8 +30,8 @@ import {SearchStore} from "./metadata/search/search.store";
     FormsModule,
     routing,
     HttpModule,
-    Ng2BootstrapModule,
-    PaginationModule,
+    Ng2BootstrapModule.forRoot(),
+    PaginationModule.forRoot(),
     LinkyModule,
   ],
   providers: [

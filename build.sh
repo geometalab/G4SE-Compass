@@ -1,5 +1,6 @@
 #!/bin/bash
-cd compass-frontend
+pushd compass-frontend
 rm -rf dist
 ng build -prod
-docker-compose build
+popd
+docker-compose -f docker-build.yml build --pull

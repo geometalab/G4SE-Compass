@@ -1,7 +1,8 @@
 import os
 
 os.environ['SECRET_KEY'] = 'secret-testing-key'
-os.environ['DATABASE_URL'] = 'postgres://postgres:postgres@localhost:5432/G4SE'
+if 'DATABASE_URL' not in os.environ:
+    os.environ['DATABASE_URL'] = 'postgres://postgres:postgres@localhost:5432/G4SE'
 
 from G4SE.settings import *  # noqa
 
