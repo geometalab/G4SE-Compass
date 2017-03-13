@@ -5,6 +5,7 @@ variables:
   DATABASE_URL: postgres://postgres:postgres@geometalab__g4se-api-db:5432/G4SE
   ELASTIC_SEARCH_URL: http://elasticsearch:9200/
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/pip-cache"
+  COMPOSE_FILE: docker-compose_gitlab-ci.yml
 
 cache:
   paths:
@@ -25,23 +26,21 @@ integration and unit tests:
   stage: integration and unit tests
   image: geometalab/docker-builder
   script:
-  - export COMPOSE_FILE=docker-compose_gitlab-ci.yml
-  - make tests
+  - docker-compose -f ${COMPOSE_FILE} run --rm api bash -c "pytest -q --flake8 && pytest"
 
 build staging images:
   image: geometalab/docker-builder
   stage: build staging images
   script:
-  - export COMPOSE_FILE=docker-compose_gitlab-ci.yml
   - cd frontend
   - npm install
   - rm -rf dist
   - npm run build -p
   - cd ..
   - export BUILD_VERSION=staging
-  - make build
+  - docker-compose -f ${COMPOSE_FILE} build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
-  - docker-compose push
+  - docker-compose -f ${COMPOSE_FILE} push
 
 deploy to staging:
   image: geometalab/docker-builder
@@ -66,15 +65,23 @@ deploy to staging:
 
 expectation tests:
   stage: expectation tests
-  image: geometalab/docker-builder
+  image: python:3
   script:
-  - make expectation-tests
+  - pip install -U pip setuptools
+  - cd expectation_tests
+  - pip install -r requirements.txt
+  - py.test --host https://search.g4se.hixi.ch
 
 build production images:
   image: geometalab/docker-builder
   stage: build production images
   script:
+  - cd frontend
+  - npm install
+  - rm -rf dist
+  - npm run build -p
+  - cd ..
   - export BUILD_VERSION=latest
-  - make build
+  - docker-compose -f ${COMPOSE_FILE} build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
-  - docker-compose push
+  - docker-compose -f ${COMPOSE_FILE} push
