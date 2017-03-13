@@ -1,6 +1,6 @@
 version: '2.1'
 services:
-  frontend:
+  frontend:  # use this in production!
     image: geometalab/g4se-frontend
     build:
       context: ./frontend/
@@ -14,11 +14,12 @@ services:
     ports:
       - "3000:8080"
   api:
-    extends:
-      file: common.yml
-      service: backend
-    environment:
-      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+    image: geometalab/g4se-api
+    build:
+      context: ./compass-api/
+      dockerfile: Dockerfile
+    env_file:
+      - .env-api
     entrypoint: /bin/wait_only_docker-entrypoint.sh
     command: uwsgi /uwsgi.ini --processes 2 --threads 1 --py-autoreload=3
     links:
@@ -30,11 +31,12 @@ services:
       # remove the following line in production!
       - ./compass-api/G4SE:/G4SE
   api-setup:
-    extends:
-      file: common.yml
-      service: backend
-    environment:
-      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+    image: geometalab/g4se-api
+    build:
+      context: ./compass-api/
+      dockerfile: Dockerfile
+    env_file:
+      - .env-api
     command: echo true
     links:
       - db:database
@@ -43,11 +45,12 @@ services:
     volumes_from:
       - api
   rq-worker:
-    extends:
-      file: common.yml
-      service: backend
-    environment:
-      - DJANGO_SETTINGS_MODULE=G4SE.dev_settings
+    image: geometalab/g4se-api
+    build:
+      context: ./compass-api/
+      dockerfile: Dockerfile
+    env_file:
+      - .env-api
     links:
       - db:database
       - elasticsearch:elasticsearch
@@ -58,11 +61,11 @@ services:
     command: python3 /G4SE/manage.py rqworker default
   nginx:
     image: geometalab/g4se-nginx
-    ports:
-      - "8081:80"
     build:
       context: ./nginx/
       dockerfile: Dockerfile
+    ports:
+      - "8081:80"
     depends_on:
       - api
       - frontend
@@ -74,17 +77,19 @@ services:
     environment:
       - VIRTUAL_HOST=localhost,127.0.0.1
   nginx-dev:
-    ports:
-      - "8080:80"
     build:
       context: ./nginx/
       dockerfile: Dockerfile.dev
+    ports:
+      - "8080:80"
     depends_on:
       - api
       - frontend-dev
     links:
       - api
       - frontend-dev
+    volumes:
+      - api-data:/var/www/g4se-api
     environment:
       - VIRTUAL_HOST=localhost,127.0.0.1,152.96.214.200
   db:
