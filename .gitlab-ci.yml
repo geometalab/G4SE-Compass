@@ -25,20 +25,20 @@ integration and unit tests:
   stage: integration and unit tests
   image: docker:latest
   script:
+  - apk add --update make
   - make tests
   services:
   - docker:dind
-
 
 build staging images:
   image: geometalab/docker-builder
   stage: build staging images
   script:
+  - apk add --update make
   - export BUILD_VERSION=staging
   - make build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
   - docker-compose push
-
 
 deploy to staging:
   image: geometalab/docker-builder
@@ -65,6 +65,7 @@ expectation tests:
   stage: expectation tests
   image: docker:latest
   script:
+  - apk add --update make
   - make expectation-tests
   services:
   - docker:dind
@@ -73,7 +74,8 @@ build production images:
   image: geometalab/docker-builder
   stage: build production images
   script:
+  - apk add --update make
   - export BUILD_VERSION=latest
-  - docker-compose build
+  - make build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
   - docker-compose push
