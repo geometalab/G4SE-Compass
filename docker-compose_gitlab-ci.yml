@@ -10,6 +10,8 @@ services:
     entrypoint: /bin/wait_only_docker-entrypoint.sh
     links:
       - db:database
+      - elasticsearch:elasticsearch
+      - redis:redis
     volumes:
       - api-data:/var/data
   nginx:
@@ -27,6 +29,10 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=G4SE
+  elasticsearch:
+    image: elasticsearch:1
+  redis:
+    image: redis
 volumes:
   api-data: {}
   frontend_dist: {}
