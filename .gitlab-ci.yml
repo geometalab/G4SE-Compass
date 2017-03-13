@@ -38,8 +38,7 @@ build staging images:
   - make build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
   - docker-compose push
-  dependencies:
-    - build:frontend
+
 
 deploy to staging:
   image: geometalab/docker-builder
