@@ -23,12 +23,10 @@ stages:
 
 integration and unit tests:
   stage: integration and unit tests
-  image: docker:latest
+  image: geometalab/docker-builder
   script:
   - apk add --update make
   - make tests
-  services:
-  - docker:dind
 
 build staging images:
   image: geometalab/docker-builder
@@ -63,12 +61,10 @@ deploy to staging:
 
 expectation tests:
   stage: expectation tests
-  image: docker:latest
+  image: geometalab/docker-builder
   script:
   - apk add --update make
   - make expectation-tests
-  services:
-  - docker:dind
 
 build production images:
   image: geometalab/docker-builder
