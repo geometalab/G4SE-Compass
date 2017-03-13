@@ -1,8 +1,6 @@
 .PHONY: all
 all: help
 
-COMPOSE_FILE ?= docker-compose.yml
-
 .PHONY: help
 help:
 	@echo frequently used:
