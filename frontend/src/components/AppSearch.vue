@@ -42,6 +42,7 @@
   </div>
 </template>
 <script>
+  // TODO: Refactor this huge hunk of a module!
   import _ from 'lodash';
   import PulseLoader from 'vue-spinner/src/PulseLoader';
   import router from '../router';
