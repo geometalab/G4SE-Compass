@@ -11,13 +11,30 @@
         <p>{{ error }}</p>
       </div>
     </div>
-    <div v-if="searching">Searching...</div>
+    <div v-if="searching">
+      Searching <loading></loading>
+    </div>
     <div v-if="!searching && searchResults.count > 0" class="row">
-      <pagination></pagination>
-      <search-result
-        v-for="searchResult in searchResults.results"
-        v-bind:search-result="searchResult"
-      />
+      <loading v-if="loading">loading...</loading>
+      <div v-else>
+        <div class="col-12 row">
+          <ul class="pagination pagination-sm">
+            <li class="page-item" v-bind:class="{ disabled: !hasPrevious() }">
+              <a class="page-link" v-on:click="pageSwitch(page - 1), $event">Previous</a>
+            </li>
+            <li class="page-item disabled">
+              <a class="page-link">Showing {{currentShowStart()}}-{{currentShowEnd()}} of total {{searchResults.count}} results.</a>
+            </li>
+            <li class="page-item" v-bind:class="{ disabled: !hasNext() }">
+              <a class="page-link" v-on:click="pageSwitch(page + 1), $event">Next</a>
+            </li>
+          </ul>
+        </div>
+        <search-result
+          v-for="searchResult in searchResults.results"
+          v-bind:search-result="searchResult"
+        />
+      </div>
     </div>
     <div v-if="search !== '' && !searching && searchResults.count == 0" class="row">
       No Results found.
@@ -26,6 +43,7 @@
 </template>
 <script>
   import _ from 'lodash';
+  import PulseLoader from 'vue-spinner/src/PulseLoader';
   import router from '../router';
   import AppSearchResult from './AppSearchResult';
   import AppPagination from './AppPagination';
@@ -62,12 +80,14 @@
         },
         error: null,
         searching: false,
+        loading: false,
       };
     },
     components: {
       // <my-component> will only be available in parent's template
       'search-result': AppSearchResult,
       pagination: AppPagination,
+      loading: PulseLoader,
     },
     created() {
       this.debouncedSearch();
@@ -100,7 +120,15 @@
         router.push(
           {
             name: 'search-result',
-            query: this.buildQueryParameters(),
+            query: this.buildQueryParameters(1),
+          });
+      },
+      pageSwitch(pageNumber) {
+        this.loading = true;
+        router.push(
+          {
+            name: 'search-result',
+            query: this.buildQueryParameters(pageNumber),
           });
       },
       getSearchParameters() {
@@ -113,10 +141,10 @@
 //          limit: 10,
         });
       },
-      buildQueryParameters() {
+      buildQueryParameters(pageNumber) {
         const query = {
           search: this.searchTerms,
-          page: this.page || 1,
+          page: pageNumber || this.page,
         };
         if (this.from_year) {
           query.from_year = this.from_year;
@@ -131,8 +159,6 @@
       },
       debouncedSearch: _.debounce(
         function fetchSearchResult() {
-          // eslint-disable-next-line
-          console.log('here', this.getSearchParameters());
           const query = this.getSearchParameters();
           if (query.search === '') {
             this.searching = false;
@@ -152,15 +178,37 @@
               },
             }).then((response) => {
               this.searchResults = response.body;
+              this.searchResults.params = query;
             }, (response) => {
               this.error = response.body.detail;
             }).then(() => {
               this.searching = false;
+              this.loading = false;
             });
           }
         },
         300,
       ),
+      hasPrevious() {
+        return this.searchResults.params.page > 1;
+      },
+      hasNext() {
+        return (this.searchResults.params.page * this.searchResults.params.page_size)
+          <= this.searchResults.count;
+      },
+      currentShowStart() {
+        const previousPage = this.searchResults.params.page - 1;
+        const itemsPerPage = this.searchResults.params.page_size;
+        const itemsDisplayed = previousPage * itemsPerPage;
+        return itemsDisplayed + 1;
+      },
+      currentShowEnd() {
+        const max = this.searchResults.params.page * this.searchResults.params.page_size;
+        if (max < this.searchResults.count) {
+          return max;
+        }
+        return this.searchResults.count;
+      },
     },
   };
 </script>
