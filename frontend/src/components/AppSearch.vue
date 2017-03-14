@@ -2,7 +2,7 @@
   <div class="container">
     <div class="form-group row">
       <div class="col-md-12 form-group form-inline">
-        <input v-model="searchText" @keyup.enter="searchEntered" type="search" class="form-control col-md-11" id="searchText" placeholder="Enter your search" />
+        <input v-model="searchTerms" @keyup.enter="searchEntered" type="search" class="form-control col-md-11" id="searchText" placeholder="Enter your search" />
         <input type="button" class="btn bg-faded" @click="searchEntered" value="Go" />
       </div>
     </div>
@@ -11,45 +11,52 @@
         <p>{{ error }}</p>
       </div>
     </div>
-    <div v-show="searching">Searching...</div>
-    <div v-if="searchResults.count > 0" class="row">
+    <div v-if="searching">Searching...</div>
+    <div v-if="!searching && searchResults.count > 0" class="row">
       <pagination></pagination>
       <search-result
         v-for="searchResult in searchResults.results"
         v-bind:search-result="searchResult"
       />
     </div>
-    <div v-if="searchResults.count == 0" class="row">
+    <div v-if="search !== '' && !searching && searchResults.count == 0" class="row">
       No Results found.
     </div>
   </div>
 </template>
 <script>
   import _ from 'lodash';
+  import router from '../router';
   import AppSearchResult from './AppSearchResult';
   import AppPagination from './AppPagination';
 
   export default {
     name: 'app-search',
-    components: {
-      // <my-component> will only be available in parent's template
-      'search-result': AppSearchResult,
-      pagination: AppPagination,
+    props: {
+      search: {
+        type: String,
+        default: '',
+      },
+      page: {
+        type: Number,
+        default: 1,
+      },
+      is_latest: {
+        type: Boolean,
+        default: false,
+      },
+      from_year: {
+        type: Number,
+        required: false,
+      },
+      to_year: {
+        type: Number,
+        required: false,
+      },
     },
     data() {
       return {
-        searchText: '',
-        searchParams: {
-          search: '',
-          language: this.getUserLanguage(),
-//          ordering: '',
-//          limit: 10,
-          page_size: 10,
-          page: 1,
-          from_year: null,
-          to_year: null,
-          is_latest: false,
-        },
+        searchTerms: this.search,
         searchResults: {
           count: 0,
         },
@@ -57,10 +64,17 @@
         searching: false,
       };
     },
+    components: {
+      // <my-component> will only be available in parent's template
+      'search-result': AppSearchResult,
+      pagination: AppPagination,
+    },
+    created() {
+      this.debouncedSearch();
+    },
     watch: {
-      searchText() {
-//                TODO: type-ahead!!!
-      },
+      // call again the method if the route changes
+      $route: 'debouncedSearch',
     },
     methods: {
       getUserLanguage() {
@@ -83,25 +97,50 @@
       },
       searchEntered() {
         this.searching = true;
-        this.clearResults();
-        this.debouncedSearch();
+        router.push(
+          {
+            name: 'search-result',
+            query: this.buildQueryParameters(),
+          });
       },
-      clearResults() {
-        this.searchResults = { count: 0 };
-        this.error = null;
+      getSearchParameters() {
+        const query = this.buildQueryParameters();
+        return Object.assign(query, {
+//          DEFAULT PARAMETERS
+          page_size: 10,
+          language: this.getUserLanguage(),
+//          ordering: this.ordering,
+//          limit: 10,
+        });
+      },
+      buildQueryParameters() {
+        const query = {
+          search: this.searchTerms,
+          page: this.page || 1,
+        };
+        if (this.from_year) {
+          query.from_year = this.from_year;
+        }
+        if (this.to_year) {
+          query.to_year = this.to_year;
+        }
+        if (this.is_latest) {
+          query.is_latest = this.is_latest;
+        }
+        return query;
       },
       debouncedSearch: _.debounce(
         function fetchSearchResult() {
           // eslint-disable-next-line
-          console.log(this.searchParams.language);
-          this.searchParams.search = this.searchText;
-          if (this.searchParams.search === '') {
+          console.log('here', this.getSearchParameters());
+          const query = this.getSearchParameters();
+          if (query.search === '') {
             this.searching = false;
             if (this.previousRequest) {
               this.previousRequest.abort();
             }
           } else {
-            this.$http.get('/api/search/', { params: this.searchParams }, {
+            this.$http.get('/api/search/', { params: query }, {
               // use before callback
               before(request) {
                 // abort previous request, if exists
@@ -112,7 +151,6 @@
                 this.previousRequest = request;
               },
             }).then((response) => {
-              // success callback
               this.searchResults = response.body;
             }, (response) => {
               this.error = response.body.detail;
