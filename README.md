@@ -7,3 +7,14 @@ Spec., API and technologies used:
 * PostgreSQL
 * OAI-PMH
 * (tbd.)
+
+
+## Usage
+
+```
+make build
+docker-compose up --build
+```
+
+For development go to http://localhost:8080
+for production to http://localhost:8080.
