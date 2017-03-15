@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="col-md-12">
     <loading v-if="loading"></loading>
     <div v-else>
       <div v-if="this.error" class="alert-danger">
@@ -7,87 +7,87 @@
       </div>
       <div v-else>
         <span v-if="metadataItem.title">
-          <h4>Title</h4>
+          <h5>Title</h5>
           <p>{{metadataItem.title}}</p>
         </span>
         <span v-if="metadataItem.abstract">
-          <h4>Abstract</h4>
+          <h5>Abstract</h5>
           <p>{{metadataItem.abstract}}</p>
         </span>
         <span v-if="metadataItem.publication_year">
-          <h4>Publication Year</h4>
+          <h5>Publication Year</h5>
           <p>{{metadataItem.publication_year}}</p>
         </span>
         <span v-if="metadataItem.publication_lineage">
-          <h4>Publication Lineage</h4>
+          <h5>Publication Lineage</h5>
           <p>{{metadataItem.publication_lineage}}</p>
         </span>
         <span v-if="metadataItem.is_latest">
-          <h4>Latest in series</h4>
+          <h5>Latest in series</h5>
           <p>{{metadataItem.is_latest | truthiness}}</p>
         </span>
         <span v-if="metadataItem.geography">
-          <h4>Geography</h4>
+          <h5>Geography</h5>
           <p>{{metadataItem.geography}}</p>
         </span>
         <span v-if="metadataItem.geodata_type">
-          <h4>Geodata Type</h4>
+          <h5>Geodata Type</h5>
           <p>{{metadataItem.geodata_type}}</p>
         </span>
         <span v-if="metadataItem.source">
-          <h4>Source</h4>
+          <h5>Source</h5>
           <p>{{metadataItem.source}}</p>
         </span>
         <span v-if="metadataItem.metadata_link">
-          <h4>Metadata Link</h4>
+          <h5>Metadata Link</h5>
           <p>{{metadataItem.metadata_link}}</p>
         </span>
         <span v-if="metadataItem.access_link">
-          <h4>Access Link</h4>
+          <h5>Access Link</h5>
           <p>{{metadataItem.access_link}}</p>
         </span>
         <span v-if="metadataItem.base_link">
-          <h4>Base Link</h4>
+          <h5>Base Link</h5>
           <p>{{metadataItem.base_link}}</p>
         </span>
         <span v-if="metadataItem.collection">
-          <h4>Collection</h4>
+          <h5>Collection</h5>
           <p>{{metadataItem.collection}}</p>
         </span>
         <span v-if="metadataItem.dataset">
-          <h4>Dataset</h4>
+          <h5>Dataset</h5>
           <p>{{metadataItem.dataset}}</p>
         </span>
         <span v-if="metadataItem.arcgis_layer_link">
-          <h4>ArcGIS Layer Link</h4>
+          <h5>ArcGIS Layer Link</h5>
           <p>{{metadataItem.arcgis_layer_link}}</p>
         </span>
         <span v-if="metadataItem.qgis_layer_link">
-          <h4>QGIS Layer Link</h4>
+          <h5>QGIS Layer Link</h5>
           <p>{{metadataItem.qgis_layer_link}}</p>
         </span>
         <span v-if="metadataItem.arcgis_symbology_link">
-          <h4>ArcGIS Symbology Link</h4>
+          <h5>ArcGIS Symbology Link</h5>
           <p>{{metadataItem.arcgis_symbology_link}}</p>
         </span>
         <span v-if="metadataItem.qgis_symbology_link">
-          <h4>QGIS Symbology Link</h4>
+          <h5>QGIS Symbology Link</h5>
           <p>{{metadataItem.qgis_symbology_link}}</p>
         </span>
         <span v-if="metadataItem.service_type">
-          <h4>Service Type</h4>
+          <h5>Service Type</h5>
           <p>{{metadataItem.service_type}}</p>
         </span>
         <span v-if="metadataItem.crs">
-          <h4>CRS (Coordinate Reference System)</h4>
+          <h5>CRS (Coordinate Reference System)</h5>
           <p>{{metadataItem.crs}}</p>
         </span>
         <span v-if="metadataItem.term_link">
-          <h4>Terms of Use</h4>
+          <h5>Terms of Use</h5>
           <p>{{metadataItem.term_link}}</p>
         </span>
         <span v-if="metadataItem.modified">
-          <h4>Last Modification</h4>
+          <h5>Last Modification</h5>
           <p>{{metadataItem.modified | dateify}}</p>
         </span>
       </div>
