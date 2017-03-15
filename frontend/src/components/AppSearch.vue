@@ -11,10 +11,7 @@
         <p>{{ error }}</p>
       </div>
     </div>
-    <div v-if="searching">
-      Searching <loading></loading>
-    </div>
-    <div v-if="!searching && searchResults.count > 0" class="row">
+    <div v-if="searchResults.count > 0" class="row">
       <loading v-if="loading">loading...</loading>
       <div v-else>
         <div class="col-12 row">
@@ -36,7 +33,7 @@
         />
       </div>
     </div>
-    <div v-if="search !== '' && !searching && searchResults.count == 0" class="row">
+    <div v-if="search !== '' && searchResults.count == 0" class="row">
       No Results found.
     </div>
   </div>
@@ -91,11 +88,14 @@
       loading: PulseLoader,
     },
     created() {
-      this.debouncedSearch();
+//      This is executed on page load, we just proceed as if it were a route change.
+      if (this.search) {
+        this.routeChanged();
+      }
     },
     watch: {
       // call again the method if the route changes
-      $route: 'debouncedSearch',
+      $route: 'routeChanged',
     },
     methods: {
       getUserLanguage() {
@@ -117,12 +117,14 @@
         return userLanguage;
       },
       searchEntered() {
-        this.searching = true;
-        router.push(
-          {
-            name: 'search-result',
-            query: this.buildQueryParameters(1),
-          });
+        if (this.searchTerms && this.searchTerms !== '') {
+          this.searching = true;
+          router.push(
+            {
+              name: 'search-result',
+              query: this.buildQueryParameters(1),
+            });
+        }
       },
       pageSwitch(pageNumber) {
         this.loading = true;
@@ -158,6 +160,13 @@
         }
         return query;
       },
+      routeChanged() {
+//        TODO: remove this duplication: this.searchTerms is already assigned a value
+//        unless we're using browser history (back/forward)
+        this.searchTerms = this.search;
+        this.loading = true;
+        this.debouncedSearch();
+      },
       debouncedSearch: _.debounce(
         function fetchSearchResult() {
           const query = this.getSearchParameters();
@@ -183,12 +192,11 @@
             }, (response) => {
               this.error = response.body.detail;
             }).then(() => {
-              this.searching = false;
               this.loading = false;
             });
           }
         },
-        300,
+        100,
       ),
       hasPrevious() {
         return this.searchResults.params.page > 1;
