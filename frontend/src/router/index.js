@@ -23,5 +23,10 @@ export default new Router({
         to_year: route.query.to_year,
       }),
     },
+    {
+      path: '/search',
+      name: 'search',
+      component: AppSearch,
+    },
   ],
 });

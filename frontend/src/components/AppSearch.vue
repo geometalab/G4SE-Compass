@@ -1,9 +1,14 @@
 <template>
   <div class="container">
     <div class="form-group row">
-      <div class="col-md-12 form-group form-inline">
+      <div class="col-md-12 form-group input-group">
         <input v-model="searchTerms" @keyup.enter="searchEntered" type="search" class="form-control col-md-11" id="searchText" placeholder="Enter your search" />
-        <input type="button" class="btn bg-faded" @click="searchEntered" value="Go" />
+        <span class="input-group-btn">
+          <input type="button" class="btn bg-faded" @click="searchEntered" value="Go" />
+        </span>
+        <span class="input-group-btn">
+          <input type="button" class="btn bg-faded" @click="clear" id="clearSearch" value="Clear" />
+        </span>
       </div>
     </div>
     <div class="row">
@@ -78,7 +83,7 @@
     },
     created() {
       // This is executed on page load, we just proceed as if it were a route change.
-      if (this.search) {
+      if (this.search && this.search !== '') {
         this.routeChanged();
       }
     },
@@ -108,17 +113,20 @@
       },
       searchEntered() {
         if (this.searchTerms && this.searchTerms !== '') {
-          this.searching = true;
           this.$store.state.paginationPage = 1;
-          router.push(
-            {
-              name: 'search-result',
-              query: this.buildQueryParameters(1),
-            });
+          this.changeRoute();
         }
       },
+      clear() {
+        this.$store.state.paginationPage = 1;
+        this.searchTerms = '';
+        this.searchResults = { count: 0 };
+        router.push(
+          {
+            name: 'search',
+          });
+      },
       changeRoute() {
-        this.loading = true;
         router.push(
           {
             name: 'search-result',
@@ -129,8 +137,10 @@
         // TODO: remove this duplication: this.searchTerms is already assigned a value
         // unless we're using browser history (back/forward)
         this.searchTerms = this.search;
+        if (this.search && this.search !== '') {
+          this.loading = true;
+        }
         this.$store.state.paginationPage = this.page;
-        this.loading = true;
         this.debouncedSearch();
       },
       getSearchParameters() {
@@ -144,8 +154,12 @@
         });
       },
       buildQueryParameters() {
+        let search = this.search;
+        if (this.searchTerms && this.searchTerms !== '') {
+          search = this.searchTerms;
+        }
         const query = {
-          search: this.searchTerms,
+          search,
           page: this.$store.state.paginationPage,
         };
         if (this.from_year) {
