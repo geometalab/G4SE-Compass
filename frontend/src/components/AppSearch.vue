@@ -15,17 +15,7 @@
       <loading v-if="loading">loading...</loading>
       <div v-else>
         <div class="col-12 row">
-          <ul class="pagination pagination-sm">
-            <li class="page-item" v-bind:class="{ disabled: !hasPrevious() }">
-              <a class="page-link" v-on:click="pageSwitch(page - 1), $event">Previous</a>
-            </li>
-            <li class="page-item disabled">
-              <a class="page-link">Showing {{currentShowStart()}}-{{currentShowEnd()}} of total {{searchResults.count}} results.</a>
-            </li>
-            <li class="page-item" v-bind:class="{ disabled: !hasNext() }">
-              <a class="page-link" v-on:click="pageSwitch(page + 1), $event">Next</a>
-            </li>
-          </ul>
+          <pagination :search-results="searchResults"></pagination>
         </div>
         <search-result
           v-for="searchResult in searchResults.results"
@@ -82,13 +72,12 @@
       };
     },
     components: {
-      // <my-component> will only be available in parent's template
       'search-result': AppSearchResult,
       pagination: AppPagination,
       loading: PulseLoader,
     },
     created() {
-//      This is executed on page load, we just proceed as if it were a route change.
+      // This is executed on page load, we just proceed as if it were a route change.
       if (this.search) {
         this.routeChanged();
       }
@@ -96,6 +85,7 @@
     watch: {
       // call again the method if the route changes
       $route: 'routeChanged',
+      '$store.state.paginationPage': 'changeRoute',
     },
     methods: {
       getUserLanguage() {
@@ -119,6 +109,7 @@
       searchEntered() {
         if (this.searchTerms && this.searchTerms !== '') {
           this.searching = true;
+          this.$store.state.paginationPage = 1;
           router.push(
             {
               name: 'search-result',
@@ -126,28 +117,36 @@
             });
         }
       },
-      pageSwitch(pageNumber) {
+      changeRoute() {
         this.loading = true;
         router.push(
           {
             name: 'search-result',
-            query: this.buildQueryParameters(pageNumber),
+            query: this.buildQueryParameters(),
           });
+      },
+      routeChanged() {
+        // TODO: remove this duplication: this.searchTerms is already assigned a value
+        // unless we're using browser history (back/forward)
+        this.searchTerms = this.search;
+        this.$store.state.paginationPage = this.page;
+        this.loading = true;
+        this.debouncedSearch();
       },
       getSearchParameters() {
         const query = this.buildQueryParameters();
         return Object.assign(query, {
-//          DEFAULT PARAMETERS
+          // DEFAULT PARAMETERS
           page_size: 10,
           language: this.getUserLanguage(),
-//          ordering: this.ordering,
-//          limit: 10,
+          // ordering: this.ordering,
+          // limit: 10,
         });
       },
-      buildQueryParameters(pageNumber) {
+      buildQueryParameters() {
         const query = {
           search: this.searchTerms,
-          page: pageNumber || this.page,
+          page: this.$store.state.paginationPage,
         };
         if (this.from_year) {
           query.from_year = this.from_year;
@@ -159,13 +158,6 @@
           query.is_latest = this.is_latest;
         }
         return query;
-      },
-      routeChanged() {
-//        TODO: remove this duplication: this.searchTerms is already assigned a value
-//        unless we're using browser history (back/forward)
-        this.searchTerms = this.search;
-        this.loading = true;
-        this.debouncedSearch();
       },
       debouncedSearch: _.debounce(
         function fetchSearchResult() {
@@ -198,26 +190,6 @@
         },
         100,
       ),
-      hasPrevious() {
-        return this.searchResults.params.page > 1;
-      },
-      hasNext() {
-        return (this.searchResults.params.page * this.searchResults.params.page_size)
-          <= this.searchResults.count;
-      },
-      currentShowStart() {
-        const previousPage = this.searchResults.params.page - 1;
-        const itemsPerPage = this.searchResults.params.page_size;
-        const itemsDisplayed = previousPage * itemsPerPage;
-        return itemsDisplayed + 1;
-      },
-      currentShowEnd() {
-        const max = this.searchResults.params.page * this.searchResults.params.page_size;
-        if (max < this.searchResults.count) {
-          return max;
-        }
-        return this.searchResults.count;
-      },
     },
   };
 </script>

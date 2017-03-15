@@ -1,14 +1,14 @@
 <template>
-  <nav aria-label="Page Navigation">
+  <nav aria-label="Pagination">
     <ul class="pagination pagination-sm">
-      <li class="page-item disabled">
-        <a class="page-link" href="#">Previous</a>
+      <li class="page-item" v-bind:class="{ disabled: !hasPrevious() }">
+        <a class="page-link" v-on:click="pageSwitch(page - 1), $event">Previous</a>
       </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">current_page</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item">
-        <a class="page-link" href="#">Next</a>
+      <li class="page-item disabled">
+        <a class="page-link">Showing {{currentShowStart()}}-{{currentShowEnd()}} of total {{searchResults.count}} results.</a>
+      </li>
+      <li class="page-item" v-bind:class="{ disabled: !hasNext() }">
+        <a class="page-link" v-on:click="pageSwitch(page + 1), $event">Next</a>
       </li>
     </ul>
   </nav>
@@ -17,15 +17,40 @@
   export default {
     name: 'app-pagination',
     props: {
-      current_page: {
-        type: Number,
+      searchResults: {
+        type: Object,
         required: true,
       },
     },
     data() {
       return {
-        msg: 'header vue',
+        page: this.$store.state.paginationPage,
       };
+    },
+    methods: {
+      pageSwitch(pageNumber) {
+        this.$store.state.paginationPage = pageNumber;
+      },
+      hasPrevious() {
+        return this.searchResults.params.page > 1;
+      },
+      hasNext() {
+        return (this.searchResults.params.page * this.searchResults.params.page_size)
+          <= this.searchResults.count;
+      },
+      currentShowStart() {
+        const previousPage = this.searchResults.params.page - 1;
+        const itemsPerPage = this.searchResults.params.page_size;
+        const itemsDisplayed = previousPage * itemsPerPage;
+        return itemsDisplayed + 1;
+      },
+      currentShowEnd() {
+        const max = this.searchResults.params.page * this.searchResults.params.page_size;
+        if (max < this.searchResults.count) {
+          return max;
+        }
+        return this.searchResults.count;
+      },
     },
   };
 </script>
