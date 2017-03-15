@@ -33,8 +33,8 @@
   import _ from 'lodash';
   import PulseLoader from 'vue-spinner/src/PulseLoader';
   import router from '../router';
-  import AppSearchResult from './AppSearchResult';
-  import AppPagination from './AppPagination';
+  import SearchResult from './AppSearchResult';
+  import Pagination from './AppPagination';
 
   export default {
     name: 'app-search',
@@ -72,8 +72,8 @@
       };
     },
     components: {
-      'search-result': AppSearchResult,
-      pagination: AppPagination,
+      'search-result': SearchResult,
+      pagination: Pagination,
       loading: PulseLoader,
     },
     created() {
