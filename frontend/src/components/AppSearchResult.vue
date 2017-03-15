@@ -10,6 +10,9 @@
           {{searchResult.abstract}}
         </p>
       </div>
+      <div class="card-block">
+        <router-link :to="{ path: `/metadata/${searchResult.api_id}` }">Full Details</router-link>
+      </div>
     </div>
   </div>
 </template>

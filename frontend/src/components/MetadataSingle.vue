@@ -1,5 +1,6 @@
 <template>
   <div class="col-md-12">
+    <button class="btn btn-sm" @click="back()" style="margin-bottom: 10px;">Back</button>
     <loading v-if="loading"></loading>
     <div v-else>
       <div v-if="this.error" class="alert-danger">
@@ -133,6 +134,9 @@
         }).then(() => {
           this.loading = false;
         });
+      },
+      back() {
+        window.history.back();
       },
     },
     filters: {
