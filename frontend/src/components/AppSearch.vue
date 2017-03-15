@@ -200,8 +200,10 @@
             }).then((response) => {
               this.searchResults = response.body;
               this.searchResults.params = query;
+              this.error = null;
             }, (response) => {
               this.error = response.body.detail;
+              this.searchResults = { count: 0 };
             }).then(() => {
               this.loading = false;
             });
