@@ -6,10 +6,10 @@
         {{this.error}}
       </div>
       <div v-else>
-        <h3>{{metadataItem.title}} ({{metadataItem.id}})</h3>
+        <h3>{{metadataItem.title}}</h3>
         <span v-if="metadataItem.title">
-          <h5>Title</h5>
-          <p>{{metadataItem.title}}</p>
+          <h5>ID</h5>
+          <p>{{metadataItem.api_id}}</p>
         </span>
         <span v-if="metadataItem.abstract">
           <h5>Abstract</h5>
