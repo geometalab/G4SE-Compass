@@ -22,10 +22,12 @@
         <div class="col-12 row">
           <pagination :search-results="searchResults"></pagination>
         </div>
-        <search-result
-          v-for="searchResult in searchResults.results"
-          v-bind:search-result="searchResult"
-        />
+        <div class="row">
+          <search-result
+            v-for="searchResult in searchResults.results"
+            v-bind:search-result="searchResult"
+          />
+        </div>
       </div>
     </div>
     <div v-if="search !== '' && searchResults.count == 0" class="row">
