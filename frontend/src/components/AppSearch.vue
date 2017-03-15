@@ -28,6 +28,9 @@
             v-bind:search-result="searchResult"
           />
         </div>
+        <div class="col-12 row">
+          <pagination :search-results="searchResults"></pagination>
+        </div>
       </div>
     </div>
     <div v-if="search !== '' && searchResults.count == 0" class="row">
@@ -204,7 +207,7 @@
             });
           }
         },
-        100,
+        60,
       ),
     },
   };
