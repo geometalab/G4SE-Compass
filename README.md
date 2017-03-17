@@ -12,6 +12,9 @@ Spec., API and technologies used:
 ## Usage
 
 ```
+cd frontend/
+npm install
+cd ..
 make build
 docker-compose up --build
 ```
