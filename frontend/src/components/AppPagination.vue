@@ -2,13 +2,13 @@
   <nav aria-label="Pagination">
     <ul class="pagination pagination-sm">
       <li class="page-item" v-bind:class="{ disabled: !hasPrevious() }">
-        <a class="page-link" v-on:click="pageSwitch(page - 1), $event">Previous</a>
+        <a class="page-link" v-on:click="previousPage()">Previous</a>
       </li>
       <li class="page-item disabled">
         <a class="page-link">Showing {{currentShowStart()}}-{{currentShowEnd()}} of total {{searchResults.count}} results.</a>
       </li>
       <li class="page-item" v-bind:class="{ disabled: !hasNext() }">
-        <a class="page-link" v-on:click="pageSwitch(page + 1), $event">Next</a>
+        <a class="page-link" v-on:click="nextPage()">Next</a>
       </li>
     </ul>
   </nav>
@@ -22,14 +22,16 @@
         required: true,
       },
     },
-    data() {
-      return {
-        page: this.$store.state.paginationPage,
-      };
-    },
     methods: {
-      pageSwitch(pageNumber) {
-        this.$store.state.paginationPage = pageNumber;
+      previousPage() {
+        if (this.hasPrevious()) {
+          this.$store.commit('previousPage');
+        }
+      },
+      nextPage() {
+        if (this.hasNext()) {
+          this.$store.commit('nextPage');
+        }
       },
       hasPrevious() {
         return this.searchResults.params.page > 1;

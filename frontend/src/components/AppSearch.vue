@@ -146,7 +146,7 @@
         if (this.search && this.search !== '') {
           this.loading = true;
         }
-        this.$store.state.paginationPage = this.page;
+        this.$store.commit('setPage', this.page);
         this.debouncedSearch();
       },
       getSearchParameters() {
