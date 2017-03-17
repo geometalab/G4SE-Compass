@@ -34,20 +34,20 @@
         }
       },
       hasPrevious() {
-        return this.searchResults.params.page > 1;
+        return this.$store.state.paginationPage > 1;
       },
       hasNext() {
-        return (this.searchResults.params.page * this.searchResults.params.page_size)
+        return (this.$store.state.paginationPage * this.$store.state.searchParameters.page_size)
           <= this.searchResults.count;
       },
       currentShowStart() {
-        const previousPage = this.searchResults.params.page - 1;
-        const itemsPerPage = this.searchResults.params.page_size;
+        const previousPage = this.$store.state.paginationPage - 1;
+        const itemsPerPage = this.$store.state.searchParameters.page_size;
         const itemsDisplayed = previousPage * itemsPerPage;
         return itemsDisplayed + 1;
       },
       currentShowEnd() {
-        const max = this.searchResults.params.page * this.searchResults.params.page_size;
+        const max = this.$store.state.paginationPage * this.$store.state.searchParameters.page_size;
         if (max < this.searchResults.count) {
           return max;
         }

@@ -16,7 +16,7 @@
         <p>{{ error }}</p>
       </div>
     </div>
-    <div v-if="searchResults.count > 0" class="row">
+    <div v-if="searchResults && searchResults.count > 0" class="row">
       <loading v-if="loading">loading...</loading>
       <div v-else>
         <div class="col-12 row">
@@ -33,18 +33,18 @@
         </div>
       </div>
     </div>
-    <div v-if="search !== '' && searchResults.count == 0" class="row">
+    <div v-if="searchResults && searchResults.count == 0" class="row">
       No Results found.
     </div>
   </div>
 </template>
 <script>
   // TODO: Refactor this huge hunk of a module!
-  import _ from 'lodash';
   import PulseLoader from 'vue-spinner/src/PulseLoader';
   import router from '../router';
   import SearchResult from './AppSearchResult';
   import Pagination from './AppPagination';
+  import search from '../api/search';
 
   export default {
     name: 'app-search',
@@ -73,12 +73,9 @@
     data() {
       return {
         searchTerms: this.search,
-        searchResults: {
-          count: 0,
-        },
-        error: null,
-        searching: false,
-        loading: false,
+        loading: this.$store.state.searchInProgress,
+        error: this.$store.state.searchError,
+        searchResults: this.$store.state.searchResults,
       };
     },
     components: {
@@ -89,13 +86,16 @@
     created() {
       // This is executed on page load, we just proceed as if it were a route change.
       if (this.search && this.search !== '') {
-        this.routeChanged();
+        this.searchTerms = this.search;
+        this.$store.commit('setPage', this.page);
+        this.doSearch();
       }
     },
     watch: {
       // call again the method if the route changes
       $route: 'routeChanged',
       '$store.state.paginationPage': 'changeRoute',
+      '$store.state.searchResults': 'updateResults',
     },
     methods: {
       getUserLanguage() {
@@ -118,100 +118,41 @@
       },
       searchEntered() {
         if (this.searchTerms && this.searchTerms !== '') {
-          this.$store.state.paginationPage = 1;
+          this.$store.commit('setSearchParameters', {
+            search: this.searchTerms,
+            page: this.page,
+          });
           this.changeRoute();
         }
       },
       clear() {
-        this.$store.state.paginationPage = 1;
+        this.$store.commit('resetSearch');
         this.searchTerms = '';
-        this.searchResults = { count: 0 };
-        router.push(
-          {
-            name: 'search',
-            query: null,
-          });
+        this.changeRoute();
       },
       changeRoute() {
         router.push(
           {
             name: 'search-result',
-            query: this.buildQueryParameters(),
+            query: this.$store.getters.getSearchParameters,
           });
       },
       routeChanged() {
-        // TODO: remove this duplication: this.searchTerms is already assigned a value
-        // unless we're using browser history (back/forward)
-        this.searchTerms = this.search;
-        if (this.search && this.search !== '') {
-          this.loading = true;
-        }
-        this.$store.commit('setPage', this.page);
-        this.debouncedSearch();
+        this.doSearch();
+        this.updateResults();
       },
-      getSearchParameters() {
-        const query = this.buildQueryParameters();
-        return Object.assign(query, {
-          // DEFAULT PARAMETERS
-          page_size: 10,
-          language: this.getUserLanguage(),
-          // ordering: this.ordering,
-          // limit: 10,
-        });
-      },
-      buildQueryParameters() {
-        let search = this.search;
+      doSearch() {
         if (this.searchTerms && this.searchTerms !== '') {
-          search = this.searchTerms;
+          this.$store.commit('setSearchParameters', {
+            search: this.searchTerms,
+            page: this.page,
+          });
+          search.search(this.$store.state.searchParameters);
         }
-        const query = {
-          search,
-          page: this.$store.state.paginationPage,
-        };
-        if (this.from_year) {
-          query.from_year = this.from_year;
-        }
-        if (this.to_year) {
-          query.to_year = this.to_year;
-        }
-        if (this.is_latest) {
-          query.is_latest = this.is_latest;
-        }
-        return query;
       },
-      debouncedSearch: _.debounce(
-        function fetchSearchResult() {
-          const query = this.getSearchParameters();
-          if (query.search === '') {
-            this.searching = false;
-            if (this.previousRequest) {
-              this.previousRequest.abort();
-            }
-          } else {
-            this.$http.get('/api/search/', { params: query }, {
-              // use before callback
-              before(request) {
-                // abort previous request, if exists
-                if (this.previousRequest) {
-                  this.previousRequest.abort();
-                }
-                // set previous request on Vue instance
-                this.previousRequest = request;
-              },
-            }).then((response) => {
-              this.searchResults = response.body;
-              this.searchResults.params = query;
-              this.error = null;
-            }, (response) => {
-              this.error = response.body.detail;
-              this.searchResults = { count: 0 };
-            }).then(() => {
-              this.loading = false;
-            });
-          }
-        },
-        60,
-      ),
+      updateResults() {
+        this.searchResults = this.$store.state.searchResults;
+      },
     },
   };
 </script>
