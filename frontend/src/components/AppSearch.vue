@@ -129,6 +129,7 @@
         router.push(
           {
             name: 'search',
+            query: null,
           });
       },
       changeRoute() {
