@@ -36,27 +36,26 @@ DB-internal attributes:
 * tsv_en
 * tsv_fr
 
-
 # Data access
 Currently dataset and collection define data access/source (accompanied with mandatory service_type). This is still unclear...!
 
 # Data sources
 ## GeoVITe - Webapp:
 * Weblink
- 
+
 ## ArcGIS REST API FeatureService:
 * ArcGIS (mit Direct Access Link)
 * ArcGIS (mit Entry Point)
 * QGIS Connector v0.x (mit Direct Access Link)
 * QGIS Connector v1.x geplant (mit Entry Point)
- 
+
 ## ArcGIS REST API MapService (new):
 * QGIS QuickMapService Plugin (mit gdal_ags.xml)
- 
-## WMS (nice-to-have): 
-* QGIS Core (mit Entry point URL) 
+
+## WMS (nice-to-have):
+* QGIS Core (mit Entry point URL)
 * QGIS QuickMapService Plugin (mit Entry point)
- 
+
 ## Examples
 ### GeoVITe:
 * Metadata language         : de
@@ -82,7 +81,7 @@ Currently dataset and collection define data access/source (accompanied with man
 * Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
 * Proving date              : 2016-01-02
 * Access restriction        : public
- 
+
 ### ArcGIS REST API FeatureService:
 * Metadata language         : de
 * Title                     : Topologisches Landschaftsmodell TLM, Fliessgewässer
@@ -107,7 +106,7 @@ Currently dataset and collection define data access/source (accompanied with man
 * Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
 * Proving date              : 2015-03-04
 * Access restriction        : public
-        
+
 ### ArcGIS REST API MapService:
 * Metadata language         : de
 * Title                     : Topologisches Landschaftsmodell TLM, Bodenbedeckung
@@ -125,14 +124,14 @@ Currently dataset and collection define data access/source (accompanied with man
 * Dataset name              : TLM_BODENBEDECKUNG
 * ArcGIS layer link         : https://geodata4edu.hsr.ch/share/TLM_BODENBEDECKUNG.pitem
 * QGIS layer link           : https://geodata4edu.hsr.ch/share/TLM_BODENBEDECKUNG.xml
-* ArcGIS symbology link     : - 
+* ArcGIS symbology link     : -
 * QGIS symbology link       : -
 * Service type              : MapService
 * CRS                       : EPSG:21781
 * Terms of use              : http://www.swisstopo.admin.ch/internet/swisstopo/de/home/swisstopo/legal_bases/copyright.html
 * Proving date              : 2015-03-04
 * Access restriction        : public
- 
+
 ### WMS KtZH:
 * Metadata language         : de
 * Title                     : Baustellen Kantonsstrassen

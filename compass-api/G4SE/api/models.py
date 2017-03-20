@@ -51,6 +51,10 @@ class TranslationTag(models.Model):
     def __str__(self):
         return "{}/{}/{}".format(self.tag_de, self.tag_en, self.tag_fr)
 
+    class Meta:
+        verbose_name = _('Word list entry')
+        verbose_name_plural = _('Word list entries')
+
 
 class GeoServiceMetadata(models.Model):
     """
