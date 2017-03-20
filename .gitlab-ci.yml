@@ -26,6 +26,7 @@ integration and unit tests:
   stage: integration and unit tests
   image: geometalab/docker-builder
   script:
+  - docker-compose -f ${COMPOSE_FILE} build api
   - docker-compose -f ${COMPOSE_FILE} run --rm api bash -c "pytest -q --flake8 && pytest"
 
 build staging images:
