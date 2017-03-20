@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib import admin
+from import_export import resources
+from import_export.admin import ExportMixin
 
 from api.forms import GeoVITeImportDataAdminForm
 from api.models import TranslationTag, GeoServiceMetadata, GEO_SERVICE_METADATA_AGREED_FIELDS, GeoVITeImportData
@@ -18,7 +20,13 @@ class EditableGeoServiceMetadataForm(forms.ModelForm):
         fields = GEO_SERVICE_METADATA_AGREED_FIELDS[1:-1]
 
 
-class TranslationTagAdmin(admin.ModelAdmin):
+class TranslationTagResource(resources.ModelResource):
+    class Meta:
+        model = TranslationTag
+
+
+class TranslationTagAdmin(ExportMixin, admin.ModelAdmin):
+    resource_class = TranslationTagResource
     list_display = [
         'tag_de', 'tag_en', 'tag_fr', 'tag_alternatives_de', 'tag_alternatives_en', 'tag_alternatives_fr',
     ]
