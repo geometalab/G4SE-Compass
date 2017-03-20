@@ -11,7 +11,7 @@
         </p>
       </div>
       <div class="card-block">
-        <router-link :to="{ path: `/metadata/${searchResult.api_id}` }">Full Details</router-link>
+        <router-link :to="{ path: `/metadata/${searchResult.api_id}` }" class="btn btn-outline-primary">Details</router-link>
       </div>
     </div>
   </div>

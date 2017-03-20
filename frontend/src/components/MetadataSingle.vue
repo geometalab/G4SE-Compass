@@ -1,6 +1,6 @@
 <template>
   <div class="col-md-12">
-    <button class="btn btn-sm" @click="back()" style="margin-bottom: 10px;">Back</button>
+    <button class="btn btn-sm" @click="back()" style="margin-bottom: 10px;" v-if="!isModal">Back</button>
     <loading v-if="loading"></loading>
     <div v-else>
       <div v-if="this.error" class="alert-danger">
@@ -106,6 +106,11 @@
       id: {
         type: String,
         required: true,
+      },
+      isModal: {
+        type: Boolean,
+        default: false,
+        required: false,
       },
     },
     created() {

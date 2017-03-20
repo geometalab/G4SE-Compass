@@ -10,7 +10,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     paginationPage: 1,
-    searchParameters: null,
+    searchParameters: {},
     searchResults: null,
     searchError: null,
     searchInProgress: false,
@@ -41,7 +41,7 @@ export default new Vuex.Store({
     },
     resetSearch(state) {
       state.paginationPage = 1;
-      state.searchParameters = null;
+      state.searchParameters = {};
       state.searchResults = null;
     },
     setSearchParameters(state, parameters) {
