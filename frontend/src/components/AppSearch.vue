@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div class="form-group row">
       <div class="col-md-12 form-group input-group">
         <input v-model="searchTerms" @keyup.enter="searchEntered" type="search" class="form-control col-md-11" id="searchText" placeholder="Enter your search" />
