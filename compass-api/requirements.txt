@@ -18,10 +18,10 @@ django-filter==1.0.1
 django-haystack==2.6.0    # via drf-haystack
 django-import-export==0.5.1
 django-rest-swagger==2.1.2
-django-rq==0.9.4
+django-rq==0.9.5
 Django==1.10.6            # via django-environ, django-haystack, django-rq, drf-haystack
 djangorestframework==3.6.2
-drf-haystack==v1.6.0rc3
+drf-haystack==1.6.1
 elasticsearch==1.9.0
 grako==3.19.1
 gunicorn==19.7.0
