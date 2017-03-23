@@ -13,6 +13,7 @@ const search = {
     searchParameters: {
       page: 1,
     },
+    language: null,
   },
   mutations: {
     updateResults(state, results, errors) {
@@ -36,6 +37,9 @@ const search = {
     },
     nextPage(state) {
       state.searchParameters.page += 1;
+    },
+    setLanguage(state, language) {
+      state.language = language;
     },
     reset(state) {
       state.processing = false;
@@ -110,7 +114,11 @@ const search = {
       return `Showing ${itemsNumberStart}-${itemsNumberEnd} of 
       total ${totalResults} results.`;
     },
-    getUserLanguage() {
+    getUserLanguage(state, getters) {
+      console.log('language', state.language, getters.getDefaultUserLanguage);
+      return state.language || getters.getDefaultUserLanguage;
+    },
+    getDefaultUserLanguage() {
       let userLanguage;
       if (navigator.languages) {
         userLanguage = navigator.languages[0];

@@ -18,7 +18,6 @@
     </div>
     <loading v-if="loadingInProgress">loading...</loading>
     <div v-if="searchResults && searchResults.count > 0" class="row">
-      <!--<loading v-if="loadingInProgress">loading...</loading>-->
       <div class="col-12 row">
         <pagination :search-results="searchResults"></pagination>
       </div>
@@ -40,7 +39,7 @@
 </template>
 <script>
   // TODO: Refactor this huge hunk of a module!
-  import { mapState } from 'vuex';
+  import { mapState, mapGetters } from 'vuex';
   import PulseLoader from 'vue-spinner/src/PulseLoader';
   import router from '../router';
   import SearchResult from './AppSearchResult';
@@ -73,13 +72,19 @@
     data() {
       return {
         searchTerms: this.search,
+        selectedLanguage: 'de',
       };
     },
-    computed: mapState({
-      loadingInProgress: state => state.search.processing,
-      searchResults: state => state.search.results,
-      error: state => state.search.errors,
-    }),
+    computed: Object.assign(
+      mapGetters({
+        userLanguage: 'search/getUserLanguage',
+      }),
+      mapState({
+        loadingInProgress: state => state.search.processing,
+        searchResults: state => state.search.results,
+        error: state => state.search.errors,
+      }),
+    ),
     components: {
       'search-result': SearchResult,
       pagination: Pagination,
@@ -87,6 +92,7 @@
     },
     created() {
       // This is executed on page load, we just proceed as if it were a route change.
+      this.$store.commit('search/setLanguage', this.$route.query.language || 'en');
       this.routeChanged();
     },
     watch: {
@@ -112,6 +118,7 @@
             name: 'search-result-paginated',
             query: {
               search: this.searchTerms,
+              language: this.$store.getters['search/getUserLanguage'],
             },
             params: {
               page: this.$store.getters['search/currentPage'],
