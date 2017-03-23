@@ -10,26 +10,51 @@
           <input type="button" class="btn bg-faded" @click="clear" id="clearSearch" value="Clear" />
         </span>
       </div>
+      <div class="col-1 push-11">
+        <button
+          v-if="!showAdvancedOptions"
+          class="btn btn-outline-primary btn-sm"
+          @click="showAdvancedOptions = !showAdvancedOptions"
+          title="Show Filters">
+          <<
+        </button>
+        <button
+          v-if="showAdvancedOptions"
+          class="btn btn-outline-primary btn-sm"
+          @click="showAdvancedOptions = !showAdvancedOptions"
+          title="Hide Filters">
+          >>
+        </button>
+        </div>
     </div>
     <div class="row">
-      <div v-show="error" class="col-12 bg-warning">
+      <div v-if="error" class="col-12 bg-warning">
         <p>{{ error }}</p>
       </div>
     </div>
+    <div class="row">
+    </div>
     <loading v-if="loadingInProgress">loading...</loading>
     <div v-if="searchResults && searchResults.count > 0" class="row">
-      <div class="col-12 row">
-        <pagination :search-results="searchResults"></pagination>
-      </div>
-      <div class="row">
-        <search-result
-          v-for="searchResult in searchResults.results"
-          v-bind:search-result="searchResult"
-          :key="searchResult.api_id"
-        />
-      </div>
-      <div class="col-12 row">
-        <pagination :search-results="searchResults"></pagination>
+      <div :class="{ 'col-12': !showAdvancedOptions, 'col-8': showAdvancedOptions }">
+        <div class="col-12 row">
+          <pagination :search-results="searchResults"></pagination>
+        </div>
+        <div class="row">
+          <search-result
+            v-for="searchResult in searchResults.results"
+            v-bind:search-result="searchResult"
+            :key="searchResult.api_id"
+          />
+        </div>
+        <div class="col-12 row">
+          <pagination :search-results="searchResults"></pagination>
+        </div>
+        </div>
+      <div class="col-4" v-if="showAdvancedOptions">
+        <div class="row">
+          <h3>Filters</h3>
+        </div>
       </div>
     </div>
     <div v-if="searchResults && searchResults.count == 0" class="row">
@@ -73,6 +98,7 @@
       return {
         searchTerms: this.search,
         selectedLanguage: 'de',
+        showAdvancedOptions: false,
       };
     },
     computed: Object.assign(
