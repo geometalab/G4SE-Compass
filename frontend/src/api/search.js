@@ -123,7 +123,7 @@ const search = {
       if (userLanguage.includes('fr')) {
         userLanguage = 'fr';
       }
-      return userLanguage;
+      return userLanguage || 'en';
     },
   },
 };
