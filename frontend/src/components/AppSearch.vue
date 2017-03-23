@@ -4,7 +4,7 @@
       <div class="col-md-12 form-group input-group">
         <input v-model="searchTerms" @keyup.enter="searchEntered" type="search" class="form-control col-md-11" id="searchText" placeholder="Enter your search" />
         <span class="input-group-btn">
-          <input type="button" class="btn bg-faded" @click="searchEntered" value="Go" />
+          <input type="button" class="btn bg-faded" :class="{ disabled: search === searchTerms }" @click="searchEntered" value="Go" />
         </span>
         <span class="input-group-btn">
           <input type="button" class="btn bg-faded" @click="clear" id="clearSearch" value="Clear" />
