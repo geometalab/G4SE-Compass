@@ -18,16 +18,22 @@ export default new Router({
       component: AppSearch,
       props: route => ({
         search: route.query.search,
-        page: parseInt(route.query.page, 10),
         is_latest: route.query.is_latest,
         from_year: route.query.from_year,
         to_year: route.query.to_year,
       }),
     },
     {
-      path: '/search',
-      name: 'search',
+      path: '/search/:page',
+      name: 'search-result-paginated',
       component: AppSearch,
+      props: route => ({
+        page: parseInt(route.params.page, 10) || 1,
+        search: route.query.search,
+        is_latest: route.query.is_latest,
+        from_year: route.query.from_year,
+        to_year: route.query.to_year,
+      }),
     },
     {
       path: '/metadata/:id',

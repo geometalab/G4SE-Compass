@@ -55,7 +55,6 @@ const search = {
         state.searchParameters,
         defaultSearchParameters,
       );
-      console.log('searching call: ', queryParameters);
       if (!queryParameters.search) {
         return;
       }
@@ -93,7 +92,6 @@ const search = {
       return state.searchParameters.page;
     },
     resultsTotal(state) {
-      console.log('total: ', state.results.count);
       return state.results.count;
     },
     showingResultsFromToText(state, getters) {

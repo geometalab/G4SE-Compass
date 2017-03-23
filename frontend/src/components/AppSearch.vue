@@ -87,11 +87,7 @@
     },
     created() {
       // This is executed on page load, we just proceed as if it were a route change.
-      if (this.search && this.search !== '') {
-        this.searchTerms = this.search;
-        this.$store.commit('search/setPage', this.page);
-        this.doSearch();
-      }
+      this.routeChanged();
     },
     watch: {
       // call again the method if the route changes
@@ -119,10 +115,7 @@
       },
       searchEntered() {
         if (this.searchTerms && this.searchTerms !== '') {
-          this.$store.commit('search/updateSearchParameters', {
-            search: this.searchTerms,
-            page: 1,
-          });
+          this.$store.commit('search/setPage', 1);
           this.changeRoute();
         }
       },
@@ -132,26 +125,30 @@
         this.changeRoute();
       },
       changeRoute() {
-        console.log(
-          'called ', this.$store.state.search.searchParameters,
-        'searchP',
-          this.$store.state.search.searchParameters.page,
-        'terms',
-          this.$store.state.search.searchParameters.search);
         router.push(
           {
-            name: 'search-result',
-            query: this.$store.state.search.searchParameters,
+            name: 'search-result-paginated',
+            query: {
+              search: this.searchTerms,
+            },
+            params: {
+              page: this.$store.getters['search/currentPage'],
+            },
           });
-        console.log('pushed');
       },
       routeChanged() {
-        this.doSearch();
+        if (this.search && this.search !== '') {
+          this.searchTerms = this.search;
+          this.$store.commit('search/setPage', this.page);
+          this.doSearch();
+        }
       },
       doSearch() {
-        if (this.searchTerms && this.searchTerms !== '') {
-          this.$store.dispatch('search/search');
-        }
+        this.$store.commit('search/updateSearchParameters', {
+          search: this.searchTerms,
+          page: this.page,
+        });
+        this.$store.dispatch('search/search');
       },
     },
   };
