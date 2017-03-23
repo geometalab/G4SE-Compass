@@ -17,7 +17,7 @@
       </div>
     </div>
     <div v-if="searchResults && searchResults.count > 0" class="row">
-      <loading v-if="loading">loading...</loading>
+      <loading v-if="loadingInProgress">loading...</loading>
       <div v-else>
         <div class="col-12 row">
           <pagination :search-results="searchResults"></pagination>
@@ -40,11 +40,11 @@
 </template>
 <script>
   // TODO: Refactor this huge hunk of a module!
+  import { mapState } from 'vuex';
   import PulseLoader from 'vue-spinner/src/PulseLoader';
   import router from '../router';
   import SearchResult from './AppSearchResult';
   import Pagination from './AppPagination';
-  import search from '../api/search';
 
   export default {
     name: 'app-search',
@@ -73,11 +73,13 @@
     data() {
       return {
         searchTerms: this.search,
-        loading: this.$store.state.searchInProgress,
-        error: this.$store.state.searchError,
-        searchResults: this.$store.state.searchResults,
       };
     },
+    computed: mapState({
+      loadingInProgress: state => state.search.processing,
+      searchResults: state => state.search.results,
+      error: state => state.search.errors,
+    }),
     components: {
       'search-result': SearchResult,
       pagination: Pagination,
@@ -87,15 +89,14 @@
       // This is executed on page load, we just proceed as if it were a route change.
       if (this.search && this.search !== '') {
         this.searchTerms = this.search;
-        this.$store.commit('setPage', this.page);
+        this.$store.commit('search/setPage', this.page);
         this.doSearch();
       }
     },
     watch: {
       // call again the method if the route changes
       $route: 'routeChanged',
-      '$store.state.paginationPage': 'changeRoute',
-      '$store.state.searchResults': 'updateResults',
+      '$store.state.search.searchParameters.page': 'changeRoute',
     },
     methods: {
       getUserLanguage() {
@@ -118,40 +119,39 @@
       },
       searchEntered() {
         if (this.searchTerms && this.searchTerms !== '') {
-          this.$store.commit('setSearchParameters', {
+          this.$store.commit('search/updateSearchParameters', {
             search: this.searchTerms,
-            page: this.page,
+            page: 1,
           });
           this.changeRoute();
         }
       },
       clear() {
-        this.$store.commit('resetSearch');
+        this.$store.commit('search/reset');
         this.searchTerms = '';
         this.changeRoute();
       },
       changeRoute() {
+        console.log(
+          'called ', this.$store.state.search.searchParameters,
+        'searchP',
+          this.$store.state.search.searchParameters.page,
+        'terms',
+          this.$store.state.search.searchParameters.search);
         router.push(
           {
             name: 'search-result',
-            query: this.$store.getters.getSearchParameters,
+            query: this.$store.state.search.searchParameters,
           });
+        console.log('pushed');
       },
       routeChanged() {
         this.doSearch();
-        this.updateResults();
       },
       doSearch() {
         if (this.searchTerms && this.searchTerms !== '') {
-          this.$store.commit('setSearchParameters', {
-            search: this.searchTerms,
-            page: this.page,
-          });
-          search.search(this.$store.state.searchParameters);
+          this.$store.dispatch('search/search');
         }
-      },
-      updateResults() {
-        this.searchResults = this.$store.state.searchResults;
       },
     },
   };
