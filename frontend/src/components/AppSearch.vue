@@ -16,21 +16,21 @@
         <p>{{ error }}</p>
       </div>
     </div>
+    <loading v-if="loadingInProgress">loading...</loading>
     <div v-if="searchResults && searchResults.count > 0" class="row">
-      <loading v-if="loadingInProgress">loading...</loading>
-      <div v-else>
-        <div class="col-12 row">
-          <pagination :search-results="searchResults"></pagination>
-        </div>
-        <div class="row">
-          <search-result
-            v-for="searchResult in searchResults.results"
-            v-bind:search-result="searchResult"
-          />
-        </div>
-        <div class="col-12 row">
-          <pagination :search-results="searchResults"></pagination>
-        </div>
+      <!--<loading v-if="loadingInProgress">loading...</loading>-->
+      <div class="col-12 row">
+        <pagination :search-results="searchResults"></pagination>
+      </div>
+      <div class="row">
+        <search-result
+          v-for="searchResult in searchResults.results"
+          v-bind:search-result="searchResult"
+          :key="searchResult.api_id"
+        />
+      </div>
+      <div class="col-12 row">
+        <pagination :search-results="searchResults"></pagination>
       </div>
     </div>
     <div v-if="searchResults && searchResults.count == 0" class="row">

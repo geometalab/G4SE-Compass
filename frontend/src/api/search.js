@@ -59,7 +59,8 @@ const search = {
       if (!queryParameters.search) {
         return;
       }
-      commit('startProcessing');
+      commit('updateResults', null, null);
+      const loadingTimer = setTimeout(() => commit('startProcessing'), 150);
       Vue.http.get('/api/search/', { params: queryParameters }, {
         before(request) {
           if (this.previousRequest) {
@@ -71,8 +72,10 @@ const search = {
         commit('updateResults', response.body, null);
       }, (response) => {
         commit('updateResults', null, response.body.detail);
+      }).then(() => {
+        clearTimeout(loadingTimer);
+        commit('endProcessing');
       });
-      commit('endProcessing');
     },
   },
   getters: {
