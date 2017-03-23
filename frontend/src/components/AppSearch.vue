@@ -95,24 +95,6 @@
       '$store.state.search.searchParameters.page': 'changeRoute',
     },
     methods: {
-      getUserLanguage() {
-        let userLanguage;
-        if (navigator.languages) {
-          userLanguage = navigator.languages[0];
-        } else {
-          userLanguage = navigator.language || navigator.userLanguage;
-        }
-        if (userLanguage.includes('en')) {
-          userLanguage = 'en';
-        }
-        if (userLanguage.includes('de')) {
-          userLanguage = 'de';
-        }
-        if (userLanguage.includes('fr')) {
-          userLanguage = 'fr';
-        }
-        return userLanguage;
-      },
       searchEntered() {
         if (this.searchTerms && this.searchTerms !== '') {
           this.$store.commit('search/setPage', 1);

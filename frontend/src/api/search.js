@@ -50,6 +50,7 @@ const search = {
     search({ state, commit, getters }) {
       const defaultSearchParameters = {
         page_size: getters.pageSize,
+        language: getters.getUserLanguage,
       };
       const queryParameters = Object.assign(
         state.searchParameters,
@@ -105,6 +106,24 @@ const search = {
       }
       return `Showing ${itemsNumberStart}-${itemsNumberEnd} of 
       total ${totalResults} results.`;
+    },
+    getUserLanguage() {
+      let userLanguage;
+      if (navigator.languages) {
+        userLanguage = navigator.languages[0];
+      } else {
+        userLanguage = navigator.language || navigator.userLanguage;
+      }
+      if (userLanguage.includes('en')) {
+        userLanguage = 'en';
+      }
+      if (userLanguage.includes('de')) {
+        userLanguage = 'de';
+      }
+      if (userLanguage.includes('fr')) {
+        userLanguage = 'fr';
+      }
+      return userLanguage;
     },
   },
 };
