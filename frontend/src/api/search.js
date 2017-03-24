@@ -44,6 +44,9 @@ const search = {
     setPublicationYears(state, yearList) {
       state.searchParameters.publication_year = yearList;
     },
+    setDataSets(state, dataSetList) {
+      state.searchParameters.dataset = dataSetList;
+    },
     reset(state) {
       state.processing = false;
       state.results = null;
@@ -68,7 +71,7 @@ const search = {
       }
       commit('updateResults', null, null);
       const loadingTimer = setTimeout(() => commit('startProcessing'), 150);
-      Vue.http.get('/api/search/{?publication_year}', { params: queryParameters }, {
+      Vue.http.get('/api/search/{?publication_year,dataset}', { params: queryParameters }, {
         before(request) {
           if (this.previousRequest) {
             this.previousRequest.abort();
