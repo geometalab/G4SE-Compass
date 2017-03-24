@@ -3,7 +3,14 @@
     <input type="button" @click="applyFilter" class="btn btn-sm btn-default" value="Apply Filter" />
     <input type="button" @click="resetFilter" class="btn btn-sm btn-default" value="Reset Filter" />
 
-      <multiselect
+    <div class="col-12">
+      <label class="form-check-label">
+        <input class="form-check-input" type="checkbox" id="checkbox" v-model="isLatest">
+        <label for="checkbox">Exclude not latest entries (where available) [{{ isLatest }}]</label>
+      </label>
+    </div>
+
+    <multiselect
         v-if="years && years.length !== 0"
         @selected="yearsChanged"
         :options="years"
@@ -33,6 +40,7 @@
       return {
         publicationYears: this.$store.state.search.searchParameters.publication_year,
         dataSets: this.$store.state.search.searchParameters.dataset,
+        isLatest: this.$store.state.search.searchParameters.is_latest || false,
       };
     },
     components: {
@@ -50,6 +58,7 @@
           this.$store.commit('search/setPage', 1);
           this.$store.commit('search/setPublicationYears', this.publicationYears);
           this.$store.commit('search/setDataSets', this.dataSets);
+          this.$store.commit('search/setLatestOnly', this.isLatest);
           this.$store.dispatch('search/search');
         }
       },
@@ -58,6 +67,8 @@
         this.$store.commit('search/setDataSets', []);
         this.publicationYears = [];
         this.$store.commit('search/setPublicationYears', []);
+        this.isLatest = false;
+        this.$store.commit('search/setLatestOnly', false);
         this.applyFilter();
       },
     },
@@ -69,7 +80,8 @@
         return this.$store.getters['search/getChoices'].dataset;
       },
       hasValueChanged() {
-        return this.$store.state.search.searchParameters.dataset !== this.dataSets ||
+        return this.$store.state.search.searchParameters.is_latest !== this.isLatest ||
+          this.$store.state.search.searchParameters.dataset !== this.dataSets ||
           this.$store.state.search.searchParameters.publication_year !== this.publicationYears;
       },
     },

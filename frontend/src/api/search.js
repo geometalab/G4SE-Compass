@@ -47,6 +47,13 @@ const search = {
     setDataSets(state, dataSetList) {
       state.searchParameters.dataset = dataSetList;
     },
+    setLatestOnly(state, truthValue) {
+      if (truthValue) {
+        state.searchParameters.is_latest = truthValue;
+      } else {
+        delete state.searchParameters.is_latest;
+      }
+    },
     reset(state) {
       state.processing = false;
       state.results = null;
