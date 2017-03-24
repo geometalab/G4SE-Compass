@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="form-group row">
-      <div class="col-md-12 form-group input-group">
+      <div class="col-md-10 form-group input-group">
         <input v-model="searchTerms" @keyup.enter="searchEntered" type="search" class="form-control col-md-11" id="searchText" placeholder="Enter your search" />
         <span class="input-group-btn">
           <input type="button" class="btn bg-faded" :class="{ disabled: search === searchTerms }" @click="searchEntered" value="Go" />
@@ -10,22 +10,22 @@
           <input type="button" class="btn bg-faded" @click="clear" id="clearSearch" value="Clear" />
         </span>
       </div>
-      <div class="col-1 push-11">
+      <div class="col-md-2">
         <button
           v-if="!showAdvancedOptions"
-          class="btn btn-outline-primary btn-sm"
+          class="btn btn-secondary"
           @click="showAdvancedOptions = !showAdvancedOptions"
           title="Show Filters">
-          <<
+          Show Filters
         </button>
         <button
           v-if="showAdvancedOptions"
-          class="btn btn-outline-primary btn-sm"
+          class="btn btn-secondary"
           @click="showAdvancedOptions = !showAdvancedOptions"
           title="Hide Filters">
-          >>
+          Hide Filters
         </button>
-        </div>
+      </div>
     </div>
     <div class="row">
       <div v-if="error" class="col-12 bg-warning">
