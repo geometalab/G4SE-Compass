@@ -101,7 +101,7 @@ const search = {
       return 10;
     },
     maxPage(state, getters) {
-      return Math.floor(state.results.count / getters.pageSize);
+      return Math.ceil(state.results.count / getters.pageSize);
     },
     hasNextPage(state, getters) {
       return (state.searchParameters.page) < getters.maxPage;
