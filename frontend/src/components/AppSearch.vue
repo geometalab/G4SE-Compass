@@ -14,6 +14,7 @@
         <button
           v-if="!showAdvancedOptions"
           class="btn btn-secondary"
+          :class="{ disabled: !hasResults }"
           @click="showAdvancedOptions = !showAdvancedOptions"
           title="Show Filters">
           Show Filters
@@ -21,6 +22,7 @@
         <button
           v-if="showAdvancedOptions"
           class="btn btn-secondary"
+          :class="{ disabled: !hasResults }"
           @click="showAdvancedOptions = !showAdvancedOptions"
           title="Hide Filters">
           Hide Filters
@@ -32,10 +34,8 @@
         <p>{{ error }}</p>
       </div>
     </div>
-    <div class="row">
-    </div>
     <loading v-if="loadingInProgress">loading...</loading>
-    <div v-if="searchResults && searchResults.count > 0" class="row">
+    <div v-if="hasResults" class="row">
       <div :class="{ 'col-12': !showAdvancedOptions, 'col-8': showAdvancedOptions }">
         <div class="col-12 row">
           <pagination :search-results="searchResults"></pagination>
@@ -54,6 +54,7 @@
       <div class="col-4" v-if="showAdvancedOptions">
         <div class="row">
           <h3>Filters</h3>
+          <search-filter></search-filter>
         </div>
       </div>
     </div>
@@ -67,6 +68,7 @@
   import { mapState, mapGetters } from 'vuex';
   import PulseLoader from 'vue-spinner/src/PulseLoader';
   import router from '../router';
+  import SearchFilter from './AppSearchFilter';
   import SearchResult from './AppSearchResult';
   import Pagination from './AppPagination';
 
@@ -102,6 +104,11 @@
       };
     },
     computed: Object.assign(
+      {
+        hasResults() {
+          return this.searchResults && this.searchResults.count > 0;
+        },
+      },
       mapGetters({
         userLanguage: 'search/getUserLanguage',
       }),
@@ -113,6 +120,7 @@
     ),
     components: {
       'search-result': SearchResult,
+      'search-filter': SearchFilter,
       pagination: Pagination,
       loading: PulseLoader,
     },

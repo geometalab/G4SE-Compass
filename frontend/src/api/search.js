@@ -41,6 +41,9 @@ const search = {
     setLanguage(state, language) {
       state.language = language;
     },
+    setPublicationYears(state, yearList) {
+      state.searchParameters.publication_year = yearList;
+    },
     reset(state) {
       state.processing = false;
       state.results = null;
@@ -65,7 +68,7 @@ const search = {
       }
       commit('updateResults', null, null);
       const loadingTimer = setTimeout(() => commit('startProcessing'), 150);
-      Vue.http.get('/api/search/', { params: queryParameters }, {
+      Vue.http.get('/api/search/{?publication_year}', { params: queryParameters }, {
         before(request) {
           if (this.previousRequest) {
             this.previousRequest.abort();
@@ -115,7 +118,6 @@ const search = {
       total ${totalResults} results.`;
     },
     getUserLanguage(state, getters) {
-      console.log('language', state.language, getters.getDefaultUserLanguage);
       return state.language || getters.getDefaultUserLanguage;
     },
     getDefaultUserLanguage() {
@@ -135,6 +137,9 @@ const search = {
         userLanguage = 'fr';
       }
       return userLanguage || 'en';
+    },
+    getChoices(state) {
+      return state.results.result_choices;
     },
   },
 };
