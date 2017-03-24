@@ -3,12 +3,10 @@
     <input type="button" @click="applyFilter" class="btn btn-sm btn-default" value="Apply Filter" />
     <input type="button" @click="resetFilter" class="btn btn-sm btn-default" value="Reset Filter" />
 
-    <div class="col-12">
-      <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" id="checkbox" v-model="isLatest">
-        <label for="checkbox">Exclude not latest entries (where available) [{{ isLatest }}]</label>
-      </label>
-    </div>
+    <label class="form-check-label">
+      <input class="form-check-input" type="checkbox" id="checkbox" v-model="isLatest">
+      <label for="checkbox">Exclude not latest entries (where available)</label>
+    </label>
 
     <multiselect
         v-if="years && years.length !== 0"
@@ -32,6 +30,7 @@
   </div>
 </template>
 <script>
+//  TODO: make flter available for geodata_type, geography, service_type, source, crs, collection
   import MultiSelect from './form_elements/MultiSelect';
 
   export default {
@@ -40,7 +39,7 @@
       return {
         publicationYears: this.$store.state.search.searchParameters.publication_year,
         dataSets: this.$store.state.search.searchParameters.dataset,
-        isLatest: this.$store.state.search.searchParameters.is_latest || false,
+        isLatest: this.$store.state.search.searchParameters.is_latest,
       };
     },
     components: {
@@ -67,7 +66,7 @@
         this.$store.commit('search/setDataSets', []);
         this.publicationYears = [];
         this.$store.commit('search/setPublicationYears', []);
-        this.isLatest = false;
+        this.isLatest = null;
         this.$store.commit('search/setLatestOnly', false);
         this.applyFilter();
       },
