@@ -10,7 +10,7 @@
             v-show="!collapsed"
             class="form-control"
             id="multiselect"
-            :size="options.length"
+            :size="size"
             multiple>
       <option v-for="opt in options" :value="opt">{{opt}}</option>
     </select>
@@ -36,6 +36,10 @@
         type: Boolean,
         default: false,
       },
+      maxSize: {
+        type: Number,
+        default: Infinity,
+      },
     },
     watch: {
       selectedOptions: 'selectedOptionsChanged',
@@ -49,6 +53,14 @@
     methods: {
       selectedOptionsChanged() {
         this.$emit('selected', this.selectedOptions);
+      },
+    },
+    computed: {
+      size() {
+        if (this.maxSize >= this.options.length) {
+          return this.options.length;
+        }
+        return this.maxSize;
       },
     },
   };
