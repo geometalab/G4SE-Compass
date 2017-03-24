@@ -98,11 +98,7 @@ services:
     image: elasticsearch:1
 #    environment:
 #      - es.logger.level=TRACE
-    ports:
-      - "9200:9200"
   redis:
     image: redis
-    ports:
-      - "6379:6379"
 volumes:
   api-data: {}
