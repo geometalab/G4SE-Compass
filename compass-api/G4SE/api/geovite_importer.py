@@ -21,7 +21,7 @@ def _remove_duplicate_entries():
     to_be_deleted = []
     for record in _imported_entries():
         if _imported_entries().filter(identifier=record.identifier).count() > 1:
-            to_be_deleted.append(_imported_entries().filter(identifier=record.identifier).exclude(api_id=record.api_id))
+            to_be_deleted.append(_imported_entries().filter(identifier=record.identifier).exclude(api_id=record.api_id))  # noqa: line too long
     for delete_em in to_be_deleted:
         delete_em.delete()
 

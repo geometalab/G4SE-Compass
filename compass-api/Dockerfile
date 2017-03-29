@@ -14,9 +14,9 @@ COPY ./wait_only_docker-entrypoint.sh /bin/wait_only_docker-entrypoint.sh
 COPY ./uwsgi_docker.ini /uwsgi.ini
 
 ENV STATIC_URL /api/static/
-ENV STATIC_ROOT /var/data/static
+ENV STATIC_ROOT /var/data/static/
 ENV MEDIA_URL /api/media/
-ENV MEDIA_ROOT /var/data/media
+ENV MEDIA_ROOT /var/data/media/
 
 VOLUME /var/data
 

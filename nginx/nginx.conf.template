@@ -32,6 +32,7 @@ add_header X-XSS-Protection "1; mode=block";
 # more: http://www.html5rocks.com/en/tutorials/security/content-security-policy/#inline-code-considered-harmful
 add_header Content-Security-Policy
     "default-src 'self';
+    connect-src 'self' http://$http_host https://$http_host ws://$http_host wss://$http_host;
     script-src 'self' 'unsafe-eval' 'unsafe-inline' https://ajax.googleapis.com https://maxcdn.bootstrapcdn.com http://ajax.googleapis.com http://maxcdn.bootstrapcdn.com;
     img-src 'self' http://*.osm.org https://*.openstreetmap.org data:;
     style-src 'self' 'unsafe-inline' https://maxcdn.bootstrapcdn.com http://maxcdn.bootstrapcdn.com;
@@ -44,6 +45,7 @@ proxy_http_version 1.1;
 proxy_buffering off;
 proxy_set_header Host $http_host;
 proxy_set_header Upgrade $http_upgrade;
+proxy_set_header Connection "upgrade";
 proxy_set_header X-Real-IP $remote_addr;
 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 proxy_set_header X-Forwarded-Host $server_name;
@@ -88,7 +90,7 @@ server {
     }
 
     location / {
-        proxy_pass http://frontend;
-        proxy_pass_request_headers on;
+        root /var/www/frontend/html;
+        error_page 404 =200 /index.html;
     }
 }

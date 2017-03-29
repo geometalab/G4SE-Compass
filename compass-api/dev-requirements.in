@@ -1,4 +1,5 @@
 -r requirements.in
 pytest-django
+pytest-flake8
 django-extensions
 django-debug-toolbar

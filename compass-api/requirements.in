@@ -6,7 +6,7 @@ django-filter
 django-import-export
 django-rest-swagger
 django-rq
-drf-haystack==v1.6.0rc3
+drf-haystack
 gunicorn
 psycopg2
 netaddr

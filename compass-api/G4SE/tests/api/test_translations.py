@@ -90,8 +90,8 @@ def tag_that_only_tags_german(db):
 @pytest.fixture
 def tag_that_only_tags_french(db):
     tag = TranslationTag.objects.create(
-            tag_de='achtung', tag_en='another', tag_fr='example'
-        )
+        tag_de='achtung', tag_en='another', tag_fr='example'
+    )
     yield tag
     tag.delete()
 
@@ -99,8 +99,8 @@ def tag_that_only_tags_french(db):
 @pytest.fixture
 def tag_that_matches_all_languages(db):
     tag = TranslationTag.objects.create(
-            tag_de='digital', tag_en='some', tag_fr='differente'
-        )
+        tag_de='digital', tag_en='some', tag_fr='differente'
+    )
     yield tag
     tag.delete()
 

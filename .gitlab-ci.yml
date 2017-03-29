@@ -5,6 +5,7 @@ variables:
   DATABASE_URL: postgres://postgres:postgres@geometalab__g4se-api-db:5432/G4SE
   ELASTIC_SEARCH_URL: http://elasticsearch:9200/
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/pip-cache"
+  COMPOSE_FILE: docker-compose_gitlab-ci.yml
 
 cache:
   paths:
@@ -15,7 +16,6 @@ stages:
 #- unit tests
 #- integration tests
 - integration and unit tests
-- build frontend
 - build staging images
 - deploy to staging
 - expectation tests
@@ -24,42 +24,25 @@ stages:
 
 integration and unit tests:
   stage: integration and unit tests
-  image: python:latest
+  image: geometalab/docker-builder
   script:
-  - pip install -U pip setuptools
-  - pip install -r compass-api/dev-requirements.txt
-  - cd compass-api/G4SE/
-  - py.test
-  services:
-  - geometalab/g4se-api-db:latest
-  - elasticsearch:1
-
-build:frontend:
-  stage: build frontend
-  image: node:7.4
-  script:
-  - cd compass-frontend
-  - npm install -g angular-cli node-gyp
-  - npm install
-  - rm -rf dist
-  - ng build -prod
-  - mv dist ../
-  artifacts:
-    expire_in: '1h0min'
-    paths:
-    - dist/
+  - docker-compose -f ${COMPOSE_FILE} build api
+  - docker-compose -f ${COMPOSE_FILE} run --rm api bash -c "pytest -q --flake8 && pytest"
+  - docker-compose down --volumes --rmi all --remove-orphans
 
 build staging images:
   image: geometalab/docker-builder
   stage: build staging images
   script:
-  - mv dist/ compass-frontend/
+  - cd frontend
+  - npm install
+  - rm -rf dist
+  - npm run build -p
+  - cd ..
   - export BUILD_VERSION=staging
-  - docker-compose -f docker-build.yml build
+  - docker-compose -f ${COMPOSE_FILE} build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
-  - docker-compose -f docker-build.yml push
-  dependencies:
-    - build:frontend
+  - docker-compose -f ${COMPOSE_FILE} push
 
 deploy to staging:
   image: geometalab/docker-builder
@@ -84,7 +67,7 @@ deploy to staging:
 
 expectation tests:
   stage: expectation tests
-  image: python:latest
+  image: python:3
   script:
   - pip install -U pip setuptools
   - cd expectation_tests
@@ -95,11 +78,12 @@ build production images:
   image: geometalab/docker-builder
   stage: build production images
   script:
-  - cd compass-frontend
+  - cd frontend
   - npm install
-  - rm -rf dist && ng build -prod
+  - rm -rf dist
+  - npm run build -p
   - cd ..
   - export BUILD_VERSION=latest
-  - docker-compose -f docker-build.yml build
+  - docker-compose -f ${COMPOSE_FILE} build
   - docker login -u $DOCKERHUB_LOGIN_USERNAME -p $DOCKERHUB_LOGIN_PASSWORD
-  - docker-compose -f docker-build.yml push
+  - docker-compose -f ${COMPOSE_FILE} push
