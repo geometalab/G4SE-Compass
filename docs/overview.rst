@@ -2,7 +2,7 @@ This Document provides an more technical overview of this project.
 
 It lays out some of the (future) ideas and the current deployment and architecture.
 
-More information can be found on the github repository of this project:
+More information can be found on the Github repository of this project:
 https://github.com/geometalab/G4SE-Compass
 
 Architecture
@@ -30,7 +30,7 @@ of which the metadata is then transformed (stemmed, lexed, tokenized) and import
 
     Components interaction inside the G4SE-system.
 
-data processing and search request handling
+Data processing and search request handling
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The data-preprocessing and a search request process can be found in :numref:`figsearchrequest`.
@@ -180,9 +180,20 @@ which are considered state of the art.
 Backup
 ~~~~~~
 
-Currently, the postgres database is the only thing being backuped, since almost everything
-can be reconstructed out of there. The only thing missing is the user-uploaded files,
-which have been uploaded using the zipped XML import.
+Daily backups of the database with retention of monthly and weekly dumps
+are being made to an external location.
 
-A better solution to backup data would be to backup the database
-and the files, which are being store inside the docker volume.
+Monitoring
+~~~~~~~~~~
+
+The API-Service is being watched in 5 minute intervals using an external monitoring solution.
+
+
+Error-Logging and Tracking
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Whenever an error occurs on the server-side, it will be logged
+to Sentry, a remote error logger, which informs the
+developers of any issues. Using Sentry, the occurred errors
+are not only being recorded but also tracked to follow the progress
+when they have been resolved.
