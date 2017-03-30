@@ -2,7 +2,7 @@ This Document provides an more technical overview of this project.
 
 It lays out some of the (future) ideas and the current deployment and architecture.
 
-More information can be found on the github repository of this project:
+More information can be found on the Github repository of this project:
 https://github.com/geometalab/G4SE-Compass
 
 Architecture
