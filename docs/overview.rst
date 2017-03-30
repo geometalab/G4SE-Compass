@@ -30,7 +30,7 @@ of which the metadata is then transformed (stemmed, lexed, tokenized) and import
 
     Components interaction inside the G4SE-system.
 
-data processing and search request handling
+Data processing and search request handling
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The data-preprocessing and a search request process can be found in :numref:`figsearchrequest`.
@@ -180,9 +180,5 @@ which are considered state of the art.
 Backup
 ~~~~~~
 
-Currently, the postgres database is the only thing being backuped, since almost everything
-can be reconstructed out of there. The only thing missing is the user-uploaded files,
-which have been uploaded using the zipped XML import.
-
-A better solution to backup data would be to backup the database
-and the files, which are being store inside the docker volume.
+Daily backups of the database with retention of monthly and weekly dumps
+are being made to an external location.
