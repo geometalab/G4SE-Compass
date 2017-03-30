@@ -126,7 +126,8 @@
     },
     created() {
       // This is executed on page load, we just proceed as if it were a route change.
-      this.$store.commit('search/setLanguage', this.$route.query.language || 'en');
+      const defaultLanguage = this.$store.getters['search/getDefaultUserLanguage'];
+      this.$store.commit('search/setLanguage', this.$route.query.language || defaultLanguage);
       this.routeChanged();
     },
     watch: {

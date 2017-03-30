@@ -24,12 +24,12 @@
     props: {
       language: {
         type: String,
-        default: 'en',
+        default: 'de',
       },
     },
     data() {
       return {
-        selectedLanguage: 'en',
+        selectedLanguage: 'de',
         languageOptions: [
             { text: 'en', value: 'en' },
             { text: 'de', value: 'de' },
@@ -38,7 +38,7 @@
       };
     },
     created() {
-      this.selectedLanguage = this.$route.query.language || 'en';
+      this.selectedLanguage = this.$route.query.language || this.$store.getters['search/getUserLanguage'];
     },
     watch: {
       selectedLanguage: 'updateLanguage',
