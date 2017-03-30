@@ -28,6 +28,9 @@
           Hide Filters
         </button>
       </div>
+      <div class="col-12 small">
+        <a href="https://github.com/geometalab/G4SE-Compass/wiki/Search-Syntax" target="_blank">Search syntax details (new window)</a>
+      </div>
     </div>
     <div class="row">
       <div v-if="error" class="col-12 bg-warning">
