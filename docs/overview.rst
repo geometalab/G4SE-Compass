@@ -182,3 +182,9 @@ Backup
 
 Daily backups of the database with retention of monthly and weekly dumps
 are being made to an external location.
+
+Monitoring
+~~~~~~~~~~
+
+The API-Service is being watched in 5 minute intervals using an external monitoring solution.
+
