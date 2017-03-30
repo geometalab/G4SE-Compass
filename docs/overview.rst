@@ -188,3 +188,12 @@ Monitoring
 
 The API-Service is being watched in 5 minute intervals using an external monitoring solution.
 
+
+Error-Logging and Tracking
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Whenever an error occurs on the server-side, it will be logged
+to Sentry, a remote error logger, which informs the
+developers of any issues. Using Sentry, the occurred errors
+are not only being recorded but also tracked to follow the progress
+when they have been resolved.
