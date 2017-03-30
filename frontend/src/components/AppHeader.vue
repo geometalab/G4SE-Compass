@@ -5,7 +5,7 @@
         <router-link to="/search"><img width="100px" src="../assets/logo.jpg"></router-link>
       </div>
       <div class="col-5">
-        <h3>&nbsp;G4SE Geodata</h3>
+        <h3> HSR Geodatenkompass</h3>
       </div>
       <div class="col-3">
         <label for="search-language">search language</label>
@@ -24,12 +24,12 @@
     props: {
       language: {
         type: String,
-        default: 'en',
+        default: 'de',
       },
     },
     data() {
       return {
-        selectedLanguage: 'en',
+        selectedLanguage: 'de',
         languageOptions: [
             { text: 'en', value: 'en' },
             { text: 'de', value: 'de' },
@@ -38,7 +38,7 @@
       };
     },
     created() {
-      this.selectedLanguage = this.$route.query.language || 'en';
+      this.selectedLanguage = this.$route.query.language || this.$store.getters['search/getUserLanguage'];
     },
     watch: {
       selectedLanguage: 'updateLanguage',
